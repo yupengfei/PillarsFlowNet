@@ -1,0 +1,7 @@
+{
+	"command" : "login",
+	"parameter": {
+		"userName": "yupengfei",
+		"password": "123456"
+	}
+}

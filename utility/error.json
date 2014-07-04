@@ -1,0 +1,11 @@
+{
+	"error": {
+		"errorCode" : 0,
+		"errorMessage": ""
+	},
+	"result": {
+		"auth": "success",
+		"authMessage": ""
+	}
+
+}
