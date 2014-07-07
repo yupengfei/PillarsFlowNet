@@ -36,9 +36,9 @@ func TestObjectToJson(t * testing.T) {
 		panic(error.Error())
 	}
 
-	LoginInMessage := ParseLoginInMessage(&data)
+	User := ParseLoginInMessage(&data)
 	
-	bytes := LoginMessageToJson(LoginInMessage)
+	bytes := LoginMessageToJson(User)
 	//fmt.Println(string(*bytes))
 
 }

@@ -15,10 +15,10 @@ type InMessage struct {
 	Command string
 	Parameter interface{}
 }
-type LoginIn struct {
-	UserName string
-	Password string
-}
+// type LoginIn struct {
+// 	UserName string
+// 	Password string
+// }
 type LoginInMessage struct {
 	Command string
 	Parameter LoginIn
@@ -35,8 +35,8 @@ func ParseInMessage(message *[] byte) * string {
 	return &result.Command
 }
 
-func ParseLoginInMessage(message * [] byte) * LoginInMessage {
-	var result LoginInMessage
+func ParseLoginInMessage(message * [] byte) * User {
+	var result User
 	
 	err := json.Unmarshal(*message, &result)
 	if err != nil {
@@ -46,7 +46,7 @@ func ParseLoginInMessage(message * [] byte) * LoginInMessage {
 }
 
 
-func LoginMessageToJson(object * LoginInMessage) * []byte {
+func LoginMessageToJson(object * User) * []byte {
 	message, err := json.Marshal(*object)
 	if err != nil {
 		panic(err.Error())

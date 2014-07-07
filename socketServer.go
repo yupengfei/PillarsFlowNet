@@ -12,25 +12,29 @@ var upgrader = websocket.Upgrader{
 }
 
 var ConnectionMap map[string] 
+//rigister conn to hub
 func websocketServer(w http.ResponseWriter, r *http.Request) {
     conn, err := upgrader.Upgrade(w, r, nil)
     if err != nil {
         fmt.Println(err)
         return
     }
-    for {
-        messageType, p, err := conn.ReadMessage()
-        fmt.Println(messageType)
-        fmt.Println(p)
-        if err != nil {
-            return
-        }
-        result := "success"
-        var test []byte= []byte(result)
-        if err = conn.WriteMessage(messageType, test); err != nil {
-            return
-        }
-    }
+ 
+
+    // for {
+    //     messageType, p, err := conn.ReadMessage()
+    //     fmt.Println(messageType)
+    //     fmt.Println(p)
+    //     if err != nil {
+    //         return
+    //     }
+    //     result := "success"
+    //     var test []byte= []byte(result)
+    //     if err = conn.WriteMessage(messageType, test); err != nil {
+    //         return
+    //     }
+    // }
+
 }
 
 func main() {
