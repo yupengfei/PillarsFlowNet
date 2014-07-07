@@ -11,6 +11,7 @@ var upgrader = websocket.Upgrader{
     WriteBufferSize: 1024,
 }
 
+var ConnectionMap map[string] 
 func websocketServer(w http.ResponseWriter, r *http.Request) {
     conn, err := upgrader.Upgrade(w, r, nil)
     if err != nil {
