@@ -5,15 +5,26 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	// "reflect"
 	// "fmt"
+	"PillarsFlowNet/utility"
 )
 var db * sql.DB
 var err error
-func ConnectToDB(userName string, password string, host string, port string, database string) * sql.DB {
+func ConnectToDB() * sql.DB {
+	propertyMap := utility.ReadProperty("../DB.properties")
+	var userName, password, host, port, database string
+	userName =  propertyMap["DBUserName"]
+	password = propertyMap["DBPassword"]
+	host = propertyMap["DBIP"]
+	port = propertyMap["DBPort"]
+	database = propertyMap["DBDatabase"]
+
 	if db != nil {
 		//fmt.Println("db connection has enstablished")
 		return db
 	}
-	db, err = sql.Open("mysql", userName + ":" + password + "@tcp(" + host + ":" + port + ")/" + database)
+	sqlString := userName + ":" + password + "@tcp(" + host + ":" + port + ")/" + database
+	//fmt.Println(sqlString)
+	db, err = sql.Open("mysql", sqlString)
 	//fmt.Println(reflect.TypeOf(db))
 	//fmt.Println(reflect.TypeOf(err))
 	if err != nil {

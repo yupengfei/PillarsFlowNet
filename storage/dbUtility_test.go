@@ -6,7 +6,8 @@ import "testing"
 func TestDBConnection(t * testing.T) {
 	//fmt.Println("testing")
 	// ConnectToDB("root", "123456", "172.16.253.216", "3306", "PillarsFlow")
-	db := ConnectToDB("root", "123456", "172.16.253.216", "3306", "PillarsFlow")
+	//db := ConnectToDB("root", "123456", "172.16.253.216", "3306", "PillarsFlow")
+	db := ConnectToDB()
 	//stmtOut, err := db.Prepare()
 	// if err := nil {
 	// 	panic(err.Error())
@@ -27,7 +28,8 @@ func TestDBConnection(t * testing.T) {
 	// fmt.Println(result)
 }
 func TestDBConnection2(t * testing.T) {
-	ConnectToDB("root", "123456", "172.16.253.216", "3306", "PillarsFlow")
+	//ConnectToDB("root", "123456", "172.16.253.216", "3306", "PillarsFlow")
+	ConnectToDB()
 }
 
 func TestDBClose(t * testing.T) {

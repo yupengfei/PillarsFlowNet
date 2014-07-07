@@ -21,6 +21,7 @@ func ReadProperty(fileName string) map[string]string {
             break
         }
         //fmt.Print(line)  //可以对一行进行处理
+        line = strings.Trim(line, "\n")
         propertyPair := strings.Split(line, "=")
         //fmt.Println(propertyPair[0])
         propertyMap[propertyPair[0]] = propertyPair[1]

@@ -1,6 +1,7 @@
 package utility
 
 import "encoding/json"
+// import "fmt"
 
 type Error struct {
 	errorCode string
@@ -11,28 +12,44 @@ type OutMessage struct {
 	result string
 }
 type InMessage struct {
-	command string
-	parameter string
+	Command string
+	Parameter interface{}
 }
 type LoginIn struct {
-	userName string
-	password string
+	UserName string
+	Password string
+}
+type LoginInMessage struct {
+	Command string
+	Parameter LoginIn
 }
 
 
-func ParserInMessage(message string) (string, string) {
+func ParseInMessage(message *[] byte) * string {
 	var result InMessage
-	err := json.Unmarshal(message, result)
+	
+	err := json.Unmarshal(*message, &result)
 	if err != nil {
 		panic(err.Error())
 	}
-	return result.command, result.parameter
+	return &result.Command
 }
 
-func ObjectToJson(object interface) string {
-	message, err := json.Marshal(object)
+func ParseLoginInMessage(message * [] byte) * LoginInMessage {
+	var result LoginInMessage
+	
+	err := json.Unmarshal(*message, &result)
 	if err != nil {
 		panic(err.Error())
 	}
-	return message
+	return &result
+}
+
+
+func LoginMessageToJson(object * LoginInMessage) * []byte {
+	message, err := json.Marshal(*object)
+	if err != nil {
+		panic(err.Error())
+	}
+	return &message
 }
