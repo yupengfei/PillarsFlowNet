@@ -3,46 +3,24 @@ package utility
 import "encoding/json"
 // import "fmt"
 
-type Error struct {
-	errorCode string
-	errorMessage string
-}
-type OutMessage struct {
-	error Error
-	result string
-}
-type InMessage struct {
-	Command string
-	Parameter interface{}
-}
-// type LoginIn struct {
-// 	UserName string
-// 	Password string
-// }
-type LoginInMessage struct {
-	Command string
-	Parameter LoginIn
-}
-
-
-func ParseInMessage(message *[] byte) * string {
+func ParseInMessage(message *[] byte) (* string, error) {
 	var result InMessage
 	
 	err := json.Unmarshal(*message, &result)
-	if err != nil {
-		panic(err.Error())
-	}
-	return &result.Command
+	// if err != nil {
+	// 	panic(err.Error())
+	// }
+	return &(result.Command), err
 }
 
-func ParseLoginInMessage(message * [] byte) * User {
+func ParseLoginInMessage(message * [] byte) (* User, error)  {
 	var result User
 	
 	err := json.Unmarshal(*message, &result)
-	if err != nil {
-		panic(err.Error())
-	}
-	return &result
+	// if err != nil {
+	// 	panic(err.Error())
+	// }
+	return &result, err
 }
 
 

@@ -4,6 +4,7 @@ import (
 	"github.com/gorilla/websocket"
 	"log"
 	"time"
+	"PillarsFlowNet/utility"
 )
 
 const (
@@ -24,6 +25,7 @@ const (
 type connection struct {
 	ws * websocket.Conn
 	send chan []byte
+	userCode string
 }
 
 // write writes a message with the given message type and message.
@@ -70,6 +72,10 @@ func (c * connection) readPump() {
 		if err != nil {
 			break
 		}
+		//if userCode is nil, login first
+		if c.userCode == nil {
+			utility.
+		}
 		//h.broadcast <- message
 	}
 }
@@ -85,7 +91,7 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 		return
 	}
-	c := &connection{send: make(chan []byte), ws: ws}
+	c := &connection{send: make(chan []byte), ws: ws, userCode: nil}
 	//h.register <- c
 	go c.writePump()
 	c.readPump()

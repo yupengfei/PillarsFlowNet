@@ -3,6 +3,7 @@
 		"errorCode" : 0,
 		"errorMessage": ""
 	},
+	"command": "login",
 	"result": {
 		"auth": "success",
 		"authMessage": ""

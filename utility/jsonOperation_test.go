@@ -1,9 +1,10 @@
 package utility
 
 import "testing"
-import "fmt"
+// import "fmt"
 import "os"
 import "io/ioutil"
+// import "unsafe"
 
 func TestParseInMessage(t * testing.T) {
 	file, err := os.Open("login.json")
@@ -17,11 +18,15 @@ func TestParseInMessage(t * testing.T) {
 	}
 	//fmt.Print(data)
 	//ParserInMessage(data)
-	command := ParseInMessage(&data)
+	command, err := ParseInMessage(&data)
+	if err != nil {
+		panic(err.Error())
+	}
 	//fmt.Print(command)
 	if *command != "login" {
 		t.Error("parse wrong")
 	}
+
 	// fmt.Print(parameter)
 }
 
@@ -36,12 +41,14 @@ func TestObjectToJson(t * testing.T) {
 		panic(error.Error())
 	}
 
-	User := ParseLoginInMessage(&data)
-	
-	bytes := LoginMessageToJson(User)
+	User, err := ParseLoginInMessage(&data)
+	if err != nil {
+		panic(err.Error())
+	}
+	LoginMessageToJson(User)
 	//fmt.Println(string(*bytes))
 
 }
 
-
+// func TestParse
 
