@@ -5,15 +5,15 @@ import (
 	"labix.org/v2/mgo"
 )
 type ChartStorage struct {
-	Message string
-	From string
-	SendTime string
-	To string
-	ReceivedTime string
+	Message * string
+	From * string
+	SendTime * string
+	To * string
+	ReceivedTime * string
 	Receipt int
 	IsRead int
 	Deleted int
-	DeletedTime string
+	DeletedTime * string
 }
 func StoreToChart(from_user_code * string, to_user_code * string, message string, receipt bool, session * mgo.Session) {
 	var charSto ChartStorage
