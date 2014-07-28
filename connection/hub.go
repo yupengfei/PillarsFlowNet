@@ -1,37 +1,44 @@
 package connection
 
 import (
-	"github.com/gorilla/websocket"
-	"log"
-	"time"
+	// "github.com/gorilla/websocket"
+	"PillarsFlowNet/pillarsLog"
+	// "time"
+	"fmt"
 )
 
+//hub handle all kind of request
+//add more channel to realize more kind of request
+//ugly through, modify hub and connection both to add a request
 type hub struct {
 
 	connections map[string]*connection
-	transmit chan []byte
-	login chan * connection
-	logout chan * connection
+	chart chan []byte
+	register chan * connection
+	unregister chan * connection
 }
 
-var h = hub {
-	connections: make(map[string]*connection)
-	transmit: make(chan [] byte)
-	login: make(chan * connection)
-	logout: make(chan * connection)
+var Hub = hub {
+	connections: make(map[string]*connection),
+	chart: make(chan [] byte),
+	register: make(chan * connection),
+	unregister: make(chan * connection),
 }
 
-func (h *hub) run() {
+
+func (h *hub) Run() {
 	for {
 		select {
-		case c := <- h.login:
-			h.connections[&c.User.UserName] = c
-		case c := <- h.logout:
-			if _, ok := h.connections[&c.User.UserName]; ok {
-				delete(h.connections, c)
+		case c := <- h.register:
+			fmt.Println(*(c.userCode))
+			h.connections[*(c.userCode)] = c
+		case c := <- h.unregister:
+			if _, ok := h.connections[*(c.userCode)]; ok {
 				close(c.send)
+				delete(h.connections, *(c.userCode))			
 			}
-		case m := h.transmit:
+		case m := <- h.chart:
+			pillarsLog.Logger.Println(m)
 			//TODO
 			//tansmit
 			// select {

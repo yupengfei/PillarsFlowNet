@@ -1,7 +1,1 @@
-{
-	"command" : "login",
-	"parameter": {
-		"userName": "yupengfei",
-		"password": "123456"
-	}
-}
+{"command" : "login","parameter": "{\"userName\": \"yupengfei\",\"password\": \"123456\"}"}

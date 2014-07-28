@@ -4,16 +4,7 @@ import "testing"
 // import "fmt"
 
 func TestDBConnection(t * testing.T) {
-	//fmt.Println("testing")
-	// ConnectToDB("root", "123456", "172.16.253.216", "3306", "PillarsFlow")
-	//db := ConnectToDB("root", "123456", "172.16.253.216", "3306", "PillarsFlow")
-	db := ConnectToDB()
-	//stmtOut, err := db.Prepare()
-	// if err := nil {
-	// 	panic(err.Error())
-	// }
-	
-	rows, err := db.Query("SELECT 1")
+	rows, err := DBConn.Query("SELECT 1")
 	for rows.Next() {
 		var result int
 		err = rows.Scan(&result)

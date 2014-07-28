@@ -5,16 +5,16 @@ type User struct{
 	Password string
 }
 type Error struct {
-	errorCode string
-	errorMessage string
+	ErrorCode string
+	ErrorMessage string
 }
 type OutMessage struct {
-	error Error
-	result string
+	Error Error
+	Result string
 }
 type InMessage struct {
 	Command string
-	Parameter interface{}
+	Parameter string
 }
 
 type LoginInMessage struct {

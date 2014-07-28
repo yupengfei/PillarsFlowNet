@@ -3,14 +3,22 @@ package storage
 import (
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
-	// "reflect"
-	// "fmt"
+	"PillarsFlowNet/pillarsLog"
 	"PillarsFlowNet/utility"
 )
-var db * sql.DB
-var err error
+//begin with capitial word so it can be accessed by outer
+var DBConn * sql.DB
+
+func init() {
+	DBConn = ConnectToDB()
+}
 func ConnectToDB() * sql.DB {
-	propertyMap := utility.ReadProperty("../DB.properties")
+	//connection already exist
+	if DBConn != nil {
+		return DBConn
+	}
+	//connection not exist
+	propertyMap := utility.ReadProperty("./DB.properties")
 	var userName, password, host, port, database string
 	userName =  propertyMap["DBUserName"]
 	password = propertyMap["DBPassword"]
@@ -18,20 +26,13 @@ func ConnectToDB() * sql.DB {
 	port = propertyMap["DBPort"]
 	database = propertyMap["DBDatabase"]
 
-	if db != nil {
-		//fmt.Println("db connection has enstablished")
-		return db
-	}
 	sqlString := userName + ":" + password + "@tcp(" + host + ":" + port + ")/" + database
-	//fmt.Println(sqlString)
-	db, err = sql.Open("mysql", sqlString)
-	//fmt.Println(reflect.TypeOf(db))
-	//fmt.Println(reflect.TypeOf(err))
+	DBConn, err := sql.Open("mysql", sqlString)
 	if err != nil {
-		panic(err.Error())
+		pillarsLog.Logger.Panic("can not connect to mysql server")
 	}
-	return db
+	return DBConn
 }
 func CloseDBConnection() {
-	defer db.Close()
+	defer DBConn.Close()
 }

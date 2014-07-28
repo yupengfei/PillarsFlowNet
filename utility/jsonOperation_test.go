@@ -1,10 +1,10 @@
 package utility
 
 import "testing"
-// import "fmt"
 import "os"
 import "io/ioutil"
-// import "unsafe"
+import "PillarsFlowNet/log"
+
 
 func TestParseInMessage(t * testing.T) {
 	file, err := os.Open("login.json")
@@ -16,39 +16,27 @@ func TestParseInMessage(t * testing.T) {
 	if error != nil {
 		panic(error.Error())
 	}
-	//fmt.Print(data)
-	//ParserInMessage(data)
-	command, err := ParseInMessage(&data)
+
+	command, parameter, err := ParseInMessage(data)
 	if err != nil {
-		panic(err.Error())
+		log.Logger.Panic(err.Error())
 	}
-	//fmt.Print(command)
+
 	if *command != "login" {
 		t.Error("parse wrong")
+	} else {
+		
+		user, error := ParseLoginInMessage(parameter)
+		if error != nil {
+			t.Error("parse login message wrong")
+		}
+		if (*user).UserName != "yupengfei" {
+			t.Error("username wrong")
+		}
+		if (*user).Password != "123456" {
+			t.Error("password wrong")
+		}
 	}
-
-	// fmt.Print(parameter)
 }
 
-func TestObjectToJson(t * testing.T) {
-	file, err := os.Open("login.json")
-	if err != nil {
-		panic(err.Error())
-	}
-	defer file.Close()
-	data, error := ioutil.ReadAll(file)
-	if error != nil {
-		panic(error.Error())
-	}
-
-	User, err := ParseLoginInMessage(&data)
-	if err != nil {
-		panic(err.Error())
-	}
-	LoginMessageToJson(User)
-	//fmt.Println(string(*bytes))
-
-}
-
-// func TestParse
 

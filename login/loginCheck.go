@@ -3,20 +3,24 @@ package login
 import "database/sql"
 import "PillarsFlowNet/utility"
 
-func CheckExist(userName * string, password * string, db * sql.DB) bool {
-	stmt, err := db.Prepare("SELECT * FROM user WHERE user_name=? AND password=?")
+func QueryUserCode(userName * string, password * string, db * sql.DB) * string {
+	stmt, err := db.Prepare("SELECT user_code FROM user WHERE user_name=? AND password=?")
 	if err != nil {
 		panic(err.Error())
 	}
-	passwordMd5 := utility.Md5sum(*password)
+	defer stmt.Close()
+	passwordMd5 := utility.Md5sum(password)
 	result, err := stmt.Query(userName, passwordMd5)
 	if err != nil {
 		panic(err.Error())
 	}
+	defer result.Close()
+	var user_code string
+
 	if result.Next() {
-		return true
-	} else {
-		return false
-	}
+		result.Scan(&user_code)
+		
+	} 
+	return &user_code
 }
 
