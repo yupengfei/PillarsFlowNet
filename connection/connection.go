@@ -38,7 +38,7 @@ var upgrader = websocket.Upgrader{
 type connection struct {
 	ws * websocket.Conn
 	send chan []byte
-	userCode * string
+	userName * string
 }
 
 // write writes a message with the given message type and message to client.
@@ -88,35 +88,47 @@ func (c * connection) readPump() {
 		if err != nil {
 			break
 		}
-
-		fmt.Println(string(message))
 		command, parameter, error := utility.ParseInMessage(message)
-		fmt.Println(*command)
-		fmt.Println(*parameter)
 		if error != nil {
 			pillarsLog.Logger.Println("parse in message error")
 			pillarsLog.Logger.Println(error.Error())
 		}
 		//if userCode is nil, login first
-		if c.userCode == nil {
+		if c.userName == nil {
 			if *command != "login" {
-				fmt.Println("2")
 				return
 			} else {
-				fmt.Println("4")
 				user, error := utility.ParseLoginInMessage(parameter)
-				fmt.Println((*user).UserName)
 				if error != nil {
 					pillarsLog.Logger.Println("parse login message error")
 				}
-				userCode := login.QueryUserCode(&((*user).UserName), &((*user).Password), storage.DBConn)
-				if *userCode != "" {
-					fmt.Println("3")
-					c.userCode = userCode
-					Hub.register <- c
-				} else {
-					fmt.Println("5")
+				validLogin := login.CheckUserNameAndPassword(&((*user).UserName), &((*user).Password))
+				var sysError = utility.Error {
+						ErrorCode: 0,
+						ErrorMessage: "",
 				}
+				var loginMessage utility.LoginInMessage
+				if validLogin {
+					c.userName = &((*user).UserName)
+					Hub.register <- c
+					
+					loginMessage = utility.LoginInMessage {
+						Auth: "success",
+						AuthMessage : "",
+					}
+				} else {
+					loginMessage = utility.LoginInMessage {
+						Auth: "failed",
+						AuthMessage : "userName or Password wrong",
+					}
+				}
+				loginStr := string(utility.LoginMessageToJson(loginMessage))					
+				var out = utility.OutMessage {
+						Error: sysError,
+						Command: "login",
+						Result: loginStr,
+					}
+				c.send <- utility.LoginMessageToJson(out)
 
 			}
 		} else {
@@ -139,7 +151,7 @@ func ServeWs(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 		return
 	}
-	c := &connection{send: make(chan []byte), ws: ws, userCode: nil}
+	c := &connection{send: make(chan []byte), ws: ws, userName: nil}
 	go c.writePump()
 	c.readPump()
 }

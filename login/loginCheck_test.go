@@ -2,16 +2,14 @@ package login
 
 import (
 	"testing"
-	"PillarsFlowNet/storage"
 	_ "github.com/go-sql-driver/mysql"
+	"PillarsFlowNet/storage"
 	// "fmt"
 )
 
-func TestCheckExist(t * testing.T) {
-	// db := storage.ConnectToDB()
+func TestQueryUserCode(t * testing.T) {
 	userName := "er.wang"
-	password := "123456"
-	user_code := QueryUserCode(&userName, &password, storage.DBConn)
+	user_code := QueryUserCode(&userName)
 	// if !isExist {
 	// 	t.Error("UserName or password wrong")
 	// }
@@ -20,9 +18,10 @@ func TestCheckExist(t * testing.T) {
 	}
 	// fmt.Println(*user_code)
 	userName = userName + "1"
-	user_code = QueryUserCode(&userName, &password, storage.DBConn)
+	user_code = QueryUserCode(&userName)
 	if *user_code != "" {
 		t.Error("UserName or password wrong")
 	}
 	storage.CloseDBConnection()
 }
+

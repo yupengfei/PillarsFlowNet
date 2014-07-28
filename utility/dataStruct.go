@@ -5,19 +5,22 @@ type User struct{
 	Password string
 }
 type Error struct {
-	ErrorCode string
+	ErrorCode int
 	ErrorMessage string
 }
 type OutMessage struct {
 	Error Error
+	Command string
 	Result string
 }
+
 type InMessage struct {
 	Command string
 	Parameter string
 }
 
+
 type LoginInMessage struct {
-	Command string
-	Parameter User
+	Auth string
+	AuthMessage string
 }

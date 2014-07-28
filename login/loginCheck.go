@@ -1,16 +1,17 @@
 package login
 
-import "database/sql"
-import "PillarsFlowNet/utility"
+import (
+	"PillarsFlowNet/utility"
+	"PillarsFlowNet/storage"
+)
 
-func QueryUserCode(userName * string, password * string, db * sql.DB) * string {
-	stmt, err := db.Prepare("SELECT user_code FROM user WHERE user_name=? AND password=?")
+func QueryUserCode(userName * string) * string {
+	stmt, err := storage.DBConn.Prepare("SELECT user_code FROM user WHERE user_name=?")
 	if err != nil {
 		panic(err.Error())
 	}
 	defer stmt.Close()
-	passwordMd5 := utility.Md5sum(password)
-	result, err := stmt.Query(userName, passwordMd5)
+	result, err := stmt.Query(userName)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -22,5 +23,25 @@ func QueryUserCode(userName * string, password * string, db * sql.DB) * string {
 		
 	} 
 	return &user_code
+}
+
+func CheckUserNameAndPassword(userName * string, password * string) bool {
+	stmt, err := storage.DBConn.Prepare("SELECT user_code FROM user WHERE user_name=? AND password=?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	passwordMd5 := utility.Md5sum(password)
+	result, err := stmt.Query(userName, passwordMd5)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+
+	if result.Next() {
+		return true
+		
+	} 
+	return false
 }
 

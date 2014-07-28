@@ -30,12 +30,15 @@ func (h *hub) Run() {
 	for {
 		select {
 		case c := <- h.register:
-			fmt.Println(*(c.userCode))
-			h.connections[*(c.userCode)] = c
+			fmt.Println(*(c.userName))
+			h.connections[*(c.userName)] = c
 		case c := <- h.unregister:
-			if _, ok := h.connections[*(c.userCode)]; ok {
-				close(c.send)
-				delete(h.connections, *(c.userCode))			
+			close(c.send)
+			//if x.userName is not nil, then h.connections contains the conresponding connection
+			if c.userName != nil {
+				if _, ok := h.connections[*(c.userName)]; ok {				
+					delete(h.connections, *(c.userName))			
+				}
 			}
 		case m := <- h.chart:
 			pillarsLog.Logger.Println(m)
