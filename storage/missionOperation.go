@@ -66,8 +66,8 @@ func QueryMissionByMissionCode(missionCode * string) * utility.Mission {
 	return &mission
 }
 
-func QueryAllProject() [] utility.Mission {
-	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM project")
+func QueryMissionsByProjectCode(project_code * string) [] utility.Mission {
+	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM project where project_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -93,3 +93,4 @@ func QueryAllProject() [] utility.Mission {
 	}
 	return missionSlice
 }
+
