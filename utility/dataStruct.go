@@ -74,7 +74,8 @@ type Mission struct {
 }
 
 
-type WorkFLow struct {
+type Dependency struct {
+    ProjectCode string
     StartMissionCode string
     EndMissionCode string
     DependencyType string
