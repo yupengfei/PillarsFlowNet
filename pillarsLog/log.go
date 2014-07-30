@@ -10,7 +10,7 @@ var Logger * log.Logger
 var outFile * os.File
 
 func init() {
-	outFile, err := os.OpenFile(logFileName, os.O_RDWR|os.O_CREATE, 0777)
+	outFile, err := os.OpenFile(logFileName, os.O_RDWR, 0777)
 
 	if err != nil {
 		panic(err.Error())

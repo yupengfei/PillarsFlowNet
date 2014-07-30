@@ -9,8 +9,8 @@ func ParseInMessage(message [] byte) (* string, * string, error) {
 	return &result.Command, &result.Parameter, err
 }
 
-func ParseLoginInMessage(message * string) (* User, error)  {
-	var result User
+func ParseLoginInMessage(message * string) (* UserLogin, error)  {
+	var result UserLogin
 	err := json.Unmarshal([]byte(*message), &result)
 	return &result, err
 }

@@ -1,0 +1,3 @@
+2014/07/30 16:01:46 /home/developer/go/src/PillarsFlowNet/storage/userOperation.go:59: sql: Scan error on column index 1: destination not a pointer
+014/07/30 15:54:50 /home/developer/go/src/PillarsFlowNet/storage/userOperation.go:60: sql: expected 12 destination arguments in Scan, not 10
+ALUES(?, ?, ?, ?, ?, ?, ?' at line 1
