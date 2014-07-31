@@ -38,6 +38,7 @@ type connection struct {
 	ws * websocket.Conn
 	send chan []byte
 	userName * string
+	// group * string
 }
 
 // write writes a message with the given message type and message to client.
