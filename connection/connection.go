@@ -102,7 +102,7 @@ func (c * connection) readPump() {
 				if error != nil {
 					pillarsLog.Logger.Println("parse login message error")
 				}
-				validLogin := login.CheckUserNameAndPassword(&((*user).UserName), &((*user).Password))
+				validLogin := storage.CheckUserNameAndPassword(&((*user).UserName), &((*user).Password))
 				var sysError = utility.Error {
 						ErrorCode: 0,
 						ErrorMessage: "",

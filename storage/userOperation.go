@@ -65,25 +65,25 @@ func QueryUserByUserName(userName * string) * utility.User{
 
 }
 
-func QueryUserCode(userName * string) * string {
-	stmt, err := DBConn.Prepare("SELECT user_code FROM user WHERE user_name=?")
-	if err != nil {
-		panic(err.Error())
-	}
-	defer stmt.Close()
-	result, err := stmt.Query(userName)
-	if err != nil {
-		panic(err.Error())
-	}
-	defer result.Close()
-	var user_code string
+// func QueryUserCode(userName * string) * string {
+// 	stmt, err := DBConn.Prepare("SELECT user_code FROM user WHERE user_name=?")
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	defer stmt.Close()
+// 	result, err := stmt.Query(userName)
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	defer result.Close()
+// 	var user_code string
 
-	if result.Next() {
-		result.Scan(&user_code)
+// 	if result.Next() {
+// 		result.Scan(&user_code)
 		
-	} 
-	return &user_code
-}
+// 	} 
+// 	return &user_code
+// }
 
 func CheckUserNameAndPassword(userName * string, password * string) bool {
 	stmt, err := DBConn.Prepare("SELECT user_code FROM user WHERE user_name=? AND password=?")

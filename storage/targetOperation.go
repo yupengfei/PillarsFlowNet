@@ -37,29 +37,29 @@ func InsertIntoTarget(target * utility.Target) bool {
 	return true
 }
 
-func QueryTargetsByMissionCode(missionCode * string) []] utility.Target{
+// func QueryTargetsByMissionCode(missionCode * string) [] utility.Target{
 	
 
-	stmt, err := DBConn.Prepare("SELECT target_code, mission_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM target WHERE mission_code = ")
-	if err != nil {
-		panic(err.Error())
-	}
-	defer stmt.Close()
-	result, err := stmt.Query(missionCode)
-	if err != nil {
-		panic(err.Error())
-	}
-	defer result.Close()
-	var targetSlice [] utility.Target
-	if result.Next() {
-		var target utility.Target
-		err = result.Scan(&(target.TargetCode), &(target.MissionCode), &(target.VersionTag), &(target.StoragePosition),
-		&(target.Picture), &(target.InsertDatetime), &(target.UpdateDatetime))
-		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
-		}
-		targetSlice := append(targetSlice, target)
-	}
-	return targetSlice
+// 	stmt, err := DBConn.Prepare("SELECT target_code, mission_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM target WHERE mission_code = ")
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	defer stmt.Close()
+// 	result, err := stmt.Query(missionCode)
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	defer result.Close()
+// 	var targetSlice [] utility.Target
+// 	if result.Next() {
+// 		var target utility.Target
+// 		err = result.Scan(&(target.TargetCode), &(target.MissionCode), &(target.VersionTag), &(target.StoragePosition),
+// 		&(target.Picture), &(target.InsertDatetime), &(target.UpdateDatetime))
+// 		if err != nil {
+// 			pillarsLog.Logger.Print(err.Error())
+// 		}
+// 		targetSlice := append(targetSlice, target)
+// 	}
+// 	return targetSlice
 
-}
+// }

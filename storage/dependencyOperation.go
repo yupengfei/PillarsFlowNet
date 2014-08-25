@@ -37,32 +37,32 @@ func InsertIntoDependency(dependency * utility.Dependency) bool {
 	return true
 }
 
-func QueryDependenciesByProjectCode(projectCode * string) []] utility.Dependency{
+// func QueryDependenciesByProjectCode(projectCode * string) [] utility.Dependency{
 	
 
-	stmt, err := DBConn.Prepare("SELECT project_code, start_mission_code, end_mission_code, dependencyType, insert_datetime, update_datetime FROM dependency WHERE project_code = ")
-	if err != nil {
-		panic(err.Error())
-	}
-	defer stmt.Close()
-	result, err := stmt.Query(projectCode)
-	if err != nil {
-		panic(err.Error())
-	}
-	defer result.Close()
-	var dependencySlice [] utility.Dependency
-	if result.Next() {
-		var dependency utility.Dependency
-		err = result.Scan(&(dependency.ProjectCode), &(dependency.StartMissionCode), &(dependency.EndMissionCode),
-		&(dependency.DependencyType), &(dependency.InsertDatetime), &(dependency.UpdateDatetime))
-		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
-		}
-		dependencySlice := append(dependencySlice, dependency)
-	}
-	return dependencySlice
+// 	stmt, err := DBConn.Prepare("SELECT project_code, start_mission_code, end_mission_code, dependencyType, insert_datetime, update_datetime FROM dependency WHERE project_code = ")
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	defer stmt.Close()
+// 	result, err := stmt.Query(projectCode)
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	defer result.Close()
+// 	var dependencySlice [] utility.Dependency
+// 	if result.Next() {
+// 		var dependency utility.Dependency
+// 		err = result.Scan(&(dependency.ProjectCode), &(dependency.StartMissionCode), &(dependency.EndMissionCode),
+// 		&(dependency.DependencyType), &(dependency.InsertDatetime), &(dependency.UpdateDatetime))
+// 		if err != nil {
+// 			pillarsLog.Logger.Print(err.Error())
+// 		}
+// 		dependencySlice := append(dependencySlice, dependency)
+// 	}
+// 	return dependencySlice
 
-}
+// }
 
 func QueryUserCode(userName * string) * string {
 	stmt, err := DBConn.Prepare("SELECT user_code FROM user WHERE user_name=?")
@@ -84,22 +84,22 @@ func QueryUserCode(userName * string) * string {
 	return &user_code
 }
 
-func CheckUserNameAndPassword(userName * string, password * string) bool {
-	stmt, err := DBConn.Prepare("SELECT user_code FROM user WHERE user_name=? AND password=?")
-	if err != nil {
-		panic(err.Error())
-	}
-	defer stmt.Close()
-	passwordMd5 := utility.Md5sum(password)
-	result, err := stmt.Query(userName, passwordMd5)
-	if err != nil {
-		panic(err.Error())
-	}
-	defer result.Close()
+// func CheckUserNameAndPassword(userName * string, password * string) bool {
+// 	stmt, err := DBConn.Prepare("SELECT user_code FROM user WHERE user_name=? AND password=?")
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	defer stmt.Close()
+// 	passwordMd5 := utility.Md5sum(password)
+// 	result, err := stmt.Query(userName, passwordMd5)
+// 	if err != nil {
+// 		panic(err.Error())
+// 	}
+// 	defer result.Close()
 
-	if result.Next() {
-		return true
+// 	if result.Next() {
+// 		return true
 		
-	} 
-	return false
-}
+// 	} 
+// 	return false
+// }
