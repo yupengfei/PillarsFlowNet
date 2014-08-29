@@ -33,6 +33,6 @@ def InsertUser(fileName, connection):
 
 
 if __name__ == '__main__':
-	connection = DBoperation.ConnectDB("172.16.253.216", "3306", "root", 
+	connection = DBoperation.ConnectDB("172.16.246.6", "3306", "root", 
 		"123456", "PillarsFlow")
 	InsertUser("users", connection)

@@ -17,16 +17,16 @@ func ConnectToMgo() * mgo.Session {
 		return Session
 	}
 
-	propertyMap := utility.ReadProperty("./Mgo.properties")
+	propertyMap := utility.ReadProperty("../Mgo.properties")
 
-	var userName, password, host, database string
-	userName =  propertyMap["DBUserName"]
-	password = propertyMap["DBPassword"]
+	var  host, database string
+	// userName =  propertyMap["DBUserName"]
+	// password = propertyMap["DBPassword"]
 	host = propertyMap["DBIP"]
 	//port = propertyMap["DBPort"]
 	database = propertyMap["DBDatabase"]
-	
-	Session, errMgo := mgo.Dial(userName + ":" + password + "@" + host + "/" + database)
+	//userName + ":" + password + "@" + 
+	Session, errMgo := mgo.Dial(host + "/" + database)
 	if errMgo != nil {
 		pillarsLog.Logger.Panic("can not connect to mongo server")
 	}

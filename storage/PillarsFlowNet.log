@@ -1,3 +1,4 @@
-2014/07/30 16:01:46 /home/developer/go/src/PillarsFlowNet/storage/userOperation.go:59: sql: Scan error on column index 1: destination not a pointer
+2014/08/29 10:23:20 /home/developer/go/src/PillarsFlowNet/storage/mgoUtility.go:31: can not connect to mongo server
+ex 1: destination not a pointer
 014/07/30 15:54:50 /home/developer/go/src/PillarsFlowNet/storage/userOperation.go:60: sql: expected 12 destination arguments in Scan, not 10
 ALUES(?, ?, ?, ?, ?, ?, ?' at line 1
