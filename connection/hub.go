@@ -1,8 +1,9 @@
 package connection
 
 import (
+	"PillarsFlowNet/utility"
 	// "github.com/gorilla/websocket"
-	"PillarsFlowNet/pillarsLog"
+	// "PillarsFlowNet/pillarsLog"
 	// "time"
 	"fmt"
 )
@@ -41,7 +42,16 @@ func (h *hub) Run() {
 				}
 			}
 		case m := <- h.chart:
-			pillarsLog.Logger.Println(m)
+			fmt.Println(string(m))
+			chartMessage, chartToPerson, error := utility.ParseChartMessage(m)
+			if (error != nil) {
+				return
+			}
+			fmt.Println(*chartToPerson)
+			connection, ok := Hub.connections[*chartToPerson];
+			if ok {
+				connection.send <- []byte(*chartMessage)
+			}
 			//TODO
 			//tansmit
 			// select {

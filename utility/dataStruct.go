@@ -25,6 +25,11 @@ type LoginInMessage struct {
 	AuthMessage string
 }
 
+type ChartMessage struct {
+    Message string
+    To string
+}
+
 type User struct {
     UserCode string
     UserName string

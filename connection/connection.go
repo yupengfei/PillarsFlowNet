@@ -94,6 +94,8 @@ func (c * connection) readPump() {
 			pillarsLog.Logger.Println(error.Error())
 		}
 		//if userCode is nil, login first
+		fmt.Println(*command)
+		fmt.Println(*parameter)
 		if c.userName == nil {
 			if *command != "login" {
 				return
@@ -131,8 +133,14 @@ func (c * connection) readPump() {
 				c.send <- utility.LoginMessageToJson(out)
 
 			}
-		} else {
-			Hub.chart <- message
+
+		} else {//else do some other command
+			if *command == "chart" {
+				Hub.chart <- []byte(*parameter)
+			} /*else if *command == "getAllProject" {
+				go 
+			}*/
+			
 
 		}
 

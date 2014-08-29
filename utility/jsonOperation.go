@@ -23,3 +23,9 @@ func LoginMessageToJson(object interface{}) []byte {
 	}
 	return message
 }
+
+func ParseChartMessage(message [] byte) (* string, * string, error) {
+	var result ChartMessage
+	err := json.Unmarshal(message, &result)
+	return &result.Message, &result.To, err
+}
