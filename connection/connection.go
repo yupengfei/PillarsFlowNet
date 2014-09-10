@@ -137,9 +137,10 @@ func (c * connection) readPump() {
 		} else {//else do some other command
 			if *command == "chart" {
 				Hub.chart <- []byte(*parameter)
-			} /*else if *command == "getAllProject" {
-				go 
-			}*/
+			} else if *command == "getAllProject" {
+				fmt.Println("todo get getAllProject")
+				Hub.getAllProject <- c
+			}
 			
 
 		}

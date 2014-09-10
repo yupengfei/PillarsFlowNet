@@ -17,6 +17,8 @@ type hub struct {
 	chart chan []byte
 	register chan * connection
 	unregister chan * connection
+	getAllProject chan * connection
+	//addProject chan [] byte
 }
 
 var Hub = hub {
@@ -24,6 +26,7 @@ var Hub = hub {
 	chart: make(chan [] byte),
 	register: make(chan * connection),
 	unregister: make(chan * connection),
+	getAllProject: make(chan * connection),
 }
 
 
@@ -60,6 +63,10 @@ func (h *hub) Run() {
 			// 	close(c.send)
 			// 	delete(h.connections, c)
 			// }
+			case c := <- h.getAllProject:
+				c.send <- []byte("TODO search all project in mysql")
 		}
+
+
 	}
 }
