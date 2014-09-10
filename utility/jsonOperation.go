@@ -16,12 +16,21 @@ func ParseLoginInMessage(message * string) (* UserLogin, error)  {
 }
 
 
-func LoginMessageToJson(object interface{}) []byte {
+func ObjectToJson(object interface{}) []byte {
 	message, err := json.Marshal(object)
 	if err != nil {
 		panic(err.Error())
 	}
 	return message
+}
+
+func ObjectToJsonString(object interface{}) * string {
+	message, err := json.Marshal(object)
+	if err != nil {
+		panic(err.Error())
+	}
+	messageString := string(message)
+	return &messageString
 }
 
 func ParseChartMessage(message [] byte) (* string, * string, error) {

@@ -124,13 +124,13 @@ func (c * connection) readPump() {
 						AuthMessage : "userName or Password wrong",
 					}
 				}
-				loginStr := string(utility.LoginMessageToJson(loginMessage))					
+				loginStr := string(utility.ObjectToJson(loginMessage))					
 				var out = utility.OutMessage {
 						Error: sysError,
 						Command: "login",
 						Result: loginStr,
 					}
-				c.send <- utility.LoginMessageToJson(out)
+				c.send <- utility.ObjectToJson(out)
 
 			}
 
@@ -138,7 +138,7 @@ func (c * connection) readPump() {
 			if *command == "chart" {
 				Hub.chart <- []byte(*parameter)
 			} else if *command == "getAllProject" {
-				fmt.Println("todo get getAllProject")
+				//fmt.Println("todo get getAllProject")
 				Hub.getAllProject <- c
 			}
 			

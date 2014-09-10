@@ -3,9 +3,10 @@ package connection
 import (
 	"PillarsFlowNet/utility"
 	// "github.com/gorilla/websocket"
-	// "PillarsFlowNet/pillarsLog"
+	"PillarsFlowNet/project"
 	// "time"
 	"fmt"
+
 )
 
 //hub handle all kind of request
@@ -64,7 +65,8 @@ func (h *hub) Run() {
 			// 	delete(h.connections, c)
 			// }
 			case c := <- h.getAllProject:
-				c.send <- []byte("TODO search all project in mysql")
+				// c.send <- []byte("TODO search all project in mysql")3
+				c.send <- project.GetAllProject()
 		}
 
 
