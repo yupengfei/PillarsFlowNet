@@ -19,6 +19,8 @@ type hub struct {
 	register chan * connection
 	unregister chan * connection
 	getAllProject chan * connection
+	project chan * string
+	mission chan * string
 	//addProject chan [] byte
 }
 
@@ -56,16 +58,7 @@ func (h *hub) Run() {
 			if ok {
 				connection.send <- []byte(*chartMessage)
 			}
-			//TODO
-			//tansmit
-			// select {
-			// case c.send <- m:
-			// default:
-			// 	close(c.send)
-			// 	delete(h.connections, c)
-			// }
 			case c := <- h.getAllProject:
-				// c.send <- []byte("TODO search all project in mysql")3
 				c.send <- project.GetAllProject()
 		}
 

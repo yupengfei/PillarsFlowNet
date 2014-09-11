@@ -3,6 +3,7 @@ package project
 import (
 	"PillarsFlowNet/storage"
 	"PillarsFlowNet/utility"
+	"fmt"
 )
 
 func GetAllProject() [] byte {
@@ -18,5 +19,32 @@ func GetAllProject() [] byte {
 					}
 	var result = utility.ObjectToJson(out)
 	return result
+}
 
+//result, userName, error 
+func AddProject(parameter * string) (* string, * string, error) {
+	var result string
+	var userName string
+	var err error
+
+	fmt.Print(*parameter)
+
+	result = "success"
+	userName = "er.wang"
+
+	return &result, &userName, err
+}
+
+//result, userName, error 
+func ModifyProject(parameter * string) (* string, * string, error) {
+	var result string
+	var userName string
+	var err error
+
+	fmt.Print(*parameter)
+
+	result = "success"
+	userName = "er.wang"
+
+	return &result, &userName, err
 }

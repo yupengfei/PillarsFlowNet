@@ -1,5 +1,5 @@
-2014/09/10 14:33:55 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
-2014/09/10 14:33:55 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
+2014/09/11 09:41:24 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
+2014/09/11 09:41:24 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
 2014/09/10 14:36:46 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
 2014/09/10 14:36:46 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
 2014/09/10 14:36:59 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
@@ -42,3 +42,7 @@
 2014/09/10 15:28:30 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
 2014/09/10 15:59:18 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
 2014/09/10 15:59:18 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
+2014/09/10 16:37:31 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
+2014/09/10 16:37:31 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
+2014/09/10 16:38:32 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
+2014/09/10 16:38:32 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string

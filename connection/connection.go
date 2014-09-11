@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"fmt"
 	"PillarsFlowNet/utility"
-	"PillarsFlowNet/storage"
+	"PillarsFlowNet/user"
 	"PillarsFlowNet/pillarsLog"
 )
 
@@ -38,7 +38,6 @@ type connection struct {
 	ws * websocket.Conn
 	send chan []byte
 	userName * string
-	// group * string
 }
 
 // write writes a message with the given message type and message to client.
@@ -98,40 +97,18 @@ func (c * connection) readPump() {
 		fmt.Println(*parameter)
 		if c.userName == nil {
 			if *command != "login" {
-				return
+				continue
 			} else {
-				user, error := utility.ParseLoginInMessage(parameter)
-				if error != nil {
-					pillarsLog.Logger.Println("parse login message error")
-				}
-				validLogin := storage.CheckUserNameAndPassword(&((*user).UserName), &((*user).Password))
-				var sysError = utility.Error {
-						ErrorCode: 0,
-						ErrorMessage: "",
-				}
-				var loginMessage utility.LoginInMessage
-				if validLogin {
-					c.userName = &((*user).UserName)
-					Hub.register <- c
-					
-					loginMessage = utility.LoginInMessage {
-						Auth: "success",
-						AuthMessage : "",
-					}
-				} else {
-					loginMessage = utility.LoginInMessage {
-						Auth: "failed",
-						AuthMessage : "userName or Password wrong",
-					}
-				}
-				loginStr := string(utility.ObjectToJson(loginMessage))					
-				var out = utility.OutMessage {
-						Error: sysError,
-						Command: "login",
-						Result: loginStr,
-					}
-				c.send <- utility.ObjectToJson(out)
+				result, userName, err := user.ValidateUser(parameter)
+				fmt.Println(*userName)
+				fmt.Println(*result)
 
+				if err == nil {
+					fmt.Println("*result")
+					c.userName = userName
+					Hub.register <- c
+					c.send <- []byte(*result)
+				}
 			}
 
 		} else {//else do some other command
@@ -141,11 +118,7 @@ func (c * connection) readPump() {
 				//fmt.Println("todo get getAllProject")
 				Hub.getAllProject <- c
 			}
-			
-
 		}
-
-		//h.broadcast <- message
 	}
 }
 
