@@ -4,6 +4,7 @@ import "testing"
 // import "fmt"
 
 func TestDBConnection(t * testing.T) {
+	ConnectToDB()
 	rows, err := DBConn.Query("SELECT 1")
 	for rows.Next() {
 		var result int
