@@ -98,3 +98,38 @@ type Target struct {
     InsertDatetime string
     UpdateDatetime string
 }
+
+//This is used for add project
+type AddProjectStruct struct {
+    UserName string
+    ProjectName string
+    ProjectDetail string
+    PlanBeginDatetime string
+    PlanEndDatetime string
+    RealBeginDatetime string
+    RealEndDatetime string
+    PersonInCharge string
+    Status string
+    Picture string
+}
+
+//when modify projects, replace the old one with a new instance without change the project code
+type ModifyProjectStruct struct {
+    UserName string
+    ProjectCode string
+    ProjectName string
+    ProjectDetail string
+    PlanBeginDatetime string
+    PlanEndDatetime string
+    RealBeginDatetime string
+    RealEndDatetime string
+    PersonInCharge string
+    Status string
+    Picture string
+}
+
+//the userName and projectCode are the only things you need to delete a project
+type DeleteProjectStruct struct {
+    UserName string
+    ProjectCode string
+}

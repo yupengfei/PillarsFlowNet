@@ -22,7 +22,7 @@ func TestBase64Bytes(t * testing.T) {
 }
 
 func TestBase64Jpg(t * testing.T) {
-	file, err := os.Open("encode_test.jpg")
+	file, err := os.Open("book-icon.png")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -30,6 +30,7 @@ func TestBase64Jpg(t * testing.T) {
 	picture, err := ioutil.ReadAll(file)
 
 	debyte := Base64Encode(picture)
+	fmt.Println(string(debyte))
 
 	enbyte, err := Base64Decode(debyte)
 	if err != nil {
@@ -39,7 +40,7 @@ func TestBase64Jpg(t * testing.T) {
 		t.Error("picture encoding or decoding wrong")
 	}
 	// file, err := os.Open("encode_test_save.jpg")
-	ioutil.WriteFile("encode_test_save.jpg", picture, 0644)
+	ioutil.WriteFile("encode_test_save.png", picture, 0644)
 
 
 }
