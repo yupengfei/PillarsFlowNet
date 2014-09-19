@@ -36,7 +36,7 @@ func InsertIntoTarget(target * utility.Target) (bool, error) {
 	return true, err
 }
 
-func DeleteTargetByTargetCode(targetCode * string, error) {
+func DeleteTargetByTargetCode(targetCode * string) (bool, error){
 	tx, err := DBConn.Begin()
 	stmt, err := tx.Prepare("DELETE FROM target WHERE target_code = ?")
 	defer stmt.Close()
@@ -80,7 +80,7 @@ func QueryTargetsByMissionCode(missionCode * string) ([] utility.Target, error) 
 		if err != nil {
 			pillarsLog.Logger.Print(err.Error())
 		}
-		targetSlice := append(targetSlice, target)
+		targetSlice = append(targetSlice, target)
 	}
 	return targetSlice, err
 }
