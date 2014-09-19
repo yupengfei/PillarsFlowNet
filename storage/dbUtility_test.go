@@ -6,6 +6,9 @@ import "testing"
 func TestDBConnection(t * testing.T) {
 	ConnectToDB()
 	rows, err := DBConn.Query("SELECT 1")
+	// if err != nil {
+	// 	panic(err.Error())
+	// }
 	for rows.Next() {
 		var result int
 		err = rows.Scan(&result)

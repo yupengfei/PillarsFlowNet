@@ -49,13 +49,13 @@ func TestObjectToJson(t * testing.T) {
 		Auth: "success",
 		AuthMessage : "",
 	}
-	loginStr := string(LoginMessageToJson(login))
+	loginStr := ObjectToJsonString(login)
 	var out = OutMessage {
 		Error: error,
 		Command: "login",
-		Result: loginStr,
+		Result: *loginStr,
 	}
-	fmt.Println(string(LoginMessageToJson(out)))
+	fmt.Println(ObjectToJsonString(out))
 }
 
 

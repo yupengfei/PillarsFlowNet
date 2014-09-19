@@ -10,12 +10,12 @@ import (
 
 
 //insert is a Transaction
-func InsertIntoProject(project * utility.Project) bool {
+//writen in hurry, there are two return, becareful when modify
+func InsertIntoProject(project * utility.Project) (bool, error) {
 	tx, err := DBConn.Begin()
 	stmt, err := tx.Prepare("INSERT INTO project(project_code, project_name, project_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
-		// fmt.Print(err.Error())
-		return false
+		panic(err.Error())
 	}
 	defer stmt.Close()
 	_, err = stmt.Exec(project.ProjectCode, project.ProjectName, project.ProjectDetail,
@@ -23,8 +23,7 @@ func InsertIntoProject(project * utility.Project) bool {
 		project.RealEndDatetime, project.PersonInCharge,
 		project.Status, project.Picture)
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
-		return false
+		panic(err.Error())
 	}
 	//insert return Result, it does not have interface Close
 	//query return Rows ,which must be closed
@@ -35,12 +34,35 @@ func InsertIntoProject(project * utility.Project) bool {
 		if err != nil {
 			pillarsLog.Logger.Panic(err.Error())
 		}
-		return false
+		return false, err
 	}
-	return true
+	return true, err
 }
 
-func QueryProjectByProjectCode(projectCode * string) * utility.Project {
+func DeleteProjectByProjectCode(projectCode * string) (bool, error) {
+	tx, err := DBConn.Begin()
+	stmt, err := tx.Prepare("DELETE FROM project WHERE project_code = ?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(projectCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	err = tx.Commit()
+	if err != nil {
+		pillarsLog.Logger.Print(err.Error())
+		err = tx.Rollback()
+		if err != nil {
+			pillarsLog.Logger.Panic(err.Error())
+		}
+		return false, err
+	}
+	return true, err
+}
+
+func QueryProjectByProjectCode(projectCode * string) (* utility.Project, error) {
 	stmt, err := DBConn.Prepare("SELECT project_code, project_name, project_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM project WHERE project_code=?")
 	if err != nil {
 		panic(err.Error())
@@ -60,10 +82,10 @@ func QueryProjectByProjectCode(projectCode * string) * utility.Project {
 			pillarsLog.Logger.Print(err.Error())
 		}
 	}
-	return &project
+	return &project, err
 }
 
-func QueryAllProject() [] utility.Project {
+func QueryAllProject() ([] utility.Project, error) {
 	stmt, err := DBConn.Prepare("SELECT project_code, project_name, project_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM project")
 	if err != nil {
 		panic(err.Error())
@@ -86,6 +108,6 @@ func QueryAllProject() [] utility.Project {
 		}
 		projectSlice = append(projectSlice, project)
 	}
-	return projectSlice
+	return projectSlice, err
 }
 

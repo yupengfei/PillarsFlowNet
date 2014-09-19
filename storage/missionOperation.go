@@ -3,46 +3,50 @@ package storage
 import (
 	"PillarsFlowNet/utility"
 	"PillarsFlowNet/pillarsLog"
-	// "fmt"
+	"fmt"
 )
 //we should use persistence layer instead, but the logic id not so confusing
 //we are in hurry 
 
 
 //insert is a Transaction
-func InsertIntoMission(mission * utility.Mission) bool {
+func InsertIntoMission(mission * utility.Mission) (bool, error) {
 	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("INSERT INTO mission(mission_code, mission_name, project_code, product_type, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := tx.Prepare(`INSERT INTO mission(mission_code, mission_name, project_code, product_type, 
+		mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, 
+		real_begin_datetime, real_end_datetime, person_in_charge, status, 
+		picture, width, height, x_coordinate, y_coordinate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
 	if err != nil {
-		// fmt.Print(err.Error())
-		return false
+		panic(err.Error())
 	}
 	defer stmt.Close()
 	_, err = stmt.Exec(mission.MissionCode, mission.MissionName, mission.ProjectCode,
 		mission.ProductType, mission.MissionType, mission.MissionDetail,
 		mission.PlanBeginDatetime, mission.PlanEndDatetime, mission.RealBeginDatetime, 
 		mission.RealEndDatetime, mission.PersonIncharge,
-		mission.Status, mission.Picture)
+		mission.Status, mission.Picture, mission.Width, mission.Height, mission.XCoordinate, mission.YCoordinate)
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
-		return false
+		panic(err.Error())
 	}
 	//insert return Result, it does not have interface Close
 	//query return Rows ,which must be closed
 	err = tx.Commit()
 	if err != nil {
+		fmt.Println(err.Error())
 		pillarsLog.Logger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
 			pillarsLog.Logger.Panic(err.Error())
 		}
-		return false
+		return false, err
 	}
-	return true
+	return true, err
 }
 
-func QueryMissionByMissionCode(missionCode * string) * utility.Mission {
-	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission WHERE project_code=?")
+
+
+func QueryMissionByMissionCode(missionCode * string) (* utility.Mission, error) {
+	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, width, height, x_coordinate, y_coordinate, insert_datetime, update_datetime FROM mission WHERE mission_code=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -57,17 +61,19 @@ func QueryMissionByMissionCode(missionCode * string) * utility.Mission {
 		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
 		&(mission.ProductType), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
-		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), &(mission.InsertDatetime), 
+		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
+		&(mission.Width), &(mission.Height), &(mission.XCoordinate), &(mission.YCoordinate), 
+		&(mission.InsertDatetime), 
 		&(mission.UpdateDatetime))
 		if err != nil {
 			pillarsLog.Logger.Print(err.Error())
 		}
 	}
-	return &mission
+	return &mission, err
 }
 
-func QueryMissionsByProjectCode(projectCode * string) [] utility.Mission {
-	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM project where project_code = ?")
+func QueryMissionsByProjectCode(projectCode * string) ([] utility.Mission, error) {
+	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, width, height, x_coordinate, y_coordinate, insert_datetime, update_datetime FROM mission where project_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -84,13 +90,15 @@ func QueryMissionsByProjectCode(projectCode * string) [] utility.Mission {
 		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
 		&(mission.ProductType), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
-		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), &(mission.InsertDatetime), 
+		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
+		&(mission.Width), &(mission.Height), &(mission.XCoordinate), &(mission.YCoordinate), 
+		&(mission.InsertDatetime), 
 		&(mission.UpdateDatetime))
 		if err != nil {
 			pillarsLog.Logger.Print(err.Error())
 		}
 		missionSlice = append(missionSlice, mission)
 	}
-	return missionSlice
+	return missionSlice, err
 }
 

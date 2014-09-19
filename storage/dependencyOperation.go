@@ -5,23 +5,20 @@ import (
 	"PillarsFlowNet/pillarsLog"
 	// "fmt"
 )
-//we should use persistence layer instead, but the logic id not so confusing
-//we are in hurry 
 
 
 //insert is a Transaction
-func InsertIntoDependency(dependency * utility.Dependency) bool {
+func InsertIntoDependency(dependency * utility.Dependency) (bool, error) {
+
 	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("INSERT INTO dependency(project_code, start_mission_code, end_mission_code, dependencyType) VALUES(?, ?, ?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO dependency(dependency_code, project_code, start_mission_code, end_mission_code, dependencyType) VALUES(?, ?, ?, ?, ?)")
 	if err != nil {
-		// fmt.Print(err.Error())
-		return false
+		panic(err.Error())
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(dependency.ProjectCode, dependency.StartMissionCode, dependency.EndMissionCode, dependency.DependencyType)
+	_, err = stmt.Exec(dependency.DependencyCode, dependency.ProjectCode, dependency.StartMissionCode, dependency.EndMissionCode, dependency.DependencyType)
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
-		return false
+		panic(err.Error())
 	}
 	//insert return Result, it does not have interface Close
 	//query return Rows ,which must be closed
@@ -32,12 +29,35 @@ func InsertIntoDependency(dependency * utility.Dependency) bool {
 		if err != nil {
 			pillarsLog.Logger.Panic(err.Error())
 		}
-		return false
+		return false, err
 	}
-	return true
+	return true, err
 }
 
-func QueryDependenciesByProjectCode(projectCode * string) [] utility.Dependency{
+func DeleteDependencyByDependencyCode(projectCode * string) (bool, error) {
+	tx, err := DBConn.Begin()
+	stmt, err := tx.Prepare("DELETE FROM dependency WHERE dependency_code = ?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(*projectCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	err = tx.Commit()
+	if err != nil {
+		pillarsLog.Logger.Print(err.Error())
+		err = tx.Rollback()
+		if err != nil {
+			pillarsLog.Logger.Panic(err.Error())
+		}
+		return false, err
+	}
+	return true, err
+}
+
+func QueryDependenciesByProjectCode(projectCode * string) ([] utility.Dependency, error){
 	
 
 	stmt, err := DBConn.Prepare("SELECT project_code, start_mission_code, end_mission_code, dependencyType, insert_datetime, update_datetime FROM dependency WHERE project_code = ?")
@@ -60,7 +80,9 @@ func QueryDependenciesByProjectCode(projectCode * string) [] utility.Dependency{
 		}
 		dependencySlice = append(dependencySlice, dependency)
 	}
-	return dependencySlice
+	return dependencySlice, err
 
 }
+
+
 

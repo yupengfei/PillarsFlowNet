@@ -16,7 +16,7 @@ func ParseLoginInMessage(message * string) (* UserLogin, error)  {
 }
 
 
-func ObjectToJson(object interface{}) []byte {
+func ObjectToJsonByte(object interface{}) []byte {
 	message, err := json.Marshal(object)
 	if err != nil {
 		panic(err.Error())

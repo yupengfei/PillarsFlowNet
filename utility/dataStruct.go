@@ -54,7 +54,7 @@ type Project struct {
     RealBeginDatetime string
     RealEndDatetime string
     PersonInCharge string
-    Status string
+    Status int
     Picture string
     InsertDatetime string
     UpdateDatetime string
@@ -73,14 +73,19 @@ type Mission struct {
     RealBeginDatetime string
     RealEndDatetime string
     PersonIncharge string
-    Status string
+    Status int
     Picture string
+    Width int
+    Height int
+    XCoordinate int
+    YCoordinate int
     InsertDatetime string
     UpdateDatetime string
 }
 
 
 type Dependency struct {
+    DependencyCode string
     ProjectCode string
     StartMissionCode string
     EndMissionCode string
@@ -132,4 +137,59 @@ type ModifyProjectStruct struct {
 type DeleteProjectStruct struct {
     UserName string
     ProjectCode string
+}
+
+//this is used for add Mission
+
+type AddMissionStruct struct {
+    UserName string
+    MissionName string
+    ProjectCode string
+    ProductType string
+    MissionType string
+    MissionDetail string
+    PlanBeginDatetime string
+    PlanEndDatetime string
+    RealBeginDatetime string
+    RealEndDatetime string
+    PersonIncharge string
+    Status string
+    Picture string
+    Width int
+    Height int
+    XCoordinate int
+    YCoordinate int
+}
+
+//this is used for modify Mission
+
+type ModifyMissionStruct struct {
+    UserName string
+    ProjectCode string
+    MissionName string
+    ProductType string
+    MissionType string
+    MissionDetail string
+    PlanBeginDatetime string
+    PlanEndDatetime string
+    RealBeginDatetime string
+    RealEndDatetime string
+    PersonIncharge string
+    Status string
+    Picture string
+    Width int
+    Height int
+    XCoordinate int
+    YCoordinate int
+}
+
+//this is used for delete mission 
+
+type DeleteMissionStruct struct {
+    UserName string
+    ProjectCode string
+}
+
+type ChartMgo struct {
+    
 }
