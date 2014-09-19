@@ -36,7 +36,7 @@ func InsertIntoTarget(target * utility.Target) (bool, error) {
 	return true, err
 }
 
-func DeleteTargetByTargetCode(targetCode * string) {
+func DeleteTargetByTargetCode(targetCode * string, error) {
 	tx, err := DBConn.Begin()
 	stmt, err := tx.Prepare("DELETE FROM target WHERE target_code = ?")
 	defer stmt.Close()
@@ -59,7 +59,7 @@ func DeleteTargetByTargetCode(targetCode * string) {
 	return true, err
 }
 
-func QueryTargetsByMissionCode(missionCode * string) [] utility.Target{
+func QueryTargetsByMissionCode(missionCode * string) ([] utility.Target, error) {
 	
 
 	stmt, err := DBConn.Prepare("SELECT target_code, mission_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM target WHERE mission_code = ")
@@ -82,7 +82,7 @@ func QueryTargetsByMissionCode(missionCode * string) [] utility.Target{
 		}
 		targetSlice := append(targetSlice, target)
 	}
-	return targetSlice
+	return targetSlice, err
 }
 
 
