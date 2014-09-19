@@ -61,7 +61,7 @@ type Project struct {
 }
 
 type Mission struct {
-    MissionId string
+    //MissionId string
     MissionCode string
     MissionName string
     ProjectCode string

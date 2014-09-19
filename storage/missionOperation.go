@@ -43,6 +43,31 @@ func InsertIntoMission(mission * utility.Mission) (bool, error) {
 	return true, err
 }
 
+//todo delete dependencies related to mission
+func DeleteMissionByMissionCode(missionCode * string) (bool, error) {
+	tx, err := DBConn.Begin()
+	stmt, err := tx.Prepare("DELETE FROM mission WHERE mission_code = ?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(missionCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	err = tx.Commit()
+	if err != nil {
+		fmt.Println(err.Error())
+		pillarsLog.Logger.Print(err.Error())
+		err = tx.Rollback()
+		if err != nil {
+			pillarsLog.Logger.Panic(err.Error())
+		}
+		return false, err
+	}
+	return true, err
+}
+
 
 
 func QueryMissionByMissionCode(missionCode * string) (* utility.Mission, error) {
