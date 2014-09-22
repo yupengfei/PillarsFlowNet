@@ -9,7 +9,7 @@ import (
 func TestInsertIntoMission(t * testing.T) {
 	DBConn = ConnectToDB()
 	missionName := string("modify the test")
-	missionCode := "a115313c765a01505acd6a5260c7d1ef"
+	missionCode := "a115313c765a01505acd6a5260c7d0ef"
 
 	//projectName := string("very good project")
 	projectCode := string("d655313c765a01505acd6a5260c7d1ef")
@@ -65,7 +65,7 @@ func TestQueryMissionsByProjectCode(t * testing.T) {
 
 func TestDeleteMissionByMissionCode(t * testing.T) {
 	DBConn = ConnectToDB()
-	missionCode := "a115313c765a01505acd6a5260c7d1ef"
+	missionCode := "a115313c765a01505acd6a5260c7d0ef"
 	result, _ := DeleteMissionByMissionCode(&missionCode)
 	if result == false {
 		t.Error("delete mission failed")

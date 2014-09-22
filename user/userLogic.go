@@ -33,7 +33,7 @@ func ValidateUser(parameter * string) (* string,  * string,  error) {
 			AuthMessage : "userName or Password wrong",
 		}
 	}
-	loginStr := string(utility.ObjectToJson(loginMessage))	
+	loginStr := string(utility.ObjectToJsonByte(loginMessage))	
 
 	var out = utility.OutMessage {
 			Error: sysError,
@@ -41,6 +41,6 @@ func ValidateUser(parameter * string) (* string,  * string,  error) {
 			Result: loginStr,
 		}
 
-	result = string(utility.ObjectToJson(out))
+	result = string(utility.ObjectToJsonByte(out))
 	return &result, &(user.UserName), err
 }

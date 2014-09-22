@@ -43,9 +43,10 @@ func InsertIntoMission(mission * utility.Mission) (bool, error) {
 	return true, err
 }
 
-//todo delete dependencies related to mission
+//delete dependencies and targets related to mission
 func DeleteMissionByMissionCode(missionCode * string) (bool, error) {
 	tx, err := DBConn.Begin()
+	//delete mission
 	stmt, err := tx.Prepare("DELETE FROM mission WHERE mission_code = ?")
 	if err != nil {
 		panic(err.Error())
@@ -55,6 +56,40 @@ func DeleteMissionByMissionCode(missionCode * string) (bool, error) {
 	if err != nil {
 		panic(err.Error())
 	}
+	//delete dependencies 
+	stmtDependencyFrom, err := tx.Prepare("DELETE FROM dependency WHERE start_mission_code = ?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmtDependencyFrom.Close()
+	_, err = stmtDependencyFrom.Exec(missionCode)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	//delete dependencies 
+	stmtDependencyTo, err := tx.Prepare("DELETE FROM dependency WHERE end_mission_code = ?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmtDependencyTo.Close()
+	_, err = stmtDependencyTo.Exec(missionCode)
+	if err != nil {
+		panic(err.Error())
+	}
+
+
+	//delete targets
+	stmtTarget, err := tx.Prepare("DELETE FROM target WHERE mission_code = ?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmtTarget.Close()
+	_, err = stmtTarget.Exec(missionCode)
+	if err != nil {
+		panic(err.Error())
+	}
+
 	err = tx.Commit()
 	if err != nil {
 		fmt.Println(err.Error())

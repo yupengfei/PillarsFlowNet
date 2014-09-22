@@ -10,12 +10,12 @@ import (
 
 
 //insert is a Transaction
-func InsertIntoUser(user * utility.User) bool {
+func InsertIntoUser(user * utility.User) (bool, error) {
 	tx, err := DBConn.Begin()
 	stmt, err := tx.Prepare("INSERT INTO user(user_code, user_name, password, `group`, display_name, position, picture, email, phone) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		// fmt.Print(err.Error())
-		return false
+		panic(err.Error())
 	}
 	defer stmt.Close()
 	_, err = stmt.Exec(user.UserCode, user.UserName, user.Password,
@@ -23,7 +23,7 @@ func InsertIntoUser(user * utility.User) bool {
 		user.Phone)
 	if err != nil {
 		pillarsLog.Logger.Print(err.Error())
-		return false
+		panic(err.Error())
 	}
 	//insert return Result, it does not have interface Close
 	//query return Rows ,which must be closed
@@ -34,12 +34,39 @@ func InsertIntoUser(user * utility.User) bool {
 		if err != nil {
 			pillarsLog.Logger.Panic(err.Error())
 		}
-		return false
+		return false, err
 	}
-	return true
+	return true, err
 }
 
-func QueryUserByUserName(userName * string) * utility.User{
+func DeleteUserByUserName(userName * string) (bool, error) {
+	tx, err := DBConn.Begin()
+
+	stmt, err := tx.Prepare("DELETE FROM user WHERE user_name = ?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(userName)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	err = tx.Commit()
+
+	if err != nil {
+		pillarsLog.Logger.Print(err.Error())
+		err = tx.Rollback()
+		if err != nil {
+			pillarsLog.Logger.Panic(err.Error())
+		}
+		return false, err
+	}
+	return true, err
+}
+
+func QueryUserByUserName(userName * string) (* utility.User, error) {
 	
 
 	stmt, err := DBConn.Prepare("SELECT user_code, user_name, password, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user WHERE user_name=?")
@@ -61,11 +88,11 @@ func QueryUserByUserName(userName * string) * utility.User{
 			pillarsLog.Logger.Print(err.Error())
 		}
 	}
-	return &user
+	return &user, err
 
 }
 
-func QueryUserCode(userName * string) * string {
+func QueryUserCode(userName * string) (* string, error) {
 	stmt, err := DBConn.Prepare("SELECT user_code FROM user WHERE user_name=?")
 	if err != nil {
 		panic(err.Error())
@@ -82,10 +109,10 @@ func QueryUserCode(userName * string) * string {
 		result.Scan(&user_code)
 		
 	} 
-	return &user_code
+	return &user_code, err
 }
 
-func CheckUserNameAndPassword(userName * string, password * string) bool {
+func CheckUserNameAndPassword(userName * string, password * string) (bool, error) {
 	stmt, err := DBConn.Prepare("SELECT user_code FROM user WHERE user_name=? AND password=?")
 	if err != nil {
 		panic(err.Error())
@@ -99,8 +126,9 @@ func CheckUserNameAndPassword(userName * string, password * string) bool {
 	defer result.Close()
 
 	if result.Next() {
-		return true
+		return true, err
 		
 	} 
-	return false
+	return false, err
 }
+

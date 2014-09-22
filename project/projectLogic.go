@@ -11,13 +11,13 @@ func GetAllProject() [] byte {
 						ErrorCode: 0,
 						ErrorMessage: "",
 					}
-	projects := storage.QueryAllProject()
+	projects, _ := storage.QueryAllProject()
 	var out = utility.OutMessage {
 						Error: sysError,
 						Command: "getAllProject",
 						Result: *utility.ObjectToJsonString(projects),
 					}
-	var result = utility.ObjectToJson(out)
+	var result = utility.ObjectToJsonByte(out)
 	return result
 }
 

@@ -12,12 +12,12 @@ import (
 //insert is a Transaction
 func InsertIntoTarget(target * utility.Target) (bool, error) {
 	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("INSERT INTO target(target_code, mission_code, version_tag, storage_position, picture) VALUES(?, ?, ?, ?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO target(target_code, mission_code, project_code, version_tag, storage_position, picture) VALUES(?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		panic(err.Error())
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(target.TargetCode, target.MissionCode, target.VersionTag, target.StoragePosition, target.Picture)
+	_, err = stmt.Exec(target.TargetCode, target.MissionCode, target.ProjectCode, target.VersionTag, target.StoragePosition, target.Picture)
 	if err != nil {
 		pillarsLog.Logger.Print(err.Error())
 		panic(err.Error())
@@ -62,7 +62,7 @@ func DeleteTargetByTargetCode(targetCode * string) (bool, error){
 func QueryTargetsByMissionCode(missionCode * string) ([] utility.Target, error) {
 	
 
-	stmt, err := DBConn.Prepare("SELECT target_code, mission_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM target WHERE mission_code = ")
+	stmt, err := DBConn.Prepare("SELECT target_code, mission_code, project_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM target WHERE mission_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -73,9 +73,9 @@ func QueryTargetsByMissionCode(missionCode * string) ([] utility.Target, error) 
 	}
 	defer result.Close()
 	var targetSlice [] utility.Target
-	if result.Next() {
+	for result.Next() {
 		var target utility.Target
-		err = result.Scan(&(target.TargetCode), &(target.MissionCode), &(target.VersionTag), &(target.StoragePosition),
+		err = result.Scan(&(target.TargetCode), &(target.MissionCode), &(target.ProjectCode), &(target.VersionTag), &(target.StoragePosition),
 		&(target.Picture), &(target.InsertDatetime), &(target.UpdateDatetime))
 		if err != nil {
 			pillarsLog.Logger.Print(err.Error())

@@ -97,6 +97,7 @@ type Dependency struct {
 type Target struct {
     TargetCode string
     MissionCode string
+    ProjectCode string
     VersionTag string
     StoragePosition string
     Picture string
