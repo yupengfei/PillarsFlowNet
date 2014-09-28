@@ -192,5 +192,14 @@ type DeleteMissionStruct struct {
 }
 
 type ChartMgo struct {
-    
+    ChartCode string
+    Message string
+    From string
+    SendTime string
+    To string
+    ReceivedTime string
+    Receipt int
+    IsRead int
+    Deleted int
+    DeletedTime string
 }

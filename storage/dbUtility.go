@@ -34,7 +34,9 @@ func ConnectToDB() * sql.DB {
 	return DBConn
 }
 func CloseDBConnection() {
-
-	DBConn.Close()
-	DBConn = nil
+	if DBConn != nil {
+		DBConn.Close()
+		DBConn = nil
+	}
+	
 }
