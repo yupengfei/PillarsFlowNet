@@ -16,7 +16,7 @@ func ValidateUser(parameter * string) (* string,  * string,  error) {
 		pillarsLog.Logger.Println("parse login message error")
 		return &result, &userName, err
 	}
-	validLogin := storage.CheckUserNameAndPassword(&((*user).UserName), &((*user).Password))
+	validLogin, _ := storage.CheckUserNameAndPassword(&((*user).UserName), &((*user).Password))
 	var sysError = utility.Error {
 			ErrorCode: 0,
 			ErrorMessage: "",

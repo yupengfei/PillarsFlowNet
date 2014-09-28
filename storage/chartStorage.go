@@ -31,7 +31,7 @@ func StoreToChart(fromUserCode * string, sendTime * string, toUserCode * string,
 	return true, err
 }
 
-func MarkAsReadByChartCode(chartCode * string) (bool, error) {
+// func MarkAsReadByChartCode(chartCode * string) (bool, error) {
 	
-}
+// }
 
