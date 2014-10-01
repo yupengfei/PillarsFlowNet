@@ -15,7 +15,7 @@ func InsertIntoMission(mission * utility.Mission) (bool, error) {
 	stmt, err := tx.Prepare(`INSERT INTO mission(mission_code, mission_name, project_code, product_type, 
 		mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, 
 		real_begin_datetime, real_end_datetime, person_in_charge, status, 
-		picture, width, height, x_coordinate, y_coordinate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+		picture) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -24,7 +24,7 @@ func InsertIntoMission(mission * utility.Mission) (bool, error) {
 		mission.ProductType, mission.MissionType, mission.MissionDetail,
 		mission.PlanBeginDatetime, mission.PlanEndDatetime, mission.RealBeginDatetime, 
 		mission.RealEndDatetime, mission.PersonIncharge,
-		mission.Status, mission.Picture, mission.Width, mission.Height, mission.XCoordinate, mission.YCoordinate)
+		mission.Status, mission.Picture)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -78,6 +78,28 @@ func DeleteMissionByMissionCode(missionCode * string) (bool, error) {
 		panic(err.Error())
 	}
 
+	//delete from campaign 
+	stmtCampaignNode, err := tx.Prepare("DELETE FROM campaign WHERE node_code = ?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmtCampaignNode.Close()
+	_, err = stmtCampaignNode.Exec(missionCode)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	//delete from campaign 
+	stmtCampaignCampaignCode, err := tx.Prepare("DELETE FROM campaign WHERE campaign_code = ?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmtCampaignCampaignCode.Close()
+	_, err = stmtCampaignCampaignCode.Exec(missionCode)
+	if err != nil {
+		panic(err.Error())
+	}
+
 
 	//delete targets
 	stmtTarget, err := tx.Prepare("DELETE FROM target WHERE mission_code = ?")
@@ -106,7 +128,7 @@ func DeleteMissionByMissionCode(missionCode * string) (bool, error) {
 
 
 func QueryMissionByMissionCode(missionCode * string) (* utility.Mission, error) {
-	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, width, height, x_coordinate, y_coordinate, insert_datetime, update_datetime FROM mission WHERE mission_code=?")
+	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission WHERE mission_code=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -122,7 +144,6 @@ func QueryMissionByMissionCode(missionCode * string) (* utility.Mission, error) 
 		&(mission.ProductType), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
 		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
-		&(mission.Width), &(mission.Height), &(mission.XCoordinate), &(mission.YCoordinate), 
 		&(mission.InsertDatetime), 
 		&(mission.UpdateDatetime))
 		if err != nil {
@@ -133,7 +154,7 @@ func QueryMissionByMissionCode(missionCode * string) (* utility.Mission, error) 
 }
 
 func QueryMissionsByProjectCode(projectCode * string) ([] utility.Mission, error) {
-	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, width, height, x_coordinate, y_coordinate, insert_datetime, update_datetime FROM mission where project_code = ?")
+	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission where project_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -151,7 +172,6 @@ func QueryMissionsByProjectCode(projectCode * string) ([] utility.Mission, error
 		&(mission.ProductType), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
 		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
-		&(mission.Width), &(mission.Height), &(mission.XCoordinate), &(mission.YCoordinate), 
 		&(mission.InsertDatetime), 
 		&(mission.UpdateDatetime))
 		if err != nil {

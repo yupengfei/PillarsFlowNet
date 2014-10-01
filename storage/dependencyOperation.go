@@ -11,12 +11,12 @@ import (
 func InsertIntoDependency(dependency * utility.Dependency) (bool, error) {
 
 	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("INSERT INTO dependency(dependency_code, project_code, start_mission_code, end_mission_code, dependencyType) VALUES(?, ?, ?, ?, ?)")
+	stmt, err := tx.Prepare("INSERT INTO dependency(dependency_code, campaign_code, project_code, start_mission_code, end_mission_code, dependency_type) VALUES(?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		panic(err.Error())
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(dependency.DependencyCode, dependency.ProjectCode, dependency.StartMissionCode, dependency.EndMissionCode, dependency.DependencyType)
+	_, err = stmt.Exec(dependency.DependencyCode, dependency.CampaignCode, dependency.ProjectCode, dependency.StartMissionCode, dependency.EndMissionCode, dependency.DependencyType)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -60,7 +60,7 @@ func DeleteDependencyByDependencyCode(projectCode * string) (bool, error) {
 func QueryDependenciesByProjectCode(projectCode * string) ([] utility.Dependency, error){
 	
 
-	stmt, err := DBConn.Prepare("SELECT dependency_code, project_code, start_mission_code, end_mission_code, dependencyType, insert_datetime, update_datetime FROM dependency WHERE project_code = ?")
+	stmt, err := DBConn.Prepare("SELECT dependency_code, campaign_code, project_code, start_mission_code, end_mission_code, dependency_type, insert_datetime, update_datetime FROM dependency WHERE project_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -73,7 +73,7 @@ func QueryDependenciesByProjectCode(projectCode * string) ([] utility.Dependency
 	var dependencySlice [] utility.Dependency
 	if result.Next() {
 		var dependency utility.Dependency
-		err = result.Scan(&(dependency.DependencyCode), &(dependency.ProjectCode), &(dependency.StartMissionCode), &(dependency.EndMissionCode),
+		err = result.Scan(&(dependency.DependencyCode), &(dependency.CampaignCode), &(dependency.ProjectCode), &(dependency.StartMissionCode), &(dependency.EndMissionCode),
 		&(dependency.DependencyType), &(dependency.InsertDatetime), &(dependency.UpdateDatetime))
 		if err != nil {
 			pillarsLog.Logger.Print(err.Error())

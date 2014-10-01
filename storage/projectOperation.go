@@ -5,12 +5,7 @@ import (
 	"PillarsFlowNet/pillarsLog"
 	// "fmt"
 )
-//we should use persistence layer instead, but the logic id not so confusing
-//we are in hurry 
 
-
-//insert is a Transaction
-//writen in hurry, there are two return, becareful when modify
 func InsertIntoProject(project * utility.Project) (bool, error) {
 	tx, err := DBConn.Begin()
 	stmt, err := tx.Prepare("INSERT INTO project(project_code, project_name, project_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")

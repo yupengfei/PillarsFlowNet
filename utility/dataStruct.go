@@ -75,6 +75,14 @@ type Mission struct {
     PersonIncharge string
     Status int
     Picture string
+    InsertDatetime string
+    UpdateDatetime string
+}
+
+type Campaign struct {
+    CampaignCode string
+    ProjectCode string
+    NodeCode string
     Width int
     Height int
     XCoordinate int
@@ -86,10 +94,11 @@ type Mission struct {
 
 type Dependency struct {
     DependencyCode string
+    CampaignCode string
     ProjectCode string
     StartMissionCode string
     EndMissionCode string
-    DependencyType string
+    DependencyType int
     InsertDatetime string
     UpdateDatetime string
 }
@@ -156,10 +165,10 @@ type AddMissionStruct struct {
     PersonIncharge string
     Status string
     Picture string
-    Width int
-    Height int
-    XCoordinate int
-    YCoordinate int
+    // Width int
+    // Height int
+    // XCoordinate int
+    // YCoordinate int
 }
 
 //this is used for modify Mission
@@ -178,10 +187,6 @@ type ModifyMissionStruct struct {
     PersonIncharge string
     Status string
     Picture string
-    Width int
-    Height int
-    XCoordinate int
-    YCoordinate int
 }
 
 //this is used for delete mission 
