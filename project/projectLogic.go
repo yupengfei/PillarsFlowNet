@@ -11,7 +11,7 @@ func GetAllProject() [] byte {
 						ErrorCode: 0,
 						ErrorMessage: "",
 					}
-	projects, _ := storage.QueryAllProject()
+	projects, _:= storage.QueryAllProject()
 	var out = utility.OutMessage {
 						Error: sysError,
 						Command: "getAllProject",

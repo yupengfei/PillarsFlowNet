@@ -6,19 +6,20 @@ import (
 	"fmt"
 )
 
-func GetAllMissionsOfProject() (parameter * string) (* string, * string, error) {
+func GetAllMissionsOfProject() (parameter * string) (* string, error) {
 	var sysError = utility.Error {
 						ErrorCode: 0,
 						ErrorMessage: "",
 					}
-	projects := storage.QueryAllProject()
+	var err error
+	projects, err := storage.QueryAllProject()
 	var out = utility.OutMessage {
 						Error: sysError,
 						Command: "getAllProject",
 						Result: *utility.ObjectToJsonString(projects),
 					}
 	var result = utility.ObjectToJson(out)
-	return result
+	return &result, err
 }
 
 // `mission_code` char(32) not null unique,
