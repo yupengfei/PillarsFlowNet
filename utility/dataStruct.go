@@ -53,6 +53,18 @@ type MissionCode struct {
     MissionCode string
 }
 
+type CampaignCode struct {
+    CampaignCode string
+}
+
+type DependencyCode struct {
+    DependencyCode string
+}
+
+type TargetCode struct {
+    TargetCode string
+}
+
 type Project struct {
     ProjectCode string
     ProjectName string

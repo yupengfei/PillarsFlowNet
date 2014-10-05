@@ -64,6 +64,24 @@ func ParseMissionCodeMessage(message * string) (* MissionCode, error) {
 	return &missionCode, err
 }
 
+func ParseCampaignCodeMessage(message * string) (* CampaignCode, error) {
+	var campaignCode CampaignCode
+	err := json.Unmarshal([]byte(*message), &campaignCode)
+	return &campaignCode, err
+}
+
+func ParseDependencyCodeMessage(message * string) (* DependencyCode, error) {
+	var dependencyCode DependencyCode
+	err := json.Unmarshal([]byte(*message), &dependencyCode)
+	return &dependencyCode, err
+}
+
+func ParseTargetCodeMessage(message * string) (* TargetCode, error) {
+	var targetCode TargetCode
+	err := json.Unmarshal([]byte(*message), &targetCode)
+	return &targetCode, err
+}
+
 
 func ObjectToJsonByte(object interface{}) []byte {
 	message, err := json.Marshal(object)

@@ -30,6 +30,31 @@ func InsertIntoCampaign(campaign * utility.Campaign) (bool, error) {
 	return true, err
 }
 
+func ModifyCampaign(campaign * utility.Campaign) (bool, error) {
+	tx, err := DBConn.Begin()
+	stmt, err := tx.Prepare(`UPDATE campaign SET project_code=?, node_code=?, 
+		width=?, height=?, x_coordinate=?, y_coordinate=? WHERE campaign_code=?`)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(campaign.ProjectCode, campaign.NodeCode,
+		campaign.Width, campaign.Height, campaign.XCoordinate, campaign.YCoordinate, campaign.CampaignCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	err = tx.Commit()
+	if err != nil {
+		panic(err.Error())
+		err = tx.Rollback()
+		if err != nil {
+			panic(err.Error())
+		}
+		return false, err
+	}
+	return true, err
+}
+
 
 func DeleteCampaignByCampaignCode(campaignCode * string) (bool, error) {
 	tx, err := DBConn.Begin()

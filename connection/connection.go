@@ -145,6 +145,8 @@ func (c * connection) readPump() {
 				Hub.getAllDependency <- &userCodeAndParameter
 			} else if *command == "addDependency" {
 				Hub.addDependency <- &userCodeAndParameter
+			} else if *command == "modifyDependency" {
+				Hub.modifyDependency <- &userCodeAndParameter
 			} else if *command == "deleteDependency" {
 				Hub.deleteDependency <- &userCodeAndParameter
 			} else if *command == "addTarget" {
@@ -153,12 +155,14 @@ func (c * connection) readPump() {
 				Hub.modifyTarget <- &userCodeAndParameter
 			} else if *command == "deleteTarget" {
 				Hub.deleteTarget <- &userCodeAndParameter
-			} else if *command == "searchTargetByMissionCode" {
-				Hub.searchTargetByMissionCode <- &userCodeAndParameter
+			} else if *command == "queryTargetByMissionCode" {
+				Hub.queryTargetByMissionCode <- &userCodeAndParameter
 			} 
 		}
 	}
 }
+
+
 
 // serverWs handles webocket requests from the peer.
 func ServeWs(w http.ResponseWriter, r *http.Request) {

@@ -62,13 +62,15 @@ func GetAllCompaign(userCodeAndParameter * string) ([] byte, *string) {
 					}
 	var out = utility.OutMessage {
 						Error: sysError,
-						Command: "“getAllCompaign”",
+						Command: "getAllCompaign",
 						Result:*utility.ObjectToJsonString(opResult),
 					}
 	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
 }
+
+
 
 // {
 // 	“command”:”addMission”,
@@ -238,8 +240,39 @@ func DeleteMission(userCodeAndParameter * string) ([] byte, *string) {
 					}
 	var out = utility.OutMessage {
 						Error: sysError,
-						Command: "modifyMission",
+						Command: "deleteMission",
 						Result: "{}",
+					}
+	var result = utility.ObjectToJsonByte(out)
+
+	return result, &(inputParameters[0])
+}
+
+func QueryMissionByMissionCode(userCodeAndParameter * string) ([] byte, *string) {
+	//userCode, parameter 
+	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
+	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+	var errorCode int
+	if (auth == false) {
+		errorCode = 3
+	}
+	var opResult * utility.Mission
+	if (errorCode == 0) {
+		missionCode, _ := utility.ParseMissionCodeMessage(&(inputParameters[1]))
+		opResult, _ =storage.QueryMissionByMissionCode(&(missionCode.MissionCode))
+		// if opResult == false {
+		// 	errorCode = 1
+		// }
+	}
+
+	var sysError = utility.Error {
+						ErrorCode: errorCode,
+						ErrorMessage: "",
+					}
+	var out = utility.OutMessage {
+						Error: sysError,
+						Command: "queryMissionByMissionCode",
+						Result:*utility.ObjectToJsonString(opResult),
 					}
 	var result = utility.ObjectToJsonByte(out)
 
