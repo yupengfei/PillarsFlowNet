@@ -111,6 +111,28 @@ func QueryTargetsByMissionCode(missionCode * string) ([] utility.Target, error) 
 	return targetSlice, err
 }
 
+func QueryTargetByTargetCode(targetCode * string) (* utility.Target, error) {
+	stmt, err := DBConn.Prepare("SELECT target_code, mission_code, project_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM target WHERE target_code = ?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	result, err := stmt.Query(targetCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+	var target * utility.Target
+	if result.Next() {
+		err = result.Scan(&(target.TargetCode), &(target.MissionCode), &(target.ProjectCode), &(target.VersionTag), &(target.StoragePosition),
+		&(target.Picture), &(target.InsertDatetime), &(target.UpdateDatetime))
+		if err != nil {
+			pillarsLog.Logger.Print(err.Error())
+		}
+	}
+	return target, err
+}
+
 
 
 

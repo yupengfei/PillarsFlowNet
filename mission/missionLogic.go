@@ -101,7 +101,22 @@ func GetAllCompaign(userCodeAndParameter * string) ([] byte, *string) {
 // 	},
 // 	“commnd”: “addMission”,
 // 	“result”:”{
-		
+		// MissionCode string
+  //   		MissionName string
+  //   		ProjectCode string
+  //   		ProductType string
+  //   		IsCampaign int
+  //   		MissionType string
+  //   		MissionDetail string
+  //   		PlanBeginDatetime string
+  //   		PlanEndDatetime string
+  //   		RealBeginDatetime string
+  //   		RealEndDatetime string
+  //   		PersonIncharge string
+  //   		Status int
+  //   		Picture string
+  //   		InsertDatetime string
+  //   		UpdateDatetime string
 // 	}”
 // }
 
@@ -113,9 +128,11 @@ func AddMission(userCodeAndParameter * string) ([] byte, *string) {
 	if (auth == false) {
 		errorCode = 3
 	}
+	var missionCode * string
 	if (errorCode == 0) {
 		mission, _ := utility.ParseMissionMessage(&(inputParameters[1]))
 		mission.MissionCode = *(utility.GenerateCode(&(inputParameters[0])))
+		missionCode = &(mission.MissionCode)
 		opResult, _ :=storage.InsertIntoMission(mission)
 		if opResult == false {
 			errorCode = 1
@@ -126,12 +143,25 @@ func AddMission(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out * utility.OutMessage
+	if errorCode != 0 {
+		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "addMission",
 						Result: "{}",
 					}
-	var result = utility.ObjectToJsonByte(out)
+		out = & tempout
+	} else {
+		missionOut, _ := storage.QueryMissionByMissionCode(missionCode)
+		tempout :=utility.OutMessage {
+						Error: sysError,
+						Command: "addMission",
+						Result: *utility.ObjectToJsonString(missionOut) ,
+					}
+		out = & tempout
+	}
+
+	var result = utility.ObjectToJsonByte(*out)
 
 	return result, &(inputParameters[0])
 }
@@ -166,7 +196,22 @@ func AddMission(userCodeAndParameter * string) ([] byte, *string) {
 // 	},
 // 	“commnd”: “modifyMission”,
 // 	“result”:”{
-		
+// MissionCode string
+//     		MissionName string
+//     		ProjectCode string
+//     		ProductType string
+//     		IsCampaign int
+//     		MissionType string
+//     		MissionDetail string
+//     		PlanBeginDatetime string
+//     		PlanEndDatetime string
+//     		RealBeginDatetime string
+//     		RealEndDatetime string
+//     		PersonIncharge string
+//     		Status int
+//     		Picture string
+//     		InsertDatetime string
+//     		UpdateDatetime string		
 // 	}”
 // }
 func ModifyMission(userCodeAndParameter * string) ([] byte, *string) {
@@ -177,9 +222,11 @@ func ModifyMission(userCodeAndParameter * string) ([] byte, *string) {
 	if (auth == false) {
 		errorCode = 3
 	}
+	var missionCode * string
 	if (errorCode == 0) {
 		mission, _ := utility.ParseMissionMessage(&(inputParameters[1]))
 		opResult, _ :=storage.ModifyMission(mission)
+		missionCode = &(mission.MissionCode)
 		if opResult == false {
 			errorCode = 1
 		}
@@ -189,12 +236,25 @@ func ModifyMission(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out * utility.OutMessage
+	if errorCode != 0 {
+		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "modifyMission",
 						Result: "{}",
 					}
-	var result = utility.ObjectToJsonByte(out)
+		out = & tempout
+	} else {
+		missionOut, _ := storage.QueryMissionByMissionCode(missionCode)
+		tempout :=utility.OutMessage {
+						Error: sysError,
+						Command: "modifyMission",
+						Result: *utility.ObjectToJsonString(missionOut) ,
+					}
+		out = & tempout
+	}
+
+	var result = utility.ObjectToJsonByte(*out)
 
 	return result, &(inputParameters[0])
 }
@@ -214,7 +274,7 @@ func ModifyMission(userCodeAndParameter * string) ([] byte, *string) {
 // 	},
 // 	“commnd”: “deleteMission”,
 // 	“result”:”{
-		
+		// MissionCode string
 // 	}”
 // }
 
@@ -238,12 +298,24 @@ func DeleteMission(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out * utility.OutMessage
+	if errorCode !=0 {
+		tempout := utility.OutMessage {
 						Error: sysError,
 						Command: "deleteMission",
 						Result: "{}",
 					}
-	var result = utility.ObjectToJsonByte(out)
+		out = & tempout
+	} else {
+		tempout := utility.OutMessage {
+						Error: sysError,
+						Command: "deleteMission",
+						Result: inputParameters[1],
+					}
+		out = & tempout
+	}
+	
+	var result = utility.ObjectToJsonByte(*out)
 
 	return result, &(inputParameters[0])
 }

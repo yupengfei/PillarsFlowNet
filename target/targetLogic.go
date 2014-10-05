@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// 添加target
 // {
 // 	“command”:”addTarget”,
 // 	“parameter”:”{
@@ -29,7 +30,14 @@ import (
 // 	},
 // 	“commnd”: “addTarget”,
 // 	“result”:”{
-		
+// 		TargetCode string
+//     		MissionCode string
+//     		ProjectCode string
+//     		VersionTag string
+//     		StoragePosition string
+//     		Picture string
+//     		InsertDatetime string
+//     		UpdateDatetime string
 // 	}”
 // }
 
@@ -41,9 +49,11 @@ func AddTarget(userCodeAndParameter * string) ([] byte, *string) {
 	if (auth == false) {
 		errorCode = 3
 	}
+	var targetCode * string
 	if (errorCode == 0) {
 		target, _ := utility.ParseTargetMessage(&(inputParameters[1]))
 		target.TargetCode = *(utility.GenerateCode(&(inputParameters[0])))
+		targetCode = &(target.TargetCode)
 		opResult, _ :=storage.InsertIntoTarget(target)
 		if opResult == false {
 			errorCode = 1
@@ -54,11 +64,23 @@ func AddTarget(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out *  utility.OutMessage
+	if errorCode != 0 {
+		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "addTarget",
 						Result: "{}",
 					}
+		out = & tempout
+	} else {
+		targetOut, _ := storage.QueryTargetByTargetCode(targetCode)
+		var tempout = utility.OutMessage {
+						Error: sysError,
+						Command: "addTarget",
+						Result:*utility.ObjectToJsonString(targetOut),
+					}
+		out = & tempout
+	}
 	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
@@ -86,7 +108,15 @@ func AddTarget(userCodeAndParameter * string) ([] byte, *string) {
 // 	},
 // 	“commnd”: “modifyTarget”,
 // 	“result”:”{
-		
+// 		TargetCode string
+//     		MissionCode string
+//     		ProjectCode string
+//     		VersionTag string
+//     		StoragePosition string
+//     		Picture string
+//     		InsertDatetime string
+//     		UpdateDatetime string
+
 // 	}”
 // }
 
@@ -98,8 +128,10 @@ func ModifyTarget(userCodeAndParameter * string) ([] byte, *string) {
 	if (auth == false) {
 		errorCode = 3
 	}
+	var targetCode * string
 	if (errorCode == 0) {
 		target, _ := utility.ParseTargetMessage(&(inputParameters[1]))
+		targetCode = &(target.TargetCode)
 		opResult, _ :=storage.ModifyTarget(target)
 		if opResult == false {
 			errorCode = 1
@@ -110,16 +142,29 @@ func ModifyTarget(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out * utility.OutMessage
+	if errorCode != 0 {
+		var tempout = utility.OutMessage {
 						Error: sysError,
-						Command: "addTarget",
+						Command: "modifyTarget",
 						Result: "{}",
 					}
+		out = & tempout
+	} else {
+		targetOut, _ := storage.QueryTargetByTargetCode(targetCode)
+		var tempout = utility.OutMessage {
+						Error: sysError,
+						Command: "modifyTarget",
+						Result:*utility.ObjectToJsonString(targetOut),
+					}
+		out = & tempout
+	}
 	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
 }
 
+// 删除target
 // {
 // 	”command“:”deleteTarget”,
 // 	“parameter”:”{
@@ -134,7 +179,7 @@ func ModifyTarget(userCodeAndParameter * string) ([] byte, *string) {
 // 	},
 // 	“commnd”: “deleteTarget”,
 // 	“result”:”{
-		
+// 		TargetCode string
 // 	}”
 // }
 
@@ -158,11 +203,22 @@ func DeleteTarget(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out *  utility.OutMessage
+	if errorCode != 0 {
+		var tempout = utility.OutMessage {
 						Error: sysError,
-						Command: "addTarget",
+						Command: "deleteTarget",
 						Result: "{}",
 					}
+		out = & tempout
+	} else {
+		var tempout = utility.OutMessage {
+						Error: sysError,
+						Command: "deleteTarget",
+						Result:inputParameters[1],
+					}
+		out = & tempout
+	}
 	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])

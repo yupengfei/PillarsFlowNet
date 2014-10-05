@@ -47,7 +47,18 @@ func GetAllProject() [] byte {
 // 	},
 // 	“commnd”: “addProject”,
 // 	“result”:”{
-		
+		// “ProjectCode”: string
+		// “ProjectName”: string,
+  //   		“ProjectDetail": string,
+  //   		“PlanBeginDatetime”: string,
+  //   		“PlanEndDatetime”: string,
+  //   		“RealBeginDatetime”: string,
+  //   		“RealEndDatetime”: string,
+  //   		“PersonInCharge”: string,
+  //   		“Status”: int,
+  //   		“Picture”: string,
+		// “InsertDatetime”: string
+  //   		“UpdateDatetime”: string
 // 	}”
 // }
 //userCode + @ + parameter
@@ -56,12 +67,14 @@ func AddProject(userCodeAndParameter * string) ([] byte, *string) {
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
 	auth := authentication.GetAuthInformation(&(inputParameters[0]))
 	var errorCode int
+	var projectCode * string
 	if (auth == false) {
 		errorCode = 3
 	}
 	if (errorCode == 0) {
 		project, _ := utility.ParseProjectMessage(&(inputParameters[1]))
 		project.ProjectCode = *(utility.GenerateCode(&(inputParameters[0])))
+		projectCode = &(project.ProjectCode)
 		opResult, _ :=storage.InsertIntoProject(project)
 		if opResult == false {
 			errorCode = 1
@@ -72,12 +85,25 @@ func AddProject(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out * utility.OutMessage
+	if errorCode != 0 {
+		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "addProject",
 						Result: "{}",
 					}
-	var result = utility.ObjectToJsonByte(out)
+		out = & tempout
+	} else {
+		projectOut, _ := storage.QueryProjectByProjectCode(projectCode)
+		tempout :=utility.OutMessage {
+						Error: sysError,
+						Command: "addProject",
+						Result: *utility.ObjectToJsonString(projectOut) ,
+					}
+		out = & tempout
+	}
+
+	var result = utility.ObjectToJsonByte(*out)
 
 	return result, &(inputParameters[0])
 }
@@ -107,7 +133,18 @@ func AddProject(userCodeAndParameter * string) ([] byte, *string) {
 // 	},
 // 	“commnd”: “modifyProject”,
 // 	“result”:”{
-		
+		// “ProjectCode”: string
+		// “ProjectName”: string,
+  //   		“ProjectDetail": string,
+  //   		“PlanBeginDatetime”: string,
+  //   		“PlanEndDatetime”: string,
+  //   		“RealBeginDatetime”: string,
+  //   		“RealEndDatetime”: string,
+  //   		“PersonInCharge”: string,
+  //   		“Status”: int,
+  //   		“Picture”: string,
+		// “InsertDatetime”: string
+  //   		“UpdateDatetime”: string
 // 	}”
 // }
 func ModifyProject(userCodeAndParameter * string) ([] byte, *string) {
@@ -118,8 +155,10 @@ func ModifyProject(userCodeAndParameter * string) ([] byte, *string) {
 	if (auth == false) {
 		errorCode = 3
 	}
+	var projectCode * string
 	if (errorCode == 0) {
 		project, _ := utility.ParseProjectMessage(&(inputParameters[1]))
+		projectCode = &(project.ProjectCode)
 		opResult, _ :=storage.ModifyProject(project)
 		if opResult == false {
 			errorCode = 1
@@ -130,12 +169,25 @@ func ModifyProject(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out * utility.OutMessage
+	if errorCode != 0 {
+		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "modifyProject",
 						Result: "{}",
 					}
-	var result = utility.ObjectToJsonByte(out)
+		out = & tempout
+	} else {
+		projectOut, _ := storage.QueryProjectByProjectCode(projectCode)
+		tempout :=utility.OutMessage {
+						Error: sysError,
+						Command: "modifyProject",
+						Result: *utility.ObjectToJsonString(projectOut) ,
+					}
+		out = & tempout
+	}
+
+	var result = utility.ObjectToJsonByte(*out)
 
 	return result, &(inputParameters[0])
 }

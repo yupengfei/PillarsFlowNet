@@ -4,11 +4,23 @@ import (
 	"PillarsFlowNet/utility"
 	"fmt"
 )
-
+// type Chart struct {
+//     ChartCode string
+//     IsPicture string
+//     Message string
+//     From string
+//     SendTime string
+//     To string
+//     ReceivedTime string
+//     Receipt int
+//     IsRead int
+//     Deleted int
+//     DeletedTime string
+// }
 func StoreToChart(fromUserCode * string, sendTime * string, toUserCode * string, message * string, receipt bool) (bool, error){
 	
     chartCode := utility.GenerateCode(fromUserCode)
-	chartMgo := utility.ChartMgo {
+	chartMgo := utility.Chart {
 		ChartCode: *chartCode,
 		From: * fromUserCode,
 		SendTime: * sendTime,

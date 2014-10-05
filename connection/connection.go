@@ -116,9 +116,9 @@ func (c * connection) readPump() {
 		} else {//else do some other command
 			userCodeAndParameter := *(c.userCode) + "@" + *parameter;
 			if *command == "chart" {
-				Hub.chart <- []byte(*parameter)
+				Hub.chart <- &userCodeAndParameter
 			} else if *command == "post" {
-				Hub.post <- []byte(*parameter)
+				Hub.post <- &userCodeAndParameter
 			} else if *command == "getAllProject" {
 				Hub.getAllProject <- c
 			} else if *command == "addProject" {

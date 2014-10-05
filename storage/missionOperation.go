@@ -113,7 +113,7 @@ func DeleteMissionByMissionCode(missionCode * string) (bool, error) {
 	}
 
 	//delete from campaign 
-	stmtCampaignNode, err := tx.Prepare("DELETE FROM campaign WHERE node_code = ?")
+	stmtCampaignNode, err := tx.Prepare("DELETE FROM graph WHERE node_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -124,7 +124,7 @@ func DeleteMissionByMissionCode(missionCode * string) (bool, error) {
 	}
 
 	//delete from campaign 
-	stmtCampaignCampaignCode, err := tx.Prepare("DELETE FROM campaign WHERE campaign_code = ?")
+	stmtCampaignCampaignCode, err := tx.Prepare("DELETE FROM graph WHERE campaign_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}

@@ -97,7 +97,7 @@ func QueryDependenciesByProjectCode(projectCode * string) ([] utility.Dependency
 	}
 	defer result.Close()
 	var dependencySlice [] utility.Dependency
-	if result.Next() {
+	for result.Next() {
 		var dependency utility.Dependency
 		err = result.Scan(&(dependency.DependencyCode), &(dependency.CampaignCode), &(dependency.ProjectCode), &(dependency.StartMissionCode), &(dependency.EndMissionCode),
 		&(dependency.DependencyType), &(dependency.InsertDatetime), &(dependency.UpdateDatetime))
@@ -110,7 +110,7 @@ func QueryDependenciesByProjectCode(projectCode * string) ([] utility.Dependency
 
 }
 
-func QueryDependenciesByCampaignCode(projectCode * string) ([] utility.Dependency, error){
+func QueryDependenciesByCampaignCode(campaignCode * string) ([] utility.Dependency, error){
 	
 
 	stmt, err := DBConn.Prepare("SELECT dependency_code, campaign_code, project_code, start_mission_code, end_mission_code, dependency_type, insert_datetime, update_datetime FROM dependency WHERE campaign_code = ?")
@@ -118,13 +118,13 @@ func QueryDependenciesByCampaignCode(projectCode * string) ([] utility.Dependenc
 		panic(err.Error())
 	}
 	defer stmt.Close()
-	result, err := stmt.Query(projectCode)
+	result, err := stmt.Query(campaignCode)
 	if err != nil {
 		panic(err.Error())
 	}
 	defer result.Close()
 	var dependencySlice [] utility.Dependency
-	if result.Next() {
+	for result.Next() {
 		var dependency utility.Dependency
 		err = result.Scan(&(dependency.DependencyCode), &(dependency.CampaignCode), &(dependency.ProjectCode), &(dependency.StartMissionCode), &(dependency.EndMissionCode),
 		&(dependency.DependencyType), &(dependency.InsertDatetime), &(dependency.UpdateDatetime))
@@ -136,6 +136,32 @@ func QueryDependenciesByCampaignCode(projectCode * string) ([] utility.Dependenc
 	return dependencySlice, err
 
 }
+
+func QueryDependencyByDependencyCode(dependencyCode * string) (* utility.Dependency, error){
+	
+
+	stmt, err := DBConn.Prepare("SELECT dependency_code, campaign_code, project_code, start_mission_code, end_mission_code, dependency_type, insert_datetime, update_datetime FROM dependency WHERE dependency_code = ?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	result, err := stmt.Query(dependencyCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+	var dependency * utility.Dependency
+	if result.Next() {
+		err = result.Scan(&(dependency.DependencyCode), &(dependency.CampaignCode), &(dependency.ProjectCode), &(dependency.StartMissionCode), &(dependency.EndMissionCode),
+		&(dependency.DependencyType), &(dependency.InsertDatetime), &(dependency.UpdateDatetime))
+		if err != nil {
+			pillarsLog.Logger.Print(err.Error())
+		}
+	}
+	return dependency, err
+
+}
+
 
 
 

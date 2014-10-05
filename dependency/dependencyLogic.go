@@ -86,7 +86,14 @@ func GetAllDependency(userCodeAndParameter * string) ([] byte, *string) {
 // 	},
 // 	“commnd”: “addDependency”,
 // 	“result”:”{
-		
+// 		DependencyCode string
+//     		CampaignCode string
+//     		ProjectCode string
+//     		StartMissionCode string
+//     		EndMissionCode string
+//     		DependencyType int
+//     		InsertDatetime string
+//     		UpdateDatetime string
 // 	}”
 // }
 func AddDependency(userCodeAndParameter * string) ([] byte, *string) {
@@ -97,9 +104,11 @@ func AddDependency(userCodeAndParameter * string) ([] byte, *string) {
 	if (auth == false) {
 		errorCode = 3
 	}
+	var dependencyCode * string
 	if (errorCode == 0) {
 		dependency, _ := utility.ParseDependencyMessage(&(inputParameters[1]))
 		dependency.DependencyCode = *(utility.GenerateCode(&(inputParameters[0])))
+		dependencyCode = &(dependency.DependencyCode)
 		opResult, _ :=storage.InsertIntoDependency(dependency)
 		if opResult == false {
 			errorCode = 1
@@ -110,11 +119,23 @@ func AddDependency(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out *  utility.OutMessage
+	if errorCode != 0 {
+		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "addDependency",
 						Result: "{}",
 					}
+		out = & tempout
+	} else {
+		dependencyOut, _ := storage.QueryDependencyByDependencyCode(dependencyCode)
+		var tempout = utility.OutMessage {
+						Error: sysError,
+						Command: "addDependency",
+						Result:*utility.ObjectToJsonString(dependencyOut),
+					}
+		out = & tempout
+	}
 	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
@@ -159,11 +180,22 @@ func DeleteDependency(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out *  utility.OutMessage
+	if errorCode != 0 {
+		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "deleteDependency",
 						Result: "{}",
 					}
+		out = & tempout
+	} else {
+		var tempout = utility.OutMessage {
+						Error: sysError,
+						Command: "deleteDependency",
+						Result:inputParameters[1],
+					}
+		out = & tempout
+	}
 	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
@@ -191,7 +223,14 @@ func DeleteDependency(userCodeAndParameter * string) ([] byte, *string) {
 // 	},
 // 	“commnd”: “addDependency”,
 // 	“result”:”{
-		
+// 		DependencyCode string
+//     		CampaignCode string
+//     		ProjectCode string
+//     		StartMissionCode string
+//     		EndMissionCode string
+//     		DependencyType int
+//     		InsertDatetime string
+//     		UpdateDatetime string
 // 	}”
 // }
 
@@ -203,8 +242,10 @@ func ModifyDependency(userCodeAndParameter * string) ([] byte, *string) {
 	if (auth == false) {
 		errorCode = 3
 	}
+	var dependencyCode * string
 	if (errorCode == 0) {
 		dependency, _ := utility.ParseDependencyMessage(&(inputParameters[1]))
+		dependencyCode = &(dependency.DependencyCode)
 		opResult, _ :=storage.ModifyDependency(dependency)
 		if opResult == false {
 			errorCode = 1
@@ -215,11 +256,23 @@ func ModifyDependency(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out *  utility.OutMessage
+	if errorCode != 0 {
+		var tempout = utility.OutMessage {
 						Error: sysError,
-						Command: "addDependency",
+						Command: "modifyDependency",
 						Result: "{}",
 					}
+		out = & tempout
+	} else {
+		dependencyOut, _ := storage.QueryDependencyByDependencyCode(dependencyCode)
+		var tempout = utility.OutMessage {
+						Error: sysError,
+						Command: "modifyDependency",
+						Result:*utility.ObjectToJsonString(dependencyOut),
+					}
+		out = & tempout
+	}
 	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])

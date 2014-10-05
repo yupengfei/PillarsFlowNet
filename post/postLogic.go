@@ -1,10 +1,10 @@
-package chart
+package post
 
 import (
 
 )
 
-func Chart(userCodeAndParameter * string) ([] byte, *string) {
+func Post(userCodeAndParameter * string) ([] byte, *string) {
 	// fmt.Println(string(m))
 	// 		chartMessage, chartToPerson, error := utility.ParseChartMessage(m)
 	// 		if (error != nil) {

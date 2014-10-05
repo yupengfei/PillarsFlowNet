@@ -1,13 +1,15 @@
 package connection
 
 import (
-	"PillarsFlowNet/utility"
+	// "PillarsFlowNet/utility"
 	// "github.com/gorilla/websocket"
 	"PillarsFlowNet/project"
 	"PillarsFlowNet/mission"
-	"PillarsFlowNet/campaign"
+	"PillarsFlowNet/graph"
 	"PillarsFlowNet/dependency"
 	"PillarsFlowNet/target"
+	"PillarsFlowNet/chart"
+	"PillarsFlowNet/post"
 	// "time"
 	"fmt"
 
@@ -19,8 +21,8 @@ import (
 type hub struct {
 
 	connections map[string]*connection
-	chart chan []byte
-	post chan []byte
+	chart chan * string
+	post chan * string
 	register chan * connection
 	unregister chan * connection
 	getAllProject chan * connection
@@ -47,8 +49,8 @@ type hub struct {
 
 var Hub = hub {
 	connections: make(map[string]*connection),
-	chart: make(chan [] byte),
-	post: make(chan [] byte),
+	chart: make(chan * string),
+	post: make(chan * string),
 	register: make(chan * connection),
 	unregister: make(chan * connection),
 	getAllProject: make(chan * connection),
@@ -89,17 +91,11 @@ func (h *hub) Run() {
 				}
 			}
 		case m := <- h.chart:
-			//should be moved to  chart logic
-			fmt.Println(string(m))
-			chartMessage, chartToPerson, error := utility.ParseChartMessage(m)
-			if (error != nil) {
-				return
-			}
-			fmt.Println(*chartToPerson)
-			connection, ok := Hub.connections[*chartToPerson];
-			if ok {
-				connection.send <- []byte(*chartMessage)
-			}
+			result, userCode := chart.Chart(m)
+			h.connections[*userCode].send <- result	
+		case m := <- h.post:
+			result, userCode := post.Post(m)
+			h.connections[*userCode].send <- result	
 		case c := <- h.getAllProject:
 			c.send <- project.GetAllProject()	
 
@@ -133,19 +129,19 @@ func (h *hub) Run() {
 			h.connections[*userCode].send <- result
 
 		case m := <- h.getAllNode:
-			result, userCode := campaign.GetAllNode(m)
+			result, userCode := graph.GetAllNode(m)
 			h.connections[*userCode].send <- result
 
 		case m := <- h.addNode:
-			result, _ := campaign.AddNode(m)
+			result, _ := graph.AddNode(m)
 			h.Dispatch(result)
 
 		case m := <- h.modifyNode:
-			result, _ := campaign.ModifyNode(m)
+			result, _ := graph.ModifyNode(m)
 			h.Dispatch(result)
 
 		case m := <- h.deleteNode:
-			result, _ := campaign.DeleteNode(m)
+			result, _ := graph.DeleteNode(m)
 			h.Dispatch(result)
 
 		case m := <- h.getAllDependency:

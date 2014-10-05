@@ -16,7 +16,7 @@ func ParseLoginInMessage(message * string) (* UserLogin, error)  {
 }
 
 func ParseChartMessage(message [] byte) (* string, * string, error) {
-	var result ChartMessage
+	var result Chart
 	err := json.Unmarshal(message, &result)
 	return &result.Message, &result.To, err
 }
@@ -45,10 +45,10 @@ func ParseDependencyMessage(message * string) (* Dependency , error) {
 	return &dependency, err
 }
 
-func ParseCampaignMessage(message * string) (* Campaign , error) {
-	var campaign Campaign
-	err := json.Unmarshal([]byte(*message), &campaign)
-	return &campaign, err
+func ParseGraphMessage(message * string) (* Graph , error) {
+	var graph Graph
+	err := json.Unmarshal([]byte(*message), &graph)
+	return &graph, err
 }
 
 
@@ -68,6 +68,12 @@ func ParseCampaignCodeMessage(message * string) (* CampaignCode, error) {
 	var campaignCode CampaignCode
 	err := json.Unmarshal([]byte(*message), &campaignCode)
 	return &campaignCode, err
+}
+
+func ParseGraphCodeMessage(message * string) (* GraphCode, error) {
+	var graphCode GraphCode
+	err := json.Unmarshal([]byte(*message), &graphCode)
+	return &graphCode, err
 }
 
 func ParseDependencyCodeMessage(message * string) (* DependencyCode, error) {

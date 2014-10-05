@@ -1,9 +1,6 @@
 package utility
 
-type UserLogin struct{
-	UserName string
-	Password string
-}
+
 type Error struct {
 	ErrorCode int
 	ErrorMessage string
@@ -19,17 +16,21 @@ type InMessage struct {
 	Parameter string
 }
 
+type UserLogin struct{
+    UserName string
+    Password string
+}
 
 type LoginInMessage struct {
 	Auth string
 	AuthMessage string
 }
 
-type ChartMessage struct {
-    Message string
-    To string
-    IsPicture int//0 false, 1 true
-}
+// type ChartMessage struct {
+//     Message string
+//     To string
+//     IsPicture int//0 false, 1 true
+// }
 
 type User struct {
     UserCode string
@@ -51,6 +52,10 @@ type ProjectCode struct {
 
 type MissionCode struct {
     MissionCode string
+}
+
+type GraphCode struct {
+    GraphCode string
 }
 
 type CampaignCode struct {
@@ -100,7 +105,8 @@ type Mission struct {
     UpdateDatetime string
 }
 
-type Campaign struct {
+type Graph struct {
+    GraphCode string
     CampaignCode string
     ProjectCode string
     NodeCode string
@@ -137,8 +143,9 @@ type Target struct {
 
 // 
 
-type ChartMgo struct {
+type Chart struct {
     ChartCode string
+    IsPicture string
     Message string
     From string
     SendTime string

@@ -1,4 +1,4 @@
-package campaign
+package graph
 
 import (
 	"PillarsFlowNet/storage"
@@ -23,6 +23,7 @@ import (
 // 	},
 // 	“commnd”: “getAllNode”,
 // 	“result”:”[{
+// 		GraphCode string
 // 		CampaignCode string
 //     		ProjectCode string
 //     		NodeCode string
@@ -44,10 +45,10 @@ func GetAllNode(userCodeAndParameter * string) ([] byte, *string) {
 	if (auth == false) {
 		errorCode = 3
 	}
-	var opResult []utility.Campaign
+	var opResult []utility.Graph
 	if (errorCode == 0) {
-		projectCode, _ := utility.ParseProjectCodeMessage(&(inputParameters[1]))
-		opResult, _ =storage.QueryCampaignNodesByCampaignCode(&(projectCode.ProjectCode))
+		campaignCode, _ := utility.ParseCampaignCodeMessage(&(inputParameters[1]))
+		opResult, _ =storage.QueryGraphNodesByCampaignCode(&(campaignCode.CampaignCode))
 		// if opResult == false {
 		// 	errorCode = 1
 		// }
@@ -68,10 +69,12 @@ func GetAllNode(userCodeAndParameter * string) ([] byte, *string) {
 }
 
 
+// 新建node
 // {
 // 	“command”:”addNode”,
 // 	“parameter”:”{
-// 		CampaignCode 任意string，不起作用,可以没有
+// 		GraphCode string 任意string，不起作用,可以没有
+// 		CampaignCode string
 //     		ProjectCode string
 //     		NodeCode string
 //     		Width int
@@ -90,9 +93,17 @@ func GetAllNode(userCodeAndParameter * string) ([] byte, *string) {
 // 	},
 // 	“commnd”: “addNode”,
 // 	“result”:”{
-		
+// 		GraphCode string
+// 		CampaignCode string
+//     		ProjectCode string
+//     		NodeCode string
+//     		Width int
+//     		Height int
+//     		XCoordinate int
+//     		YCoordinate int
+//     		InsertDatetime string
+//     		UpdateDatetime string
 // 	}”
-// }
 
 func AddNode(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
@@ -102,10 +113,12 @@ func AddNode(userCodeAndParameter * string) ([] byte, *string) {
 	if (auth == false) {
 		errorCode = 3
 	}
+	var graphCode * string
 	if (errorCode == 0) {
-		campaign, _ := utility.ParseCampaignMessage(&(inputParameters[1]))
-		campaign.CampaignCode = *(utility.GenerateCode(&(inputParameters[0])))
-		opResult, _ :=storage.InsertIntoCampaign(campaign)
+		graph, _ := utility.ParseGraphMessage(&(inputParameters[1]))
+		graph.GraphCode = *(utility.GenerateCode(&(inputParameters[0])))
+		graphCode = &(graph.GraphCode)
+		opResult, _ :=storage.InsertIntoGraph(graph)
 		if opResult == false {
 			errorCode = 1
 		}
@@ -115,11 +128,23 @@ func AddNode(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out *  utility.OutMessage
+	if errorCode != 0 {
+		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "addNode",
 						Result: "{}",
 					}
+		out = & tempout
+	} else {
+		graphOut, _ := storage.QueryGraphNodeByGraphCode(graphCode)
+		var tempout = utility.OutMessage {
+						Error: sysError,
+						Command: "addNode",
+						Result:*utility.ObjectToJsonString(graphOut),
+					}
+		out = & tempout
+	}
 	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
@@ -129,6 +154,7 @@ func AddNode(userCodeAndParameter * string) ([] byte, *string) {
 // {
 // 	“command”:”modifyNode”,
 // 	“parameter”:”{
+// 		GraphCode string
 // 		CampaignCode string
 //     		ProjectCode string
 //     		NodeCode string
@@ -148,7 +174,16 @@ func AddNode(userCodeAndParameter * string) ([] byte, *string) {
 // 	},
 // 	“commnd”: “modifyNode”,
 // 	“result”:”{
-		
+// 		GraphCode string
+// 		CampaignCode string
+//     		ProjectCode string
+//     		NodeCode string
+//     		Width int
+//     		Height int
+//     		XCoordinate int
+//     		YCoordinate int
+//     		InsertDatetime string
+//     		UpdateDatetime string
 // 	}”
 // }
 
@@ -160,9 +195,11 @@ func ModifyNode(userCodeAndParameter * string) ([] byte, *string) {
 	if (auth == false) {
 		errorCode = 3
 	}
+	var graphCode * string
 	if (errorCode == 0) {
-		campaign, _ := utility.ParseCampaignMessage(&(inputParameters[1]))
-		opResult, _ :=storage.ModifyCampaign(campaign)
+		graph, _ := utility.ParseGraphMessage(&(inputParameters[1]))
+		graphCode = &(graph.GraphCode)
+		opResult, _ :=storage.ModifyGraph(graph)
 		if opResult == false {
 			errorCode = 1
 		}
@@ -172,11 +209,23 @@ func ModifyNode(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out *  utility.OutMessage
+	if errorCode != 0 {
+		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "modifyNode",
 						Result: "{}",
 					}
+		out = & tempout
+	} else {
+		graphOut, _ := storage.QueryGraphNodeByGraphCode(graphCode)
+		var tempout = utility.OutMessage {
+						Error: sysError,
+						Command: "modifyNode",
+						Result:*utility.ObjectToJsonString(graphOut),
+					}
+		out = & tempout
+	}
 	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
@@ -186,7 +235,7 @@ func ModifyNode(userCodeAndParameter * string) ([] byte, *string) {
 // {
 // 	“command”:”deleteNode”,
 // 	“parameter”:”{
-// 		NodeCode string
+// 		GraphCode string
 // 	}”
 // }
 // 返回值
@@ -197,7 +246,7 @@ func ModifyNode(userCodeAndParameter * string) ([] byte, *string) {
 // 	},
 // 	“commnd”: “deleteNode”,
 // 	“result”:”{
-		
+// 	GraphCode string	
 // 	}”
 // }
 
@@ -209,9 +258,10 @@ func DeleteNode(userCodeAndParameter * string) ([] byte, *string) {
 	if (auth == false) {
 		errorCode = 3
 	}
+
 	if (errorCode == 0) {
-		campaignCode, _ := utility.ParseCampaignCodeMessage(&(inputParameters[1]))
-		opResult, _ :=storage.DeleteCampaignByCampaignCode(&(campaignCode.CampaignCode))
+		graphCode, _ := utility.ParseGraphCodeMessage(&(inputParameters[1]))
+		opResult, _ :=storage.DeleteGraphByGraphCode(&(graphCode.GraphCode))
 		if opResult == false {
 			errorCode = 1
 		}
@@ -221,12 +271,23 @@ func DeleteNode(userCodeAndParameter * string) ([] byte, *string) {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
 					}
-	var out = utility.OutMessage {
+	var out *  utility.OutMessage				
+	if errorCode !=0 {
+		tempout := utility.OutMessage {
 						Error: sysError,
 						Command: "deleteNode",
 						Result: "{}",
 					}
-	var result = utility.ObjectToJsonByte(out)
+		out = & tempout
+	} else {
+		tempout := utility.OutMessage {
+						Error: sysError,
+						Command: "deleteNode",
+						Result: inputParameters[1],
+					}
+		out = & tempout
+	}
+	var result = utility.ObjectToJsonByte(*out)
 
 	return result, &(inputParameters[0])
 }
