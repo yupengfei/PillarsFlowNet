@@ -20,7 +20,7 @@ import (
 func StoreToChart(fromUserCode * string, sendTime * string, toUserCode * string, message * string, receipt bool) (bool, error){
 	
     chartCode := utility.GenerateCode(fromUserCode)
-	chartMgo := utility.Chart {
+	chart := utility.Chart {
 		ChartCode: *chartCode,
 		From: * fromUserCode,
 		SendTime: * sendTime,
@@ -34,9 +34,9 @@ func StoreToChart(fromUserCode * string, sendTime * string, toUserCode * string,
 	}
 	
 	// 插入记录
-	fmt.Println(*(utility.ObjectToJsonString(chartMgo)))
+	fmt.Println(*(utility.ObjectToJsonString(chart)))
 	//chartString := utility.ObjectToJsonString(chart)
-	err := ChartCollection.Insert(chartMgo)
+	err := ChartCollection.Insert(chart)
 	if err != nil {
 		panic(err.Error())
 	}
