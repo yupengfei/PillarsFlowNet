@@ -17,7 +17,7 @@ func TestQueryAllProject(t * testing.T) {
 
 func TestInsertIntoProject(t * testing.T) {
 	DBConn = ConnectToDB()
-	projectName := string("anthor test")
+	projectName := string("very maim")
 	projectCode := string("890b2f1b208f93586e0ad86cb6f16668")
 	project := utility.Project{
 		ProjectCode: projectCode,

@@ -28,6 +28,7 @@ type LoginInMessage struct {
 type ChartMessage struct {
     Message string
     To string
+    IsPicture int//0 false, 1 true
 }
 
 type User struct {
@@ -44,6 +45,13 @@ type User struct {
     UpdateDatetime string
 }
 
+type ProjectCode struct {
+    ProjectCode string
+}
+
+type MissionCode struct {
+    MissionCode string
+}
 
 type Project struct {
     ProjectCode string
@@ -66,6 +74,7 @@ type Mission struct {
     MissionName string
     ProjectCode string
     ProductType string
+    IsCampaign int
     MissionType string
     MissionDetail string
     PlanBeginDatetime string
@@ -114,87 +123,7 @@ type Target struct {
     UpdateDatetime string
 }
 
-//This is used for add project
-type AddProjectStruct struct {
-    UserName string
-    ProjectName string
-    ProjectDetail string
-    PlanBeginDatetime string
-    PlanEndDatetime string
-    RealBeginDatetime string
-    RealEndDatetime string
-    PersonInCharge string
-    Status string
-    Picture string
-}
-
-//when modify projects, replace the old one with a new instance without change the project code
-type ModifyProjectStruct struct {
-    UserName string
-    ProjectCode string
-    ProjectName string
-    ProjectDetail string
-    PlanBeginDatetime string
-    PlanEndDatetime string
-    RealBeginDatetime string
-    RealEndDatetime string
-    PersonInCharge string
-    Status string
-    Picture string
-}
-
-//the userName and projectCode are the only things you need to delete a project
-type DeleteProjectStruct struct {
-    UserName string
-    ProjectCode string
-}
-
-//this is used for add Mission
-
-type AddMissionStruct struct {
-    UserName string
-    MissionName string
-    ProjectCode string
-    ProductType string
-    MissionType string
-    MissionDetail string
-    PlanBeginDatetime string
-    PlanEndDatetime string
-    RealBeginDatetime string
-    RealEndDatetime string
-    PersonIncharge string
-    Status string
-    Picture string
-    // Width int
-    // Height int
-    // XCoordinate int
-    // YCoordinate int
-}
-
-//this is used for modify Mission
-
-type ModifyMissionStruct struct {
-    UserName string
-    ProjectCode string
-    MissionName string
-    ProductType string
-    MissionType string
-    MissionDetail string
-    PlanBeginDatetime string
-    PlanEndDatetime string
-    RealBeginDatetime string
-    RealEndDatetime string
-    PersonIncharge string
-    Status string
-    Picture string
-}
-
-//this is used for delete mission 
-
-type DeleteMissionStruct struct {
-    UserName string
-    ProjectCode string
-}
+// 
 
 type ChartMgo struct {
     ChartCode string

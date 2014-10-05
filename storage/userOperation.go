@@ -112,7 +112,7 @@ func QueryUserCode(userName * string) (* string, error) {
 	return &user_code, err
 }
 
-func CheckUserNameAndPassword(userName * string, password * string) (bool, error) {
+func CheckUserNameAndPassword(userName * string, password * string) (* string, error) {
 	stmt, err := DBConn.Prepare("SELECT user_code FROM user WHERE user_name=? AND password=?")
 	if err != nil {
 		panic(err.Error())
@@ -124,11 +124,12 @@ func CheckUserNameAndPassword(userName * string, password * string) (bool, error
 		panic(err.Error())
 	}
 	defer result.Close()
-
+	var userCode string
 	if result.Next() {
-		return true, err
+		result.Scan(&userCode)
+		return &userCode, err
 		
 	} 
-	return false, err
+	return &userCode, err
 }
 

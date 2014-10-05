@@ -37,7 +37,7 @@ var upgrader = websocket.Upgrader{
 type connection struct {
 	ws * websocket.Conn
 	send chan []byte
-	userName * string
+	userCode * string
 }
 
 // write writes a message with the given message type and message to client.
@@ -95,29 +95,67 @@ func (c * connection) readPump() {
 		//if userCode is nil, login first
 		fmt.Println(*command)
 		fmt.Println(*parameter)
-		if c.userName == nil {
+		if c.userCode == nil {
 			if *command != "login" {
 				continue
 			} else {
-				result, userName, err := user.ValidateUser(parameter)
-				fmt.Println(*userName)
+				result, userCode, err := user.ValidateUser(parameter)
+				fmt.Println(*userCode)
 				fmt.Println(*result)
 
 				if err == nil {
 					fmt.Println("*result")
-					c.userName = userName
-					Hub.register <- c
 					c.send <- []byte(*result)
+					if *userCode != "" {
+						c.userCode = userCode
+						Hub.register <- c
+					}
 				}
 			}
 
 		} else {//else do some other command
+			userCodeAndParameter := *(c.userCode) + "@" + *parameter;
 			if *command == "chart" {
 				Hub.chart <- []byte(*parameter)
+			} else if *command == "post" {
+				Hub.post <- []byte(*parameter)
 			} else if *command == "getAllProject" {
-				//fmt.Println("todo get getAllProject")
 				Hub.getAllProject <- c
-			}
+			} else if *command == "addProject" {
+				Hub.addProject <- &userCodeAndParameter
+			} else if *command == "modifyProject" {
+				Hub.modifyProject <- &userCodeAndParameter
+			} else if *command == "getAllCompaign" {
+				Hub.getAllCompaign <- &userCodeAndParameter
+			} else if *command == "addMission" {
+				Hub.addMission <- &userCodeAndParameter
+			} else if *command == "modifyMission" {
+				Hub.modifyMission <- &userCodeAndParameter
+			} else if *command == "deleteMission" {
+				Hub.deleteMission <- &userCodeAndParameter
+			} else if *command == "getAllNode" {
+				Hub.getAllNode <- &userCodeAndParameter
+			} else if *command == "addNode" {
+				Hub.addNode <- &userCodeAndParameter
+			} else if *command == "modifyNode" {
+				Hub.modifyNode <- &userCodeAndParameter
+			} else if *command == "deleteNode" {
+				Hub.deleteNode <- &userCodeAndParameter
+			} else if *command == "getAllDependency" {
+				Hub.getAllDependency <- &userCodeAndParameter
+			} else if *command == "addDependency" {
+				Hub.addDependency <- &userCodeAndParameter
+			} else if *command == "deleteDependency" {
+				Hub.deleteDependency <- &userCodeAndParameter
+			} else if *command == "addTarget" {
+				Hub.addTarget <- &userCodeAndParameter
+			} else if *command == "modifyTarget" {
+				Hub.modifyTarget <- &userCodeAndParameter
+			} else if *command == "deleteTarget" {
+				Hub.deleteTarget <- &userCodeAndParameter
+			} else if *command == "searchTargetByMissionCode" {
+				Hub.searchTargetByMissionCode <- &userCodeAndParameter
+			} 
 		}
 	}
 }
@@ -133,7 +171,7 @@ func ServeWs(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 		return
 	}
-	c := &connection{send: make(chan []byte), ws: ws, userName: nil}
+	c := &connection{send: make(chan []byte), ws: ws, userCode: nil}
 	go c.writePump()
 	c.readPump()
 }

@@ -7,35 +7,6 @@ import (
 	// "fmt"
 )
 
-// DBConn = ConnectToDB()
-// 	dependencyCode := string("a11e99a9e0c8b37a2622e6752117cf93")
-// 	startMissionCode := string("b00e99a9e0c8b37a2622e6752117c453")
-// 	endMissionCode := string("d9e84adb0d94c409d1359177a88fef74")
-// 	projectCode := string("d43e421cb4f0d2cd6a91f309facf944b")
-// 	dependency := utility.Dependency{
-// 		DependencyCode: dependencyCode,
-// 		ProjectCode: projectCode,
-// 		StartMissionCode: startMissionCode,
-// 		EndMissionCode: endMissionCode,
-// 		DependencyType: "test dep",
-// 	}
-// 	result, _ := InsertIntoDependency(&dependency)
-// 	if result == false {
-// 		t.Error("insert dependency")
-// 	}
-// 	CloseDBConnection()
-
-// type Campaign struct {
-//     CampaignCode string
-//     ProjectCode string
-//     NodeCode string
-//     Width int
-//     Height int
-//     XCoordinate int
-//     YCoordinate int
-//     InsertDatetime string
-//     UpdateDatetime string
-// }
 func TestInsertIntoCampaign(t * testing.T) {
 	DBConn = ConnectToDB()
 	campaignCode := string("a11e99a9e0c8b37a2622e6752117cf92")

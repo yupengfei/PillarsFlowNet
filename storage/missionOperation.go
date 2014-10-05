@@ -12,19 +12,53 @@ import (
 //insert is a Transaction
 func InsertIntoMission(mission * utility.Mission) (bool, error) {
 	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare(`INSERT INTO mission(mission_code, mission_name, project_code, product_type, 
+	stmt, err := tx.Prepare(`INSERT INTO mission(mission_code, mission_name, project_code, product_type, is_campaign,
 		mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, 
 		real_begin_datetime, real_end_datetime, person_in_charge, status, 
-		picture) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+		picture) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		panic(err.Error())
 	}
 	defer stmt.Close()
 	_, err = stmt.Exec(mission.MissionCode, mission.MissionName, mission.ProjectCode,
-		mission.ProductType, mission.MissionType, mission.MissionDetail,
+		mission.ProductType, mission.IsCampaign, mission.MissionType, mission.MissionDetail,
 		mission.PlanBeginDatetime, mission.PlanEndDatetime, mission.RealBeginDatetime, 
 		mission.RealEndDatetime, mission.PersonIncharge,
 		mission.Status, mission.Picture)
+	if err != nil {
+		panic(err.Error())
+	}
+	//insert return Result, it does not have interface Close
+	//query return Rows ,which must be closed
+	err = tx.Commit()
+	if err != nil {
+		fmt.Println(err.Error())
+		pillarsLog.Logger.Print(err.Error())
+		err = tx.Rollback()
+		if err != nil {
+			pillarsLog.Logger.Panic(err.Error())
+		}
+		return false, err
+	}
+	return true, err
+}
+
+//is_campaign is not checked
+func ModifyMission(mission * utility.Mission) (bool, error) {
+	tx, err := DBConn.Begin()
+	stmt, err := tx.Prepare(`UPDATE mission SET mission_name=?, project_code=?, product_type=?, is_campaign=?,
+		mission_type=?, mission_detail=?, plan_begin_datetime=?, plan_end_datetime=?, 
+		real_begin_datetime=?, real_end_datetime=?, person_in_charge=?, status=?, 
+		picture=? WHERE mission_code=?`)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(mission.MissionName, mission.ProjectCode,
+		mission.ProductType, mission.IsCampaign, mission.MissionType, mission.MissionDetail,
+		mission.PlanBeginDatetime, mission.PlanEndDatetime, mission.RealBeginDatetime, 
+		mission.RealEndDatetime, mission.PersonIncharge,
+		mission.Status, mission.Picture, mission.MissionCode)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -128,7 +162,7 @@ func DeleteMissionByMissionCode(missionCode * string) (bool, error) {
 
 
 func QueryMissionByMissionCode(missionCode * string) (* utility.Mission, error) {
-	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission WHERE mission_code=?")
+	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, is_campaign, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission WHERE mission_code=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -141,7 +175,7 @@ func QueryMissionByMissionCode(missionCode * string) (* utility.Mission, error) 
 	var mission utility.Mission
 	if result.Next() {
 		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
-		&(mission.ProductType), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
 		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
 		&(mission.InsertDatetime), 
@@ -154,7 +188,7 @@ func QueryMissionByMissionCode(missionCode * string) (* utility.Mission, error) 
 }
 
 func QueryMissionsByProjectCode(projectCode * string) ([] utility.Mission, error) {
-	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission where project_code = ?")
+	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, is_campaign, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission where project_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -169,7 +203,36 @@ func QueryMissionsByProjectCode(projectCode * string) ([] utility.Mission, error
 	for result.Next() {
 		var mission utility.Mission
 		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
-		&(mission.ProductType), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
+		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
+		&(mission.InsertDatetime), 
+		&(mission.UpdateDatetime))
+		if err != nil {
+			pillarsLog.Logger.Print(err.Error())
+		}
+		missionSlice = append(missionSlice, mission)
+	}
+	return missionSlice, err
+}
+
+func QueryCampaignsByProjectCode(projectCode * string) ([] utility.Mission, error) {
+	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, is_campaign, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission where project_code = ? AND is_campaign=1")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	result, err := stmt.Query(projectCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+	//this is easy to imply but may not very fast
+	var missionSlice [] utility.Mission
+	for result.Next() {
+		var mission utility.Mission
+		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
 		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
 		&(mission.InsertDatetime), 

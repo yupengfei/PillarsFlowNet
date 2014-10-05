@@ -13,7 +13,7 @@ func init() {
 }
 //todo
 //this function has not been complished
-func GetAuthInformation(userName * string) bool {
-	fmt.Println(userName)
+func GetAuthInformation(userCode * string) bool {
+	fmt.Println(*userCode)
 	return true
 }

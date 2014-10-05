@@ -34,6 +34,34 @@ func InsertIntoProject(project * utility.Project) (bool, error) {
 	return true, err
 }
 
+func ModifyProject(project * utility.Project) (bool, error) {
+	tx, err := DBConn.Begin()
+	stmt, err := tx.Prepare("UPDATE project SET project_name=?, project_detail=?, plan_begin_datetime=?, plan_end_datetime=?, real_begin_datetime=?, real_end_datetime=?, person_in_charge=?, status=?, picture=? WHERE project_code=?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(project.ProjectName, project.ProjectDetail,
+		project.PlanBeginDatetime, project.PlanEndDatetime, project.RealBeginDatetime, 
+		project.RealEndDatetime, project.PersonInCharge,
+		project.Status, project.Picture, project.ProjectCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	//insert return Result, it does not have interface Close
+	//query return Rows ,which must be closed
+	err = tx.Commit()
+	if err != nil {
+		pillarsLog.Logger.Print(err.Error())
+		err = tx.Rollback()
+		if err != nil {
+			pillarsLog.Logger.Panic(err.Error())
+		}
+		return false, err
+	}
+	return true, err
+}
+
 func DeleteProjectByProjectCode(projectCode * string) (bool, error) {
 	tx, err := DBConn.Begin()
 	stmt, err := tx.Prepare("DELETE FROM project WHERE project_code = ?")
@@ -96,7 +124,7 @@ func QueryAllProject() ([] utility.Project, error) {
 	for result.Next() {
 		var project utility.Project
 		err = result.Scan(&(project.ProjectCode), &(project.ProjectName), &(project.ProjectDetail),
-		&(project.PlanBeginDatetime), &(project.PlanEndDatetime), &(project.RealBeginDatetime), &(project.PlanEndDatetime), &(project.PersonInCharge),
+		&(project.PlanBeginDatetime), &(project.PlanEndDatetime), &(project.RealBeginDatetime), &(project.RealEndDatetime), &(project.PersonInCharge),
 		&(project.Status), &(project.Picture), &(project.InsertDatetime), &(project.UpdateDatetime))
 		if err != nil {
 			pillarsLog.Logger.Print(err.Error())

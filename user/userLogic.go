@@ -16,13 +16,13 @@ func ValidateUser(parameter * string) (* string,  * string,  error) {
 		pillarsLog.Logger.Println("parse login message error")
 		return &result, &userName, err
 	}
-	validLogin, _ := storage.CheckUserNameAndPassword(&((*user).UserName), &((*user).Password))
+	userCode, _ := storage.CheckUserNameAndPassword(&((*user).UserName), &((*user).Password))
 	var sysError = utility.Error {
 			ErrorCode: 0,
 			ErrorMessage: "",
 	}
 	var loginMessage utility.LoginInMessage
-	if validLogin {
+	if *userCode != "" {
 		loginMessage = utility.LoginInMessage {
 			Auth: "success",
 			AuthMessage : "",
@@ -42,5 +42,5 @@ func ValidateUser(parameter * string) (* string,  * string,  error) {
 		}
 
 	result = string(utility.ObjectToJsonByte(out))
-	return &result, &(user.UserName), err
+	return &result, userCode, err
 }
