@@ -141,11 +141,9 @@ type Target struct {
     UpdateDatetime string
 }
 
-// 
-
 type Chart struct {
     ChartCode string
-    IsPicture string
+    IsPicture int
     Message string
     From string
     SendTime string
@@ -153,6 +151,17 @@ type Chart struct {
     ReceivedTime string
     Receipt int
     IsRead int
+    Deleted int
+    DeletedTime string
+}
+
+type Post struct {
+    PostCode string
+    TargetCode string
+    Message string
+    ReplyTo string
+    UserCode string
+    PostTime string
     Deleted int
     DeletedTime string
 }

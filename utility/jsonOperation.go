@@ -15,10 +15,16 @@ func ParseLoginInMessage(message * string) (* UserLogin, error)  {
 	return &result, err
 }
 
-func ParseChartMessage(message [] byte) (* string, * string, error) {
-	var result Chart
-	err := json.Unmarshal(message, &result)
-	return &result.Message, &result.To, err
+func ParseChartMessage(message * string) (* Chart, error) {
+	var chart Chart
+	err := json.Unmarshal([]byte(*message), &chart)
+	return &chart, err
+}
+
+func ParsePostMessage(message * string) (* Post, error) {
+	var post Post
+	err := json.Unmarshal([]byte(*message), &post)
+	return &post, err
 }
 
 func ParseProjectMessage(message * string) (* Project, error) {

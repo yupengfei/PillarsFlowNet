@@ -94,8 +94,8 @@ func (h *hub) Run() {
 			result, userCode := chart.Chart(m)
 			h.connections[*userCode].send <- result	
 		case m := <- h.post:
-			result, userCode := post.Post(m)
-			h.connections[*userCode].send <- result	
+			post.Post(m)
+			//h.connections[*userCode].send <- result	
 		case c := <- h.getAllProject:
 			c.send <- project.GetAllProject()	
 
