@@ -18,7 +18,7 @@ import (
 //     Deleted int
 //     DeletedTime string
 // }
-func Post(userCodeAndParameter * string) ([] byte, *string) {
+func AddPost(userCodeAndParameter * string) ([] byte, *string) {
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
 	auth := authentication.GetAuthInformation(&(inputParameters[0]))
 	var errorCode int
@@ -38,5 +38,5 @@ func Post(userCodeAndParameter * string) ([] byte, *string) {
 		post.DeletedTime = time.Now().Format("2006-01-02 15:04:05")
 		storage.StoreToPost(post)
 	}
-	return utility.ObjectToJsonByte(post), nil
+	return utility.ObjectToJsonByte(post), &(inputParameters[0])
 }

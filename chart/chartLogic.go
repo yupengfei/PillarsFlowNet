@@ -15,11 +15,10 @@ import (
 // 		SendTime: sendTime,
 // 		To: toUserCode,
 // 		ReceivedTime: time.Now().Format("2006-01-02 15:04:05"),
-// 		Receipt: receipt,
-// 		IsRead: 0,
+// 		IsReceived: 0,
 // 		Deleted: 0,
 // 		DeletedTime: time.Now().Format("2006-01-02 15:04:05"),
-func Chart(userCodeAndParameter * string) ([] byte, *string) {
+func AddChart(userCodeAndParameter * string) ([] byte, *string, *string) {//result, fromUserCode, ToUserCode
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
 	auth := authentication.GetAuthInformation(&(inputParameters[0]))
 	var errorCode int
@@ -35,10 +34,10 @@ func Chart(userCodeAndParameter * string) ([] byte, *string) {
 		chart.ChartCode = *(utility.GenerateCode(&inputParameters[0]))
 		chart.From = inputParameters[0]
 		chart.ReceivedTime = time.Now().Format("2006-01-02 15:04:05")
-		chart.IsRead = 0
+		chart.IsReceived = 0
 		chart.Deleted = 0
 		chart.DeletedTime = time.Now().Format("2006-01-02 15:04:05")
 		storage.StoreToChart(chart)
 	}
-	return utility.ObjectToJsonByte(chart), toUserCode
+	return utility.ObjectToJsonByte(chart), &(inputParameters[0]), toUserCode
 }

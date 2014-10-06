@@ -9,7 +9,7 @@ import (
 
 func TestQueryUserCode(t * testing.T) {
 	DBConn = ConnectToDB()
-	userName := "er.wang"
+	userName := "kun.wang"
 	user_code, _ := QueryUserCode(&userName)
 	// if !isExist {
 	// 	t.Error("UserName or password wrong")
@@ -30,10 +30,10 @@ func TestInsertIntoUser1(t * testing.T) {
 	DBConn = ConnectToDB()
 	var user utility.User
 
-	user.UserName = "yupengfei"
+	user.UserName = "er.wang"
 	user.UserCode = *(utility.GenerateCode(&(user.UserName)))
-	pass := "123456"
-	user.Password =  *(utility.GenerateCode(&(pass)))
+	pass := "aaa"
+	user.Password =  string(utility.Md5sum(&pass))
 	user.Group = "fjkdjflk"
 	user.DisplayName = "fdafae"
 
@@ -56,12 +56,23 @@ func TestQueryByUserName(t * testing.T) {
 
 func TestDeleteUserByUserName(t * testing.T) {
 	DBConn = ConnectToDB()
-	userName := string("yupengfei")
+	userName := string("er.wang")
 	result, err := DeleteUserByUserName(&userName)
 	if result == false || err != nil {
 		t.Error("test delete user failed")
 	}
 
+	CloseDBConnection()
+}
+
+func TestQueryAllUser(t * testing.T) {
+	DBConn = ConnectToDB()
+	result, err := QueryAllUser()
+	if err != nil {
+		panic(err.Error())
+	} else {
+		fmt.Println(*(utility.ObjectToJsonString(result)))
+	}
 	CloseDBConnection()
 }
 

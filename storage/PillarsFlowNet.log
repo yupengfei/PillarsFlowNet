@@ -1,6 +1,6 @@
-2014/10/05 17:49:37 /home/developer/go/src/PillarsFlowNet/storage/userOperation.go:88: sql: Scan error on column index 5: unsupported driver -> Scan pair: <nil> -> *string
-'
-
-2014/09/19 17:45:34 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:85: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
-2014/09/19 17:45:34 /home/developer/go/src/PillarsFlowNet/storage/projectOperation.go:60: sql: Scan error on column index 9: unsupported driver -> Scan pair: <nil> -> *string
- 104 97 114 116 34 44 34 80 97 114 97 109 101 116 101 114 34 58 34 123 92 34 77 101 115 115 97 103 101 92 34 58 92 34 102 103 102 92 34 44 92 34 84 111 92 34 58 92 34 115 105 46 122 104 97 111 92 34 125 34 125]
+2014/10/06 12:06:54 /home/developer/go/src/PillarsFlowNet/storage/userOperation.go:25: Error 1062: Duplicate entry 'kun.wang' for key 'user_name'
+an pair: <nil> -> *string
+2014/10/06 11:52:46 /home/developer/go/src/PillarsFlowNet/storage/userOperation.go:135: sql: Scan error on column index 4: unsupported driver -> Scan pair: <nil> -> *string
+2014/10/06 11:52:46 /home/developer/go/src/PillarsFlowNet/storage/userOperation.go:135: sql: Scan error on column index 4: unsupported driver -> Scan pair: <nil> -> *string
+2014/10/06 11:52:46 /home/developer/go/src/PillarsFlowNet/storage/userOperation.go:135: sql: Scan error on column index 4: unsupported driver -> Scan pair: <nil> -> *string
+2014/10/06 11:52:46 /home/developer/go/src/PillarsFlowNet/storage/userOperation.go:135: sql: Scan error on column index 4: unsupported driver -> Scan pair: <nil> -> *string

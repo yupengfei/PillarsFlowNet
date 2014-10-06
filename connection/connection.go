@@ -115,18 +115,14 @@ func (c * connection) readPump() {
 
 		} else {//else do some other command
 			userCodeAndParameter := *(c.userCode) + "@" + *parameter;
-			if *command == "chart" {
-				Hub.chart <- &userCodeAndParameter
-			} else if *command == "post" {
-				Hub.post <- &userCodeAndParameter
-			} else if *command == "getAllProject" {
+			if *command == "getAllProject" {
 				Hub.getAllProject <- c
 			} else if *command == "addProject" {
 				Hub.addProject <- &userCodeAndParameter
 			} else if *command == "modifyProject" {
 				Hub.modifyProject <- &userCodeAndParameter
-			} else if *command == "getAllCompaign" {
-				Hub.getAllCompaign <- &userCodeAndParameter
+			} else if *command == "getAllCampaign" {
+				Hub.getAllCampaign <- &userCodeAndParameter
 			} else if *command == "addMission" {
 				Hub.addMission <- &userCodeAndParameter
 			} else if *command == "modifyMission" {
@@ -157,7 +153,19 @@ func (c * connection) readPump() {
 				Hub.deleteTarget <- &userCodeAndParameter
 			} else if *command == "queryTargetByMissionCode" {
 				Hub.queryTargetByMissionCode <- &userCodeAndParameter
-			} 
+			} else if *command == "getAllUser" {
+				Hub.getAllUser <- &userCodeAndParameter
+			} else if * command == "addChart" {
+				Hub.addChart <- &userCodeAndParameter
+			} else if * command == "receiveChart" {
+				Hub.addChart <- &userCodeAndParameter
+			} else if * command == "getAllUnreceivedChart" {
+				Hub.addChart <- &userCodeAndParameter
+			} else if * command == "addPost" {
+				Hub.addChart <- &userCodeAndParameter
+			} else if * command == "getAllTargetPost" {
+				Hub.addChart <- &userCodeAndParameter
+			}
 		}
 	}
 }

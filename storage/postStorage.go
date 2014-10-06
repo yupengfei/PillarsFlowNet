@@ -2,13 +2,24 @@ package storage
 import (
 
 	"PillarsFlowNet/utility"
-	// "fmt"
+	"labix.org/v2/mgo/bson"
 )
-func StoreToPost(post * utility.Post) (bool, error){
+func StoreToPost(post * utility.Post) (* utility.Post, error){
 	
 	err := PostCollection.Insert(post)
 	if err != nil {
-		return false, err
+		return post, err
 	}
-	return true, err
+	PostCollection.Find(bson.M{"postcode":post.PostCode}).One(post)
+	return post, err
+}
+
+func GetAllPostByTargetCode(targetCode * string) ([] utility.Post, error) {
+	var postSlice [] utility.Post
+	iter := PostCollection.Find(bson.M{"targetcode":*targetCode}).Iter()
+	err := iter.All(&postSlice)
+	if err != nil {
+		return postSlice, err
+	}
+	return postSlice, err
 }

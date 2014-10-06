@@ -10,7 +10,7 @@ import (
 	"PillarsFlowNet/target"
 	"PillarsFlowNet/chart"
 	"PillarsFlowNet/post"
-	// "time"
+	"sync"
 	"fmt"
 
 )
@@ -21,14 +21,13 @@ import (
 type hub struct {
 
 	connections map[string]*connection
-	chart chan * string
-	post chan * string
+	
 	register chan * connection
 	unregister chan * connection
 	getAllProject chan * connection
 	addProject chan * string
 	modifyProject chan * string
-	getAllCompaign chan * string
+	getAllCampaign chan * string
 	addMission chan * string
 	modifyMission chan * string
 	deleteMission chan * string
@@ -45,18 +44,29 @@ type hub struct {
 	modifyTarget chan * string
 	deleteTarget chan * string
 	queryTargetByMissionCode chan * string
+	getAllUser chan * string
+
+	addChart chan * string
+	receiveChart chan * string
+	getAllUnreceivedChart chan * string
+
+	addPost chan * string
+	getAllTargetPost chan * string
+
+
+	productionMutex * sync.Mutex
+	//postMutex * sync.Mutex
 }
 
 var Hub = hub {
 	connections: make(map[string]*connection),
-	chart: make(chan * string),
-	post: make(chan * string),
+	
 	register: make(chan * connection),
 	unregister: make(chan * connection),
 	getAllProject: make(chan * connection),
 	addProject: make(chan * string),
 	modifyProject: make(chan * string),
-	getAllCompaign: make(chan * string),
+	getAllCampaign: make(chan * string),
 	addMission: make(chan * string),
 	modifyMission: make(chan * string),
 	deleteMission: make(chan * string),
@@ -73,6 +83,18 @@ var Hub = hub {
 	modifyTarget: make(chan * string),
 	deleteTarget: make(chan * string),
 	queryTargetByMissionCode: make(chan * string),
+
+	getAllUser: make(chan * string),
+
+	addChart: make(chan * string),
+	receiveChart: make(chan * string),
+	getAllUnreceivedChart: make(chan * string),
+
+	addPost: make(chan * string),
+	getAllTargetPost: make(chan * string),
+
+
+	productionMutex: new(sync.Mutex),
 }
 
 
@@ -90,39 +112,60 @@ func (h *hub) Run() {
 					delete(h.connections, *(c.userCode))			
 				}
 			}
-		case m := <- h.chart:
-			result, userCode := chart.Chart(m)
-			h.connections[*userCode].send <- result	
-		case m := <- h.post:
-			post.Post(m)
-			//h.connections[*userCode].send <- result	
+		case m := <- h.addChart:
+			result, fromUserCode, toUserCode := chart.AddChart(m)
+			h.SendToUserCode(result, fromUserCode)
+			h.SendToUserCode(result, toUserCode)
+		// case m := <- h.receiveChart:
+
+		// case m := <- h.getAllUnreceivedChart:
+
+		case m := <- h.addPost:
+			post.AddPost(m)
+		// 	//h.connections[*userCode].send <- result	
+		// case m := <- h.getAllTargetPost:
+
+		// case m := <- h.getAllUser:
+
+
 		case c := <- h.getAllProject:
 			c.send <- project.GetAllProject()	
 
 
 		case m := <- h.addProject:
+			h.productionMutex.Lock()
 			result, _ := project.AddProject(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
 		case m := <- h.modifyProject:
+			h.productionMutex.Lock()
 			result, _ := project.ModifyProject(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
-		case m := <- h.getAllCompaign:
-			result, userCode := mission.GetAllCompaign(m)
+		case m := <- h.getAllCampaign:
+			fmt.Println("getAllCampaign")
+			result, userCode := mission.GetAllCampaign(m)
 			h.connections[*userCode].send <- result
 
 		case m := <- h.addMission:
+			h.productionMutex.Lock()
 			result, _ := mission.AddMission(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
 		case m := <- h.modifyMission:
+			h.productionMutex.Lock()
 			result, _ := mission.ModifyMission(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
 		case m := <- h.deleteMission:
+			h.productionMutex.Lock()
 			result, _ := mission.DeleteMission(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
 		case m := <- h.queryMissionByMissionCode:
 			result, userCode := mission.QueryMissionByMissionCode(m)
@@ -133,44 +176,62 @@ func (h *hub) Run() {
 			h.connections[*userCode].send <- result
 
 		case m := <- h.addNode:
+			h.productionMutex.Lock()
 			result, _ := graph.AddNode(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
 		case m := <- h.modifyNode:
+			h.productionMutex.Lock()
 			result, _ := graph.ModifyNode(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
 		case m := <- h.deleteNode:
+			h.productionMutex.Lock()
 			result, _ := graph.DeleteNode(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
 		case m := <- h.getAllDependency:
 			result, userCode := dependency.GetAllDependency(m)
 			h.connections[*userCode].send <- result
 
 		case m := <- h.addDependency:
+			h.productionMutex.Lock()
 			result, _ := dependency.AddDependency(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
 		case m := <- h.deleteDependency:
+			h.productionMutex.Lock()
 			result, _ := dependency.DeleteDependency(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
 		case m := <- h.modifyDependency:
+			h.productionMutex.Lock()
 			result, _ := dependency.ModifyDependency(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
 		case m := <- h.addTarget:
+			h.productionMutex.Lock()
 			result, _ := target.AddTarget(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
 		case m := <- h.modifyTarget:
+			h.productionMutex.Lock()
 			result, _ := target.ModifyTarget(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
 		case m := <- h.deleteTarget:
+			h.productionMutex.Lock()
 			result, _ := target.DeleteTarget(m)
 			h.Dispatch(result)
+			h.productionMutex.Unlock()
 
 		case m := <- h.queryTargetByMissionCode:
 			result, userCode := target.QueryTargetByMissionCode(m)
@@ -182,6 +243,7 @@ func (h *hub) Run() {
 }
 
 func (h *hub) Dispatch(result []byte) {
+	fmt.Println(string(result))
 	for userCode := range h.connections {
 		select {
 		case h.connections[userCode].send <- result:
@@ -189,5 +251,14 @@ func (h *hub) Dispatch(result []byte) {
 			close(h.connections[userCode].send)
 			delete(h.connections, userCode)
 		}
+	}
+}
+
+func (h *hub) SendToUserCode(result []byte, userCode * string) {
+	select {
+	case h.connections[*userCode].send <- result:
+	default:
+		close(h.connections[*userCode].send)
+		delete(h.connections, *userCode)
 	}
 }

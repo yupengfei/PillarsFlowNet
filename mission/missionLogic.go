@@ -39,7 +39,7 @@ import (
 //     		UpdateDatetime string		
 // 	}”
 // }
-func GetAllCompaign(userCodeAndParameter * string) ([] byte, *string) {
+func GetAllCampaign(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
 	auth := authentication.GetAuthInformation(&(inputParameters[0]))
@@ -62,7 +62,7 @@ func GetAllCompaign(userCodeAndParameter * string) ([] byte, *string) {
 					}
 	var out = utility.OutMessage {
 						Error: sysError,
-						Command: "getAllCompaign",
+						Command: "getAllCampaign",
 						Result:*utility.ObjectToJsonString(opResult),
 					}
 	var result = utility.ObjectToJsonByte(out)

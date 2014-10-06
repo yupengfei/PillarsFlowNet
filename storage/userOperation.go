@@ -69,7 +69,7 @@ func DeleteUserByUserName(userName * string) (bool, error) {
 func QueryUserByUserName(userName * string) (* utility.User, error) {
 	
 
-	stmt, err := DBConn.Prepare("SELECT user_code, user_name, password, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user WHERE user_name=?")
+	stmt, err := DBConn.Prepare("SELECT user_code, user_name, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user WHERE user_name=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -81,7 +81,7 @@ func QueryUserByUserName(userName * string) (* utility.User, error) {
 	defer result.Close()
 	var user utility.User
 	if result.Next() {
-		err = result.Scan(&(user.UserCode), &(user.UserName), &(user.Password),
+		err = result.Scan(&(user.UserCode), &(user.UserName),
 		&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
 		&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
 		if err != nil {
@@ -110,6 +110,34 @@ func QueryUserCode(userName * string) (* string, error) {
 		
 	} 
 	return &user_code, err
+}
+
+func QueryAllUser() ([] utility.User, error) {
+	
+
+	stmt, err := DBConn.Prepare("SELECT user_code, user_name, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	result, err := stmt.Query()
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+	var users [] utility.User
+	for result.Next() {
+		var user utility.User
+		err = result.Scan(&(user.UserCode), &(user.UserName),
+		&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
+		&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
+		if err != nil {
+			pillarsLog.Logger.Print(err.Error())
+		}
+		users = append(users, user)
+	}
+	return users, err
+
 }
 
 func CheckUserNameAndPassword(userName * string, password * string) (* string, error) {

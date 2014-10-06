@@ -149,8 +149,7 @@ type Chart struct {
     SendTime string
     To string
     ReceivedTime string
-    Receipt int
-    IsRead int
+    IsReceived int
     Deleted int
     DeletedTime string
 }
