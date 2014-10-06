@@ -112,7 +112,7 @@ func QueryGraphNodesByCampaignCode(campaignCode * string) ([] utility.Graph, err
 	for result.Next() {
 		var graph utility.Graph
 		err = result.Scan(&(graph.GraphCode), &(graph.CampaignCode), &(graph.ProjectCode), &(graph.NodeCode), &(graph.Width),
-			&(graph.Height), &(graph.XCoordinate), &(graph.YCoordinate))
+			&(graph.Height), &(graph.XCoordinate), &(graph.YCoordinate), &(graph.InsertDatetime), &(graph.UpdateDatetime))
 		if err != nil {
 			panic(err.Error())
 		}
@@ -134,13 +134,13 @@ func QueryGraphNodeByGraphCode(graphCode * string) (* utility.Graph, error) {
 		panic(err.Error())
 	}
 	defer result.Close()
-	var graph * utility.Graph
+	var graph utility.Graph
 	if result.Next() {
 		err = result.Scan(&(graph.GraphCode), &(graph.CampaignCode), &(graph.ProjectCode), &(graph.NodeCode), &(graph.Width),
-			&(graph.Height), &(graph.XCoordinate), &(graph.YCoordinate))
+			&(graph.Height), &(graph.XCoordinate), &(graph.YCoordinate), &(graph.InsertDatetime), &(graph.UpdateDatetime))
 		if err != nil {
 			panic(err.Error())
 		}
 	}
-	return graph, err
+	return &graph, err
 }

@@ -70,6 +70,10 @@ type TargetCode struct {
     TargetCode string
 }
 
+type ChartCode struct {
+    ChartCode string
+}
+
 type Project struct {
     ProjectCode string
     ProjectName string

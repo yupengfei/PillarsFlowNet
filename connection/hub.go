@@ -10,6 +10,7 @@ import (
 	"PillarsFlowNet/target"
 	"PillarsFlowNet/chart"
 	"PillarsFlowNet/post"
+	"PillarsFlowNet/user"
 	"sync"
 	"fmt"
 
@@ -116,17 +117,23 @@ func (h *hub) Run() {
 			result, fromUserCode, toUserCode := chart.AddChart(m)
 			h.SendToUserCode(result, fromUserCode)
 			h.SendToUserCode(result, toUserCode)
-		// case m := <- h.receiveChart:
-
-		// case m := <- h.getAllUnreceivedChart:
-
+		case m := <- h.receiveChart:
+			result, userCode := chart.ReceiveChart(m)
+			h.SendToUserCode(result, userCode)
+		case m := <- h.getAllUnreceivedChart:
+			result, userCode := chart.GetAllUnreceivedChart(m)
+			h.SendToUserCode(result, userCode)
 		case m := <- h.addPost:
-			post.AddPost(m)
-		// 	//h.connections[*userCode].send <- result	
-		// case m := <- h.getAllTargetPost:
+			result, _ := post.AddPost(m)
+			h.Dispatch(result)
 
-		// case m := <- h.getAllUser:
+		case m := <- h.getAllTargetPost:
+			result, userCode := post.AddPost(m)
+			h.SendToUserCode(result, userCode)
 
+		case m := <- h.getAllUser:
+			result, userCode := user.GetAllUser(m)
+			h.SendToUserCode(result, userCode)
 
 		case c := <- h.getAllProject:
 			c.send <- project.GetAllProject()	
@@ -145,9 +152,8 @@ func (h *hub) Run() {
 			h.productionMutex.Unlock()
 
 		case m := <- h.getAllCampaign:
-			fmt.Println("getAllCampaign")
 			result, userCode := mission.GetAllCampaign(m)
-			h.connections[*userCode].send <- result
+			h.SendToUserCode(result, userCode)
 
 		case m := <- h.addMission:
 			h.productionMutex.Lock()

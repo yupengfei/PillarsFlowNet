@@ -4,6 +4,8 @@ import (
 	"PillarsFlowNet/utility"
 	"PillarsFlowNet/storage"
 	"PillarsFlowNet/pillarsLog"
+	"strings"
+	"PillarsFlowNet/authentication"
 )
 
 //result, userName, err
@@ -93,7 +95,7 @@ func GetAllUser(userCodeAndParameter * string) ([] byte, *string) {
 					}
 		out = & tempout
 	} else {
-		userSlice, _ := user.QueryAllUser()
+		userSlice, _ := storage.QueryAllUser()
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "getAllUser",

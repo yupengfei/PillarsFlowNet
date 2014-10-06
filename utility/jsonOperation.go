@@ -94,6 +94,12 @@ func ParseTargetCodeMessage(message * string) (* TargetCode, error) {
 	return &targetCode, err
 }
 
+func ParseChartCodeMessage(message * string) (* ChartCode, error) {
+	var chartCode ChartCode
+	err := json.Unmarshal([]byte(*message), &chartCode)
+	return &chartCode, err
+}
+
 
 func ObjectToJsonByte(object interface{}) []byte {
 	message, err := json.Marshal(object)
