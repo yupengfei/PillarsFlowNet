@@ -116,7 +116,7 @@ func (c * connection) readPump() {
 		} else {//else do some other command
 			userCodeAndParameter := *(c.userCode) + "@" + *parameter;
 			if *command == "getAllProject" {
-				Hub.getAllProject <- c
+				Hub.getAllProject <- &userCodeAndParameter
 			} else if *command == "addProject" {
 				Hub.addProject <- &userCodeAndParameter
 			} else if *command == "modifyProject" {

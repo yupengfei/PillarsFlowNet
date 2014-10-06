@@ -40,34 +40,6 @@ func ValidateUser(parameter * string) (* string,  * string,  error) {
 	return result, userCode, err
 }
 
-// getAllUser 获取所有的用户列表
-// {
-// 	“command”:”getAllUser”,
-// 	”parameter“：”{
-// 	}“
-// }
-// 返回值
-// {
-// 	"error": {
-// 		"errorCode" : 0,
-// 		"errorMessage": ""
-// 	},
-// 	“commnd”: “getAllUser”,
-// 	“result”:”[{
-// 		UserCode string
-//     		UserName string
-//     		Password string，返回只里面该字段为空
-//     		Group string
-//     		DisplayName string
-//     		Position string
-//     		Picture string
-//     		Email string
-//     		Phone string
-//     		InsertDatetime string
-//     		UpdateDatetime string
-// 	}]”
-// }
-
 func GetAllUser(userCodeAndParameter * string) ([] byte, *string) {
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
 	auth := authentication.GetAuthInformation(&(inputParameters[0]))
@@ -75,31 +47,11 @@ func GetAllUser(userCodeAndParameter * string) ([] byte, *string) {
 	if (auth == false) {
 		errorCode = 3
 	}
-	var sysError = utility.Error {
-						ErrorCode: errorCode,
-						ErrorMessage: "",
-					}
-	var out * utility.OutMessage
-	if errorCode != 0 {
-		tempout :=utility.OutMessage {
-						Error: sysError,
-						Command: "getAllUser",
-						UserCode: inputParameters[0],
-						Result: "{}",
-					}
-		out = & tempout
-	} else {
-		userSlice, _ := storage.QueryAllUser()
-		tempout :=utility.OutMessage {
-						Error: sysError,
-						Command: "getAllUser",
-						UserCode: inputParameters[0],
-						Result: *utility.ObjectToJsonString(userSlice) ,
-					}
-		out = & tempout
+	var userSlice [] utility.User
+	if errorCode == 0 {
+		userSlice, _ = storage.QueryAllUser()
 	}
-
-	var result = utility.ObjectToJsonByte(out)
-
+	command := "getAllUser"
+	result := utility.SliceResultToOutMessage(&command, userSlice, errorCode, &(inputParameters[0]))
 	return result, &(inputParameters[0])
 }

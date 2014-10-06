@@ -8,39 +8,7 @@ import (
 	// "fmt"
 	"strings"
 )
-// addPost
-// {
-// 	“command”:”addPost”,
-// 	“parameter”:”{
-// 		PostCode: 任意string，可以没有
-// 		TargetCode string
-// 		Message string
-// 		ReplyTo string
-// 		UserCode 任意string，可以没有
-// 		PostTime: 任意string，可以没有
-// 		Deleted: 任意int，可以没有
-// 		DeletedTime:任意string，可以没有
-// 	}”
-// }
-// 返回给所有人
-// {
-// 	"error": {
-// 		"errorCode" : 0,
-// 		"errorMessage": ""
-// 	},
-// 	“commnd”: “addPost”,
-// 	“result”:”{
-// 		PostCode: string
-// 		TargetCode string
-// 		Message string
-// 		ReplyTo string
-// 		UserCode string
-// 		PostTime: string
-// 		Deleted: 任意int，可以没有
-// 		DeletedTime:任意string，可以没有
 
-// 	}”
-// }
 func AddPost(userCodeAndParameter * string) ([] byte, *string) {
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
 	auth := authentication.GetAuthInformation(&(inputParameters[0]))
@@ -65,61 +33,12 @@ func AddPost(userCodeAndParameter * string) ([] byte, *string) {
 			errorCode = 1
 		}
 	}
-	var sysError = utility.Error {
-						ErrorCode: errorCode,
-						ErrorMessage: "",
-					}
-	var out * utility.OutMessage
-	if errorCode != 0 {
-		tempout :=utility.OutMessage {
-						Error: sysError,
-						Command: "addPost",
-						UserCode: inputParameters[0],
-						Result: "{}",
-					}
-		out = & tempout
-	} else {
-		tempout :=utility.OutMessage {
-						Error: sysError,
-						Command: "addPost",
-						UserCode: inputParameters[0],
-						Result: *utility.ObjectToJsonString(postOut) ,
-					}
-		out = & tempout
-	}
-
-	var result = utility.ObjectToJsonByte(out)
+	var command = "addPost"
+	result := utility.BoolResultToOutMessage(&command, postOut, errorCode, &inputParameters[0])
 	return result, &(inputParameters[0])
 }
 
-// getAllTargetPost 根据targetCode获取所有post
-// {
-// 	“command”：“getAllTargetPost”，
-// 	“parameter”：“{
-// 		TargetCode string
-// 	}”
-// }
-// 返回值
-// {
-// 	"error": {
-// 		"errorCode" : 0,
-// 		"errorMessage": ""
-// 	},
-// 	“commnd”: “getAllTargetPost”,
-// 	“result”:”[{
-// 		PostCode: string
-// 		TargetCode string
-// 		Message string
-// 		ReplyTo string
-// 		UserCode string
-// 		PostTime: string
-// 		Deleted: 任意int，可以没有
-// 		DeletedTime:任意string，可以没有
-
-// 	}]”
-// }
-
-func GetAllUnreceivedChart(userCodeAndParameter * string) ([] byte, *string) {
+func GetAllTargetPost(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
 	auth := authentication.GetAuthInformation(&(inputParameters[0]))
@@ -136,18 +55,7 @@ func GetAllUnreceivedChart(userCodeAndParameter * string) ([] byte, *string) {
 			errorCode = 1
 		}
 	}
-
-	var sysError = utility.Error {
-						ErrorCode: errorCode,
-						ErrorMessage: "",
-					}
-	var out = utility.OutMessage {
-						Error: sysError,
-						Command: "getAllTargetPost",
-						UserCode: inputParameters[0],
-						Result:*utility.ObjectToJsonString(opResult),
-					}
-	var result = utility.ObjectToJsonByte(&out)
-
+	var command = "getAllTargetPost"
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &inputParameters[0])
 	return result, &(inputParameters[0])
 }

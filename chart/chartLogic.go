@@ -8,42 +8,7 @@ import (
 	// "fmt"
 	"strings"
 )
-// addChart
-// {
-// 	“command”:”addChart”,
-// 	“parameter”:”{
-// 		ChartCode 任意string,可以没有 
-//     		IsPicture int #0不是，1是
-//     		Message string
-//     		From 任意string,可以没有
-//     		SendTime 任意string,可以没有
-//     		To string
-//     		ReceivedTime 任意string,可以没有
-//     		IsReceived 任意int,可以没有
-//     		Deleted int 任意int,可以没有
-//     		DeletedTime 任意string,可以没有
-// 	}”
-// }
-// 返回值分别给发出人和受到人
-// {
-// 	"error": {
-// 		"errorCode" : 0,
-// 		"errorMessage": ""
-// 	},
-// 	“commnd”: “addChart”,
-// 	“result”:”{
-// 		ChartCode string 
-//     		IsPicture int #0不是，1是
-//     		Message string
-//     		From string
-//     		SendTime string
-//     		To string
-//     		ReceivedTime 任意string,可以没有
-//     		IsRecieved 任意int,可以没有
-//     		Deleted int 任意int,可以没有
-//     		DeletedTime 任意string,可以没有
-// 	}”
-// }
+
 func AddChart(userCodeAndParameter * string) ([] byte, *string, *string) {//result, fromUserCode, ToUserCode
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
 	auth := authentication.GetAuthInformation(&(inputParameters[0]))
@@ -69,51 +34,10 @@ func AddChart(userCodeAndParameter * string) ([] byte, *string, *string) {//resu
 			errorCode = 1
 		}
 	}
-	var sysError = utility.Error {
-						ErrorCode: errorCode,
-						ErrorMessage: "",
-					}
-	var out * utility.OutMessage
-	if errorCode != 0 {
-		tempout :=utility.OutMessage {
-						Error: sysError,
-						Command: "addChart",
-						UserCode: inputParameters[0],
-						Result: "{}",
-					}
-		out = & tempout
-	} else {
-		tempout :=utility.OutMessage {
-						Error: sysError,
-						Command: "addChart",
-						UserCode: inputParameters[0],
-						Result: *utility.ObjectToJsonString(chartOut) ,
-					}
-		out = & tempout
-	}
-
-	var result = utility.ObjectToJsonByte(out)
+	var command = "addChart"
+	result := utility.BoolResultToOutMessage(&command, chartOut, errorCode, &inputParameters[0])
 	return result, &(inputParameters[0]), toUserCode
 }
-
-// receiveChart由收到人返回给服务器
-// {
-// 	“command”:”receiveChart”,
-// 	“parameter”:”{
-// 		ChartCode string
-// 	}”
-// }
-// 返回值
-// {
-// 	"error": {
-// 		"errorCode" : 0,
-// 		"errorMessage": ""
-// 	},
-// 	“commnd”: “receiveChart”,
-// 	“result”:”{
-// 		ChartCode string
-// 	}”
-// }
 
 func ReceiveChart(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
@@ -131,59 +55,10 @@ func ReceiveChart(userCodeAndParameter * string) ([] byte, *string) {
 		}
 	}
 
-	var sysError = utility.Error {
-						ErrorCode: errorCode,
-						ErrorMessage: "",
-					}
-	var out *  utility.OutMessage
-	if errorCode != 0 {
-		var tempout = utility.OutMessage {
-						Error: sysError,
-						Command: "receiveChart",
-						UserCode: inputParameters[0],
-						Result: "{}",
-					}
-		out = & tempout
-	} else {
-		var tempout = utility.OutMessage {
-						Error: sysError,
-						Command: "receiveChart",
-						UserCode: inputParameters[0],
-						Result:inputParameters[1],
-					}
-		out = & tempout
-	}
-	var result = utility.ObjectToJsonByte(out)
-
+	var command = "receiveChart"
+	result := utility.BoolResultToOutMessage(&command, &inputParameters[1], errorCode, &inputParameters[0])
 	return result, &(inputParameters[0])
 }
-
-// getAllUnreceivedChart获取所有的未读信息
-// {
-// 	“command”:”getAllUnreceivedChart”,
-// 	”parameter“：”{
-// 	}“
-// }
-// 返回值
-// {
-// 	"error": {
-// 		"errorCode" : 0,
-// 		"errorMessage": ""
-// 	},
-// 	“commnd”: “getAllUnreceivedChart”,
-// 	“result”:”[{
-// 		ChartCode string 
-//     		IsPicture int #0不是，1是
-//     		Message string
-//     		From string
-//     		SendTime string
-//     		To string
-//     		ReceivedTime 任意string,可以没有
-//     		IsRecieved 任意int,可以没有
-//     		Deleted int 任意int,可以没有
-//     		DeletedTime 任意string,可以没有
-// 	}]”
-// }
 
 func GetAllUnreceivedChart(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
@@ -202,17 +77,7 @@ func GetAllUnreceivedChart(userCodeAndParameter * string) ([] byte, *string) {
 		}
 	}
 
-	var sysError = utility.Error {
-						ErrorCode: errorCode,
-						ErrorMessage: "",
-					}
-	var out = utility.OutMessage {
-						Error: sysError,
-						Command: "getAllUnreceivedChart",
-						UserCode: inputParameters[0],
-						Result:*utility.ObjectToJsonString(opResult),
-					}
-	var result = utility.ObjectToJsonByte(&out)
-
+	command := "getAllUnreceivedChart"
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &(inputParameters[0]))
 	return result, &(inputParameters[0])
 }

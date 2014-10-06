@@ -25,7 +25,7 @@ type hub struct {
 	
 	register chan * connection
 	unregister chan * connection
-	getAllProject chan * connection
+	getAllProject chan * string
 	addProject chan * string
 	modifyProject chan * string
 	getAllCampaign chan * string
@@ -64,7 +64,7 @@ var Hub = hub {
 	
 	register: make(chan * connection),
 	unregister: make(chan * connection),
-	getAllProject: make(chan * connection),
+	getAllProject: make(chan * string),
 	addProject: make(chan * string),
 	modifyProject: make(chan * string),
 	getAllCampaign: make(chan * string),
@@ -128,15 +128,16 @@ func (h *hub) Run() {
 			h.Dispatch(result)
 
 		case m := <- h.getAllTargetPost:
-			result, userCode := post.AddPost(m)
+			result, userCode := post.GetAllTargetPost(m)
 			h.SendToUserCode(result, userCode)
 
 		case m := <- h.getAllUser:
 			result, userCode := user.GetAllUser(m)
 			h.SendToUserCode(result, userCode)
 
-		case c := <- h.getAllProject:
-			c.send <- project.GetAllProject()	
+		case m := <- h.getAllProject:
+			result, userCode := project.GetAllProject(m)	
+			h.SendToUserCode(result, userCode)
 
 
 		case m := <- h.addProject:
@@ -175,11 +176,11 @@ func (h *hub) Run() {
 
 		case m := <- h.queryMissionByMissionCode:
 			result, userCode := mission.QueryMissionByMissionCode(m)
-			h.connections[*userCode].send <- result
+			h.SendToUserCode(result, userCode)
 
 		case m := <- h.getAllNode:
 			result, userCode := graph.GetAllNode(m)
-			h.connections[*userCode].send <- result
+			h.SendToUserCode(result, userCode)
 
 		case m := <- h.addNode:
 			h.productionMutex.Lock()
@@ -201,7 +202,7 @@ func (h *hub) Run() {
 
 		case m := <- h.getAllDependency:
 			result, userCode := dependency.GetAllDependency(m)
-			h.connections[*userCode].send <- result
+			h.SendToUserCode(result, userCode)
 
 		case m := <- h.addDependency:
 			h.productionMutex.Lock()
@@ -241,7 +242,7 @@ func (h *hub) Run() {
 
 		case m := <- h.queryTargetByMissionCode:
 			result, userCode := target.QueryTargetByMissionCode(m)
-			h.connections[*userCode].send <- result
+			h.SendToUserCode(result, userCode)
 
 		}
 
@@ -249,7 +250,7 @@ func (h *hub) Run() {
 }
 
 func (h *hub) Dispatch(result []byte) {
-	fmt.Println(string(result))
+	fmt.Println(string(result[:]))
 	for userCode := range h.connections {
 		select {
 		case h.connections[userCode].send <- result:
@@ -261,6 +262,7 @@ func (h *hub) Dispatch(result []byte) {
 }
 
 func (h *hub) SendToUserCode(result []byte, userCode * string) {
+	fmt.Println(string(result[:]))
 	select {
 	case h.connections[*userCode].send <- result:
 	default:

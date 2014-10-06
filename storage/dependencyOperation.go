@@ -18,7 +18,7 @@ func InsertIntoDependency(dependency * utility.Dependency) (bool, error) {
 	defer stmt.Close()
 	_, err = stmt.Exec(dependency.DependencyCode, dependency.CampaignCode, dependency.ProjectCode, dependency.StartMissionCode, dependency.EndMissionCode, dependency.DependencyType)
 	if err != nil {
-		panic(err.Error())
+		return false, err
 	}
 	//insert return Result, it does not have interface Close
 	//query return Rows ,which must be closed
@@ -150,7 +150,7 @@ func QueryDependencyByDependencyCode(dependencyCode * string) (* utility.Depende
 		panic(err.Error())
 	}
 	defer result.Close()
-	var dependency * utility.Dependency
+	var dependency utility.Dependency
 	if result.Next() {
 		err = result.Scan(&(dependency.DependencyCode), &(dependency.CampaignCode), &(dependency.ProjectCode), &(dependency.StartMissionCode), &(dependency.EndMissionCode),
 		&(dependency.DependencyType), &(dependency.InsertDatetime), &(dependency.UpdateDatetime))
@@ -158,7 +158,7 @@ func QueryDependencyByDependencyCode(dependencyCode * string) (* utility.Depende
 			pillarsLog.Logger.Print(err.Error())
 		}
 	}
-	return dependency, err
+	return &dependency, err
 
 }
 

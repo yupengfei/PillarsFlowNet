@@ -122,7 +122,7 @@ func QueryTargetByTargetCode(targetCode * string) (* utility.Target, error) {
 		panic(err.Error())
 	}
 	defer result.Close()
-	var target * utility.Target
+	var target utility.Target
 	if result.Next() {
 		err = result.Scan(&(target.TargetCode), &(target.MissionCode), &(target.ProjectCode), &(target.VersionTag), &(target.StoragePosition),
 		&(target.Picture), &(target.InsertDatetime), &(target.UpdateDatetime))
@@ -130,7 +130,7 @@ func QueryTargetByTargetCode(targetCode * string) (* utility.Target, error) {
 			pillarsLog.Logger.Print(err.Error())
 		}
 	}
-	return target, err
+	return &target, err
 }
 
 

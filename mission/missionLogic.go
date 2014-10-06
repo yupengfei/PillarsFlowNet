@@ -7,38 +7,7 @@ import (
 	// "fmt"
 	"strings"
 )
-// 根据projectCode获取所有的compaign
-// {
-// 	“command”:”getAllCompaign”,
-// 	“parameter”:”{
-// 		“ProjectCode”:string
-// 	}”
-// }
-// {
-// 	"error": {
-// 		"errorCode" : 0,
-// 		"errorMessage": ""
-// 	},
-// 	“commnd”: “getAllCompaign”,
-// 	“result”:”[{
-// 		MissionCode string
-//     		MissionName string
-//     		ProjectCode string
-//     		ProductType string
-//     		IsCampaign int
-//     		MissionType string
-//     		MissionDetail string
-//     		PlanBeginDatetime string
-//     		PlanEndDatetime string
-//     		RealBeginDatetime string
-//     		RealEndDatetime string
-//     		PersonIncharge string
-//     		Status int
-//     		Picture string
-//     		InsertDatetime string
-//     		UpdateDatetime string		
-// 	}”
-// }
+
 func GetAllCampaign(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
@@ -57,70 +26,32 @@ func GetAllCampaign(userCodeAndParameter * string) ([] byte, *string) {
 	}
 
 
-	var sysError = utility.Error {
-						ErrorCode: errorCode,
-						ErrorMessage: "",
-					}
-	var out = utility.OutMessage {
-						Error: sysError,
-						Command: "getAllCampaign",
-						UserCode: inputParameters[0],
-						Result:*utility.ObjectToJsonString(opResult),
-					}
-	var result = utility.ObjectToJsonByte(&out)
-
+	// var sysError = utility.Error {
+	// 					ErrorCode: errorCode,
+	// 					ErrorMessage: "",
+	// 				}
+	// var out *  utility.OutMessage
+	// if opResult == nil {
+	// 	out = &(utility.OutMessage {
+	// 					Error: sysError,
+	// 					Command: "getAllCampaign",
+	// 					UserCode: inputParameters[0],
+	// 					Result:"{}",
+	// 				})
+	// } else {
+	// 	out = &(utility.OutMessage {
+	// 					Error: sysError,
+	// 					Command: "getAllCampaign",
+	// 					UserCode: inputParameters[0],
+	// 					Result:*utility.ObjectToJsonString(opResult),
+	// 				})
+	// }
+	
+	// var result = utility.ObjectToJsonByte(out)
+	command := "getAllCampaign"
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &(inputParameters[0]))
 	return result, &(inputParameters[0])
 }
-
-
-
-// {
-// 	“command”:”addMission”,
-// 	“parameter”:”{
-// 		MissionCode 任意string，不起作用,可以没有
-//     		MissionName string
-//     		ProjectCode string
-//     		ProductType string
-//     		IsCampaign int
-//     		MissionType string
-//     		MissionDetail string
-//     		PlanBeginDatetime string
-//     		PlanEndDatetime string
-//     		RealBeginDatetime string
-//     		RealEndDatetime string
-//     		PersonIncharge string
-//     		Status int
-//     		Picture string
-//     		InsertDatetime 任意string，不起作用,可以没有
-//     		UpdateDatetime 任意string，不起作用,可以没有
-// 	}”
-// }
-// 返回值
-// {
-// 	"error": {
-// 		"errorCode" : 0,
-// 		"errorMessage": ""
-// 	},
-// 	“commnd”: “addMission”,
-// 	“result”:”{
-		// MissionCode string
-  //   		MissionName string
-  //   		ProjectCode string
-  //   		ProductType string
-  //   		IsCampaign int
-  //   		MissionType string
-  //   		MissionDetail string
-  //   		PlanBeginDatetime string
-  //   		PlanEndDatetime string
-  //   		RealBeginDatetime string
-  //   		RealEndDatetime string
-  //   		PersonIncharge string
-  //   		Status int
-  //   		Picture string
-  //   		InsertDatetime string
-  //   		UpdateDatetime string
-// 	}”
-// }
 
 func AddMission(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
@@ -131,6 +62,7 @@ func AddMission(userCodeAndParameter * string) ([] byte, *string) {
 		errorCode = 3
 	}
 	var missionCode * string
+	var missionOut * utility.Mission
 	if (errorCode == 0) {
 		mission, _ := utility.ParseMissionMessage(&(inputParameters[1]))
 		mission.MissionCode = *(utility.GenerateCode(&(inputParameters[0])))
@@ -138,87 +70,15 @@ func AddMission(userCodeAndParameter * string) ([] byte, *string) {
 		opResult, _ :=storage.InsertIntoMission(mission)
 		if opResult == false {
 			errorCode = 1
+		} else {
+			missionOut, _ = storage.QueryMissionByMissionCode(missionCode)
 		}
 	}
-
-	var sysError = utility.Error {
-						ErrorCode: errorCode,
-						ErrorMessage: "",
-					}
-	var out * utility.OutMessage
-	if errorCode != 0 {
-		tempout :=utility.OutMessage {
-						Error: sysError,
-						Command: "addMission",
-						UserCode: inputParameters[0],
-						Result: "{}",
-					}
-		out = & tempout
-	} else {
-		missionOut, _ := storage.QueryMissionByMissionCode(missionCode)
-		tempout :=utility.OutMessage {
-						Error: sysError,
-						Command: "addMission",
-						UserCode: inputParameters[0],
-						Result: *utility.ObjectToJsonString(missionOut) ,
-					}
-		out = & tempout
-	}
-
-	var result = utility.ObjectToJsonByte(out)
-
+	command := "addMission"
+	result := utility.BoolResultToOutMessage(&command, missionOut, errorCode, &(inputParameters[0]))
 	return result, &(inputParameters[0])
 }
 
-
-
-// {
-// 	“command”:”modifyMission”,
-// 	“parameter”:{
-// 		MissionCode string
-//     		MissionName string
-//     		ProjectCode string
-//     		ProductType string
-//     		IsCampaign int
-//     		MissionType string
-//     		MissionDetail string
-//     		PlanBeginDatetime string
-//     		PlanEndDatetime string
-//     		RealBeginDatetime string
-//     		RealEndDatetime string
-//     		PersonIncharge string
-//     		Status int
-//     		Picture string
-//     		InsertDatetime 任意string，不起作用,可以没有
-//     		UpdateDatetime 任意string，不起作用,可以没有
-// 	}”
-// }
-// 返回值
-// {
-// 	"error": {
-// 		"errorCode" : 0,
-// 		"errorMessage": ""
-// 	},
-// 	“commnd”: “modifyMission”,
-// 	“result”:”{
-// MissionCode string
-//     		MissionName string
-//     		ProjectCode string
-//     		ProductType string
-//     		IsCampaign int
-//     		MissionType string
-//     		MissionDetail string
-//     		PlanBeginDatetime string
-//     		PlanEndDatetime string
-//     		RealBeginDatetime string
-//     		RealEndDatetime string
-//     		PersonIncharge string
-//     		Status int
-//     		Picture string
-//     		InsertDatetime string
-//     		UpdateDatetime string		
-// 	}”
-// }
 func ModifyMission(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
@@ -228,62 +88,21 @@ func ModifyMission(userCodeAndParameter * string) ([] byte, *string) {
 		errorCode = 3
 	}
 	var missionCode * string
+	var missionOut * utility.Mission
 	if (errorCode == 0) {
 		mission, _ := utility.ParseMissionMessage(&(inputParameters[1]))
 		opResult, _ :=storage.ModifyMission(mission)
 		missionCode = &(mission.MissionCode)
 		if opResult == false {
 			errorCode = 1
+		} else {
+			missionOut, _ = storage.QueryMissionByMissionCode(missionCode)
 		}
 	}
-
-	var sysError = utility.Error {
-						ErrorCode: errorCode,
-						ErrorMessage: "",
-					}
-	var out * utility.OutMessage
-	if errorCode != 0 {
-		tempout :=utility.OutMessage {
-						Error: sysError,
-						Command: "modifyMission",
-						UserCode: inputParameters[0],
-						Result: "{}",
-					}
-		out = & tempout
-	} else {
-		missionOut, _ := storage.QueryMissionByMissionCode(missionCode)
-		tempout :=utility.OutMessage {
-						Error: sysError,
-						Command: "modifyMission",
-						UserCode: inputParameters[0],
-						Result: *utility.ObjectToJsonString(missionOut) ,
-					}
-		out = & tempout
-	}
-
-	var result = utility.ObjectToJsonByte(out)
-
+	command := "modifyMission"
+	result := utility.BoolResultToOutMessage(&command, missionOut, errorCode, &(inputParameters[0]))
 	return result, &(inputParameters[0])
 }
-
-// 删除mission
-// {
-// 	“command”:”deleteMission”,
-// 	“parameter”:”{
-// 		MissionCode string
-// 	}”
-// }
-// 返回值
-// {
-// 	"error": {
-// 		"errorCode" : 0,
-// 		"errorMessage": ""
-// 	},
-// 	“commnd”: “deleteMission”,
-// 	“result”:”{
-		// MissionCode string
-// 	}”
-// }
 
 func DeleteMission(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
@@ -300,32 +119,8 @@ func DeleteMission(userCodeAndParameter * string) ([] byte, *string) {
 			errorCode = 1
 		}
 	}
-
-	var sysError = utility.Error {
-						ErrorCode: errorCode,
-						ErrorMessage: "",
-					}
-	var out * utility.OutMessage
-	if errorCode !=0 {
-		tempout := utility.OutMessage {
-						Error: sysError,
-						Command: "deleteMission",
-						UserCode: inputParameters[0],
-						Result: "{}",
-					}
-		out = & tempout
-	} else {
-		tempout := utility.OutMessage {
-						Error: sysError,
-						Command: "deleteMission",
-						UserCode: inputParameters[0],
-						Result: inputParameters[1],
-					}
-		out = & tempout
-	}
-	
-	var result = utility.ObjectToJsonByte(out)
-
+	var command = "deleteMission"
+	result := utility.BoolResultToOutMessage(&command, &inputParameters[1], errorCode, &inputParameters[0])
 	return result, &(inputParameters[0])
 }
 
@@ -341,22 +136,8 @@ func QueryMissionByMissionCode(userCodeAndParameter * string) ([] byte, *string)
 	if (errorCode == 0) {
 		missionCode, _ := utility.ParseMissionCodeMessage(&(inputParameters[1]))
 		opResult, _ =storage.QueryMissionByMissionCode(&(missionCode.MissionCode))
-		// if opResult == false {
-		// 	errorCode = 1
-		// }
 	}
-
-	var sysError = utility.Error {
-						ErrorCode: errorCode,
-						ErrorMessage: "",
-					}
-	var out = utility.OutMessage {
-						Error: sysError,
-						Command: "queryMissionByMissionCode",
-						UserCode: inputParameters[0],
-						Result:*utility.ObjectToJsonString(opResult),
-					}
-	var result = utility.ObjectToJsonByte(&out)
-
+	command := "queryMissionByMissionCode"
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &(inputParameters[0]))
 	return result, &(inputParameters[0])
 }
