@@ -53,7 +53,22 @@ func GetAllNode(userCodeAndParameter * string) ([] byte, *string) {
 		// 	errorCode = 1
 		// }
 	}
-
+	var missionSlice []utility.Mission
+	opResultLength := len(opResult)
+	var i int
+	for i = 0; i < opResultLength; i++ {
+		var mission * utility.Mission
+		mission, err := storage.QueryMissionByMissionCode(&(opResult[i].NodeCode))
+		if err != nil {
+			mission = new(utility.Mission)
+		}
+		missionSlice = append(missionSlice, *mission)
+	}
+	var resultSlice [] string
+	for i = 0; i < opResultLength; i++ {
+		resultSlice = append(resultSlice, *utility.ObjectToJsonString(opResult[i]))
+		resultSlice = append(resultSlice, *utility.ObjectToJsonString(missionSlice[i]))
+	}
 	var sysError = utility.Error {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
@@ -61,7 +76,7 @@ func GetAllNode(userCodeAndParameter * string) ([] byte, *string) {
 	var out = utility.OutMessage {
 						Error: sysError,
 						Command: "getAllNode",
-						Result:*utility.ObjectToJsonString(opResult),
+						Result:*utility.ObjectToJsonString(resultSlice),
 					}
 	var result = utility.ObjectToJsonByte(out)
 
@@ -138,10 +153,17 @@ func AddNode(userCodeAndParameter * string) ([] byte, *string) {
 		out = & tempout
 	} else {
 		graphOut, _ := storage.QueryGraphNodeByGraphCode(graphCode)
+		var resultSlice [] string
+		resultSlice = append(resultSlice, *utility.ObjectToJsonString(graphOut))
+		mission, err := storage.QueryMissionByMissionCode(&(graphOut.NodeCode))
+		if err != nil {
+			mission = new(utility.Mission)
+		}
+		resultSlice = append(resultSlice, *utility.ObjectToJsonString(mission))
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "addNode",
-						Result:*utility.ObjectToJsonString(graphOut),
+						Result: *utility.ObjectToJsonString(resultSlice),
 					}
 		out = & tempout
 	}

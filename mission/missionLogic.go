@@ -56,6 +56,7 @@ func GetAllCampaign(userCodeAndParameter * string) ([] byte, *string) {
 		// }
 	}
 
+
 	var sysError = utility.Error {
 						ErrorCode: errorCode,
 						ErrorMessage: "",
