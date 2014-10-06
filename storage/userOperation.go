@@ -92,6 +92,32 @@ func QueryUserByUserName(userName * string) (* utility.User, error) {
 
 }
 
+func QueryUserByUserCode(userCode * string) (* utility.User, error) {
+	
+
+	stmt, err := DBConn.Prepare("SELECT user_code, user_name, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user WHERE user_code=?")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	result, err := stmt.Query(userCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+	var user utility.User
+	if result.Next() {
+		err = result.Scan(&(user.UserCode), &(user.UserName),
+		&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
+		&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
+		if err != nil {
+			pillarsLog.Logger.Print(err.Error())
+		}
+	}
+	return &user, err
+
+}
+
 func QueryUserCode(userName * string) (* string, error) {
 	stmt, err := DBConn.Prepare("SELECT user_code FROM user WHERE user_name=?")
 	if err != nil {

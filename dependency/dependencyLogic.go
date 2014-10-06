@@ -57,9 +57,10 @@ func GetAllDependency(userCodeAndParameter * string) ([] byte, *string) {
 	var out = utility.OutMessage {
 						Error: sysError,
 						Command: "getAllDependency",
+						UserCode: inputParameters[0],
 						Result:*utility.ObjectToJsonString(opResult),
 					}
-	var result = utility.ObjectToJsonByte(out)
+	var result = utility.ObjectToJsonByte(&out)
 
 	return result, &(inputParameters[0])
 }
@@ -124,6 +125,7 @@ func AddDependency(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "addDependency",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -132,6 +134,7 @@ func AddDependency(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "addDependency",
+						UserCode: inputParameters[0],
 						Result:*utility.ObjectToJsonString(dependencyOut),
 					}
 		out = & tempout
@@ -185,6 +188,7 @@ func DeleteDependency(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "deleteDependency",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -192,6 +196,7 @@ func DeleteDependency(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "deleteDependency",
+						UserCode: inputParameters[0],
 						Result:inputParameters[1],
 					}
 		out = & tempout
@@ -261,6 +266,7 @@ func ModifyDependency(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "modifyDependency",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -269,6 +275,7 @@ func ModifyDependency(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "modifyDependency",
+						UserCode: inputParameters[0],
 						Result:*utility.ObjectToJsonString(dependencyOut),
 					}
 		out = & tempout

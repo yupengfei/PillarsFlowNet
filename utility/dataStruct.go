@@ -8,6 +8,7 @@ type Error struct {
 type OutMessage struct {
 	Error Error
 	Command string
+    UserCode string
 	Result string
 }
 
@@ -21,16 +22,7 @@ type UserLogin struct{
     Password string
 }
 
-type LoginInMessage struct {
-	Auth string
-	AuthMessage string
-}
 
-// type ChartMessage struct {
-//     Message string
-//     To string
-//     IsPicture int//0 false, 1 true
-// }
 
 type User struct {
     UserCode string

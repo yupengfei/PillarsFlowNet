@@ -19,7 +19,7 @@ func GetAllProject() [] byte {
 						Command: "getAllProject",
 						Result: *utility.ObjectToJsonString(projects),
 					}
-	var result = utility.ObjectToJsonByte(out)
+	var result = utility.ObjectToJsonByte(&out)
 	return result
 }
 // {
@@ -90,6 +90,7 @@ func AddProject(userCodeAndParameter * string) ([] byte, *string) {
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "addProject",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -98,12 +99,13 @@ func AddProject(userCodeAndParameter * string) ([] byte, *string) {
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "addProject",
+						UserCode: inputParameters[0],
 						Result: *utility.ObjectToJsonString(projectOut) ,
 					}
 		out = & tempout
 	}
 
-	var result = utility.ObjectToJsonByte(*out)
+	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
 }
@@ -174,6 +176,7 @@ func ModifyProject(userCodeAndParameter * string) ([] byte, *string) {
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "modifyProject",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -182,12 +185,13 @@ func ModifyProject(userCodeAndParameter * string) ([] byte, *string) {
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "modifyProject",
+						UserCode: inputParameters[0],
 						Result: *utility.ObjectToJsonString(projectOut) ,
 					}
 		out = & tempout
 	}
 
-	var result = utility.ObjectToJsonByte(*out)
+	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
 }

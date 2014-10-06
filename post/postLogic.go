@@ -74,6 +74,7 @@ func AddPost(userCodeAndParameter * string) ([] byte, *string) {
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "addPost",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -81,12 +82,13 @@ func AddPost(userCodeAndParameter * string) ([] byte, *string) {
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "addPost",
+						UserCode: inputParameters[0],
 						Result: *utility.ObjectToJsonString(postOut) ,
 					}
 		out = & tempout
 	}
 
-	var result = utility.ObjectToJsonByte(*out)
+	var result = utility.ObjectToJsonByte(out)
 	return result, &(inputParameters[0])
 }
 
@@ -142,9 +144,10 @@ func GetAllUnreceivedChart(userCodeAndParameter * string) ([] byte, *string) {
 	var out = utility.OutMessage {
 						Error: sysError,
 						Command: "getAllTargetPost",
+						UserCode: inputParameters[0],
 						Result:*utility.ObjectToJsonString(opResult),
 					}
-	var result = utility.ObjectToJsonByte(out)
+	var result = utility.ObjectToJsonByte(&out)
 
 	return result, &(inputParameters[0])
 }

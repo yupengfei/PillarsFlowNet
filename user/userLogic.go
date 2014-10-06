@@ -3,48 +3,41 @@ package user
 import (
 	"PillarsFlowNet/utility"
 	"PillarsFlowNet/storage"
-	"PillarsFlowNet/pillarsLog"
 	"strings"
 	"PillarsFlowNet/authentication"
 )
 
 //result, userName, err
 func ValidateUser(parameter * string) (* string,  * string,  error) {
-	var result string
-	var userName string
 	var err error
 	user, err := utility.ParseLoginInMessage(parameter)
 	if err != nil {
-		pillarsLog.Logger.Println("parse login message error")
-		return &result, &userName, err
+		//TO DO need to made more rebust
+		panic("wrong login message")
 	}
 	userCode, _ := storage.CheckUserNameAndPassword(&((*user).UserName), &((*user).Password))
 	var sysError = utility.Error {
 			ErrorCode: 0,
 			ErrorMessage: "",
 	}
-	var loginMessage utility.LoginInMessage
-	if *userCode != "" {
-		loginMessage = utility.LoginInMessage {
-			Auth: "success",
-			AuthMessage : "",
-		}
+	var resultString * string
+	if *userCode == "" {
+		tmpResultString := ""
+		resultString = &tmpResultString
 	} else {
-		loginMessage = utility.LoginInMessage {
-			Auth: "failed",
-			AuthMessage : "userName or Password wrong",
-		}
+		user, _ := storage.QueryUserByUserCode(userCode)
+		resultString = utility.ObjectToJsonString(user)
 	}
-	loginStr := string(utility.ObjectToJsonByte(loginMessage))	
 
 	var out = utility.OutMessage {
 			Error: sysError,
 			Command: "login",
-			Result: loginStr,
+			UserCode: *userCode,
+			Result: *resultString,
 		}
 
-	result = string(utility.ObjectToJsonByte(out))
-	return &result, userCode, err
+	result := utility.ObjectToJsonString(&out)
+	return result, userCode, err
 }
 
 // getAllUser 获取所有的用户列表
@@ -91,6 +84,7 @@ func GetAllUser(userCodeAndParameter * string) ([] byte, *string) {
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "getAllUser",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -99,12 +93,13 @@ func GetAllUser(userCodeAndParameter * string) ([] byte, *string) {
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "getAllUser",
+						UserCode: inputParameters[0],
 						Result: *utility.ObjectToJsonString(userSlice) ,
 					}
 		out = & tempout
 	}
 
-	var result = utility.ObjectToJsonByte(*out)
+	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
 }

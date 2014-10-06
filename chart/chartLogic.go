@@ -78,6 +78,7 @@ func AddChart(userCodeAndParameter * string) ([] byte, *string, *string) {//resu
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "addChart",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -85,12 +86,13 @@ func AddChart(userCodeAndParameter * string) ([] byte, *string, *string) {//resu
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "addChart",
+						UserCode: inputParameters[0],
 						Result: *utility.ObjectToJsonString(chartOut) ,
 					}
 		out = & tempout
 	}
 
-	var result = utility.ObjectToJsonByte(*out)
+	var result = utility.ObjectToJsonByte(out)
 	return result, &(inputParameters[0]), toUserCode
 }
 
@@ -138,6 +140,7 @@ func ReceiveChart(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "receiveChart",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -145,6 +148,7 @@ func ReceiveChart(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "receiveChart",
+						UserCode: inputParameters[0],
 						Result:inputParameters[1],
 					}
 		out = & tempout
@@ -205,9 +209,10 @@ func GetAllUnreceivedChart(userCodeAndParameter * string) ([] byte, *string) {
 	var out = utility.OutMessage {
 						Error: sysError,
 						Command: "getAllUnreceivedChart",
+						UserCode: inputParameters[0],
 						Result:*utility.ObjectToJsonString(opResult),
 					}
-	var result = utility.ObjectToJsonByte(out)
+	var result = utility.ObjectToJsonByte(&out)
 
 	return result, &(inputParameters[0])
 }

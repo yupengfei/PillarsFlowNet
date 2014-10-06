@@ -76,9 +76,10 @@ func GetAllNode(userCodeAndParameter * string) ([] byte, *string) {
 	var out = utility.OutMessage {
 						Error: sysError,
 						Command: "getAllNode",
+						UserCode: inputParameters[0],
 						Result:*utility.ObjectToJsonString(resultSlice),
 					}
-	var result = utility.ObjectToJsonByte(out)
+	var result = utility.ObjectToJsonByte(&out)
 
 	return result, &(inputParameters[0])
 }
@@ -148,6 +149,7 @@ func AddNode(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "addNode",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -163,6 +165,7 @@ func AddNode(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "addNode",
+						UserCode: inputParameters[0],
 						Result: *utility.ObjectToJsonString(resultSlice),
 					}
 		out = & tempout
@@ -236,6 +239,7 @@ func ModifyNode(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "modifyNode",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -244,6 +248,7 @@ func ModifyNode(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "modifyNode",
+						UserCode: inputParameters[0],
 						Result:*utility.ObjectToJsonString(graphOut),
 					}
 		out = & tempout
@@ -298,6 +303,7 @@ func DeleteNode(userCodeAndParameter * string) ([] byte, *string) {
 		tempout := utility.OutMessage {
 						Error: sysError,
 						Command: "deleteNode",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -305,11 +311,12 @@ func DeleteNode(userCodeAndParameter * string) ([] byte, *string) {
 		tempout := utility.OutMessage {
 						Error: sysError,
 						Command: "deleteNode",
+						UserCode: inputParameters[0],
 						Result: inputParameters[1],
 					}
 		out = & tempout
 	}
-	var result = utility.ObjectToJsonByte(*out)
+	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
 }

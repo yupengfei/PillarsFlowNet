@@ -69,6 +69,7 @@ func AddTarget(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "addTarget",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -77,6 +78,7 @@ func AddTarget(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "addTarget",
+						UserCode: inputParameters[0],
 						Result:*utility.ObjectToJsonString(targetOut),
 					}
 		out = & tempout
@@ -147,6 +149,7 @@ func ModifyTarget(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "modifyTarget",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -155,6 +158,7 @@ func ModifyTarget(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "modifyTarget",
+						UserCode: inputParameters[0],
 						Result:*utility.ObjectToJsonString(targetOut),
 					}
 		out = & tempout
@@ -208,6 +212,7 @@ func DeleteTarget(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "deleteTarget",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -215,6 +220,7 @@ func DeleteTarget(userCodeAndParameter * string) ([] byte, *string) {
 		var tempout = utility.OutMessage {
 						Error: sysError,
 						Command: "deleteTarget",
+						UserCode: inputParameters[0],
 						Result:inputParameters[1],
 					}
 		out = & tempout
@@ -272,9 +278,10 @@ func QueryTargetByMissionCode(userCodeAndParameter * string) ([] byte, *string) 
 	var out = utility.OutMessage {
 						Error: sysError,
 						Command: "addTarget",
+						UserCode: inputParameters[0],
 						Result: *utility.ObjectToJsonString(opResult),
 					}
-	var result = utility.ObjectToJsonByte(out)
+	var result = utility.ObjectToJsonByte(&out)
 
 	return result, &(inputParameters[0])
 }

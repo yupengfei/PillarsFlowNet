@@ -64,9 +64,10 @@ func GetAllCampaign(userCodeAndParameter * string) ([] byte, *string) {
 	var out = utility.OutMessage {
 						Error: sysError,
 						Command: "getAllCampaign",
+						UserCode: inputParameters[0],
 						Result:*utility.ObjectToJsonString(opResult),
 					}
-	var result = utility.ObjectToJsonByte(out)
+	var result = utility.ObjectToJsonByte(&out)
 
 	return result, &(inputParameters[0])
 }
@@ -149,6 +150,7 @@ func AddMission(userCodeAndParameter * string) ([] byte, *string) {
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "addMission",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -157,15 +159,17 @@ func AddMission(userCodeAndParameter * string) ([] byte, *string) {
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "addMission",
+						UserCode: inputParameters[0],
 						Result: *utility.ObjectToJsonString(missionOut) ,
 					}
 		out = & tempout
 	}
 
-	var result = utility.ObjectToJsonByte(*out)
+	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
 }
+
 
 
 // {
@@ -242,6 +246,7 @@ func ModifyMission(userCodeAndParameter * string) ([] byte, *string) {
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "modifyMission",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -250,12 +255,13 @@ func ModifyMission(userCodeAndParameter * string) ([] byte, *string) {
 		tempout :=utility.OutMessage {
 						Error: sysError,
 						Command: "modifyMission",
+						UserCode: inputParameters[0],
 						Result: *utility.ObjectToJsonString(missionOut) ,
 					}
 		out = & tempout
 	}
 
-	var result = utility.ObjectToJsonByte(*out)
+	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
 }
@@ -304,6 +310,7 @@ func DeleteMission(userCodeAndParameter * string) ([] byte, *string) {
 		tempout := utility.OutMessage {
 						Error: sysError,
 						Command: "deleteMission",
+						UserCode: inputParameters[0],
 						Result: "{}",
 					}
 		out = & tempout
@@ -311,12 +318,13 @@ func DeleteMission(userCodeAndParameter * string) ([] byte, *string) {
 		tempout := utility.OutMessage {
 						Error: sysError,
 						Command: "deleteMission",
+						UserCode: inputParameters[0],
 						Result: inputParameters[1],
 					}
 		out = & tempout
 	}
 	
-	var result = utility.ObjectToJsonByte(*out)
+	var result = utility.ObjectToJsonByte(out)
 
 	return result, &(inputParameters[0])
 }
@@ -345,9 +353,10 @@ func QueryMissionByMissionCode(userCodeAndParameter * string) ([] byte, *string)
 	var out = utility.OutMessage {
 						Error: sysError,
 						Command: "queryMissionByMissionCode",
+						UserCode: inputParameters[0],
 						Result:*utility.ObjectToJsonString(opResult),
 					}
-	var result = utility.ObjectToJsonByte(out)
+	var result = utility.ObjectToJsonByte(&out)
 
 	return result, &(inputParameters[0])
 }
