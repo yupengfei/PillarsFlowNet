@@ -1,4 +1,5 @@
-2014/10/06 12:06:54 /home/developer/go/src/PillarsFlowNet/storage/userOperation.go:25: Error 1062: Duplicate entry 'kun.wang' for key 'user_name'
+2014/10/08 20:51:08 /home/developer/Go/src/PillarsFlowNet/storage/mgoUtility.go:33: can not connect to mongo server
+kun.wang' for key 'user_name'
 an pair: <nil> -> *string
 2014/10/06 11:52:46 /home/developer/go/src/PillarsFlowNet/storage/userOperation.go:135: sql: Scan error on column index 4: unsupported driver -> Scan pair: <nil> -> *string
 2014/10/06 11:52:46 /home/developer/go/src/PillarsFlowNet/storage/userOperation.go:135: sql: Scan error on column index 4: unsupported driver -> Scan pair: <nil> -> *string

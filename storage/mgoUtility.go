@@ -3,7 +3,6 @@ package storage
 
 import "labix.org/v2/mgo"
 import "PillarsFlowNet/utility"
-import "PillarsFlowNet/pillarsLog"
 var Session * mgo.Session
 var ChartCollection * mgo.Collection
 var PostCollection * mgo.Collection
@@ -30,7 +29,8 @@ func ConnectToMgo() * mgo.Session {
 	//userName + ":" + password + "@" + 
 	Session, errMgo := mgo.Dial(userName + ":" + password + "@" + host + "/" + database)
 	if errMgo != nil {
-		pillarsLog.Logger.Panic("can not connect to mongo server")
+		//panic("can not connect to mongo server")
+		panic(errMgo.Error())
 	}
 	ChartCollection = Session.DB("PillarsFlow").C("Chart")
 	PostCollection = Session.DB("PillarsFlow").C("Post")

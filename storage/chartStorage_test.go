@@ -39,17 +39,17 @@ func TestStoreToChart(t * testing.T) {
 	CloseMgoConnection()
 }
 
-func TestMarkAsReceiveByChartCode(t * testing.T) {
-	ConnectToMgo()
-	chartCode := "6fce4188e44a2decab8f0bc2cfbff1fd"
-	_, err := MarkAsReceiveByChartCode(&chartCode)
-	if err != nil {
-		panic(err.Error())
-	} else {
-		//fmt.Println(*(utility.ObjectToJsonString(result)))
-	}
-	CloseMgoConnection()
-}
+// func TestMarkAsReceiveByChartCode(t * testing.T) {
+// 	ConnectToMgo()
+// 	chartCode := "6fce4188e44a2decab8f0bc2cfbff1fd"
+// 	_, err := MarkAsReceiveByChartCode(&chartCode)
+// 	if err != nil {
+// 		panic(err.Error())
+// 	} else {
+// 		//fmt.Println(*(utility.ObjectToJsonString(result)))
+// 	}
+// 	CloseMgoConnection()
+// }
 
 func TestGetAllUnreceivedMessageByUserCode(t * testing.T) {
 	ConnectToMgo()

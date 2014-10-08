@@ -7,24 +7,24 @@ import (
 	"fmt"
 )
 
-func TestQueryUserCode(t * testing.T) {
-	DBConn = ConnectToDB()
-	userName := "kun.wang"
-	user_code, _ := QueryUserCode(&userName)
-	// if !isExist {
-	// 	t.Error("UserName or password wrong")
-	// }
-	if *user_code == "" {
-		t.Error("UserName or password wrong")
-	}
-	// fmt.Println(*user_code)
-	userName = userName + "1"
-	user_code, _ = QueryUserCode(&userName)
-	if *user_code != "" {
-		t.Error("UserName or password wrong 2")
-	}
-	CloseDBConnection()
-}
+// func TestQueryUserCode(t * testing.T) {
+// 	DBConn = ConnectToDB()
+// 	userName := "kun.wang"
+// 	user_code, _ := QueryUserCode(&userName)
+// 	// if !isExist {
+// 	// 	t.Error("UserName or password wrong")
+// 	// }
+// 	if *user_code == "" {
+// 		t.Error("UserName or password wrong")
+// 	}
+// 	// fmt.Println(*user_code)
+// 	userName = userName + "1"
+// 	user_code, _ = QueryUserCode(&userName)
+// 	if *user_code != "" {
+// 		t.Error("UserName or password wrong 2")
+// 	}
+// 	CloseDBConnection()
+// }
 
 func TestInsertIntoUser1(t * testing.T) {
 	DBConn = ConnectToDB()
