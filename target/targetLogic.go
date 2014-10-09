@@ -76,7 +76,7 @@ func DeleteTarget(userCodeAndParameter * string) ([] byte, *string) {
 		}
 	}
 	var command = "deleteTarget"
-	result := utility.BoolResultToOutMessage(&command, &inputParameters[1], errorCode, &inputParameters[0])
+	result := utility.StringResultToOutMessage(&command, &inputParameters[1], errorCode, &inputParameters[0])
 	return result, &(inputParameters[0])
 }
 
