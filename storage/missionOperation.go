@@ -176,7 +176,7 @@ func QueryMissionByMissionCode(missionCode * string) (* utility.Mission, error) 
 	if result.Next() {
 		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
 		&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionType), &(mission.MissionDetail),
-		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
+		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.RealEndDatetime), 
 		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
 		&(mission.InsertDatetime), 
 		&(mission.UpdateDatetime))
