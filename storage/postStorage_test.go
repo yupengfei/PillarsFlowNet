@@ -16,9 +16,14 @@ func TestStoreToPost(t * testing.T) {
 	targetCode := "789"
 
 	postCode := utility.GenerateCode(&userCode)
+	// PostType：int#0mission自身的消息，1missionDaily的消息，2target的消息
+	// Code：post关联到某个daily或者mission自身或者target
+	// IsPicture int #0不是图片，1是图片
 	post := utility.Post {
 		PostCode: *postCode,
-    	TargetCode: targetCode,
+    	Code: targetCode,
+    	PostType: 0,
+    	IsPicture:0,
     	Message: message,
     	ReplyTo: replyTo,
     	UserCode: userCode,

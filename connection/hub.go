@@ -11,6 +11,7 @@ import (
 	"PillarsFlowNet/chart"
 	"PillarsFlowNet/post"
 	"PillarsFlowNet/user"
+	"PillarsFlowNet/daily"
 	"sync"
 	"fmt"
 
@@ -45,6 +46,10 @@ type hub struct {
 	modifyTarget chan * string
 	deleteTarget chan * string
 	queryTargetByMissionCode chan * string
+	addDaily chan * string
+	modifyDaily chan * string
+	deleteDaily chan * string
+	queryDailyByMissionCode chan * string
 	getAllUser chan * string
 
 	addChart chan * string
@@ -53,6 +58,11 @@ type hub struct {
 
 	addPost chan * string
 	getAllTargetPost chan * string
+
+	getPersonAllWaitingMission chan * string
+	getPersonAllUndergoingMission chan * string
+	getPersonAllReviewingMission chan * string
+	getPersonAllFinishedMission chan * string
 
 
 	productionMutex * sync.Mutex
@@ -85,6 +95,10 @@ var Hub = hub {
 	deleteTarget: make(chan * string),
 	queryTargetByMissionCode: make(chan * string),
 
+	addDaily: make(chan * string),
+	modifyDaily: make(chan * string),
+	deleteDaily: make(chan * string),
+	queryDailyByMissionCode: make(chan * string),
 	getAllUser: make(chan * string),
 
 	addChart: make(chan * string),
@@ -94,6 +108,10 @@ var Hub = hub {
 	addPost: make(chan * string),
 	getAllTargetPost: make(chan * string),
 
+	getPersonAllWaitingMission: make(chan * string),
+	getPersonAllUndergoingMission: make(chan * string),
+	getPersonAllReviewingMission: make(chan * string),
+	getPersonAllFinishedMission: make(chan * string),
 
 	productionMutex: new(sync.Mutex),
 }
@@ -244,6 +262,43 @@ func (h *hub) Run() {
 			result, userCode := target.QueryTargetByMissionCode(m)
 			h.SendToUserCode(result, userCode)
 
+		case m := <- h.addDaily:
+			h.productionMutex.Lock()
+			result, _ := daily.AddDaily(m)
+			h.Dispatch(result)
+			h.productionMutex.Unlock()
+
+		case m := <- h.modifyDaily:
+			h.productionMutex.Lock()
+			result, _ := daily.ModifyDaily(m)
+			h.Dispatch(result)
+			h.productionMutex.Unlock()
+
+		case m := <- h.deleteDaily:
+			h.productionMutex.Lock()
+			result, _ := daily.DeleteDaily(m)
+			h.Dispatch(result)
+			h.productionMutex.Unlock()
+
+		case m := <- h.queryDailyByMissionCode:
+			result, userCode := daily.QueryDailyByMissionCode(m)
+			h.SendToUserCode(result, userCode)
+
+		case m := <- h.getPersonAllWaitingMission:
+			result, userCode := mission.GetPersonAllWaitingMission(m)
+			h.SendToUserCode(result, userCode)
+
+		case m := <- h.getPersonAllUndergoingMission:
+			result, userCode := mission.GetPersonAllUndergoingMission(m)
+			h.SendToUserCode(result, userCode)
+
+		case m := <- h.getPersonAllReviewingMission:
+			result, userCode := mission.GetPersonAllReviewingMission(m)
+			h.SendToUserCode(result, userCode)
+
+		case m := <- h.getPersonAllFinishedMission:
+			result, userCode := mission.GetPersonAllFinishedMission(m)
+			h.SendToUserCode(result, userCode)
 		}
 
 	}

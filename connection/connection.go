@@ -153,18 +153,34 @@ func (c * connection) readPump() {
 				Hub.deleteTarget <- &userCodeAndParameter
 			} else if *command == "queryTargetByMissionCode" {
 				Hub.queryTargetByMissionCode <- &userCodeAndParameter
+			} else if *command == "addDaily" {
+				Hub.addTarget <- &userCodeAndParameter
+			} else if *command == "modifyDaily" {
+				Hub.modifyTarget <- &userCodeAndParameter
+			} else if *command == "deleteDaily" {
+				Hub.deleteTarget <- &userCodeAndParameter
+			} else if *command == "queryDailyByMissionCode" {
+				Hub.queryTargetByMissionCode <- &userCodeAndParameter
 			} else if *command == "getAllUser" {
 				Hub.getAllUser <- &userCodeAndParameter
 			} else if * command == "addChart" {
 				Hub.addChart <- &userCodeAndParameter
 			} else if * command == "receiveChart" {
-				Hub.addChart <- &userCodeAndParameter
+				Hub.receiveChart <- &userCodeAndParameter
 			} else if * command == "getAllUnreceivedChart" {
-				Hub.addChart <- &userCodeAndParameter
+				Hub.getAllUnreceivedChart <- &userCodeAndParameter
 			} else if * command == "addPost" {
-				Hub.addChart <- &userCodeAndParameter
+				Hub.addPost <- &userCodeAndParameter
 			} else if * command == "getAllTargetPost" {
-				Hub.addChart <- &userCodeAndParameter
+				Hub.getAllTargetPost <- &userCodeAndParameter
+			} else if * command == "getPersonAllWaitingMission" {
+				Hub.getPersonAllWaitingMission <- &userCodeAndParameter
+			} else if * command == "getPersonAllUndergoingMission" {
+				Hub.getPersonAllUndergoingMission <- &userCodeAndParameter
+			} else if * command == "getPersonAllReviewingMission" {
+				Hub.getPersonAllReviewingMission <- &userCodeAndParameter
+			} else if * command == "getPersonAllFinishedMission" {
+				Hub.getPersonAllFinishedMission <- &userCodeAndParameter
 			}
 		}
 	}

@@ -45,6 +45,12 @@ func ParseTargetMessage(message * string) (*Target, error) {
 	return &target, err
 }
 
+func ParseDailyMessage(message * string) (*Daily, error) {
+	var daily Daily
+	err := json.Unmarshal([]byte(*message), &daily)
+	return &daily, err
+}
+
 func ParseDependencyMessage(message * string) (* Dependency , error) {
 	var dependency Dependency
 	err := json.Unmarshal([]byte(*message), &dependency)
@@ -92,6 +98,12 @@ func ParseTargetCodeMessage(message * string) (* TargetCode, error) {
 	var targetCode TargetCode
 	err := json.Unmarshal([]byte(*message), &targetCode)
 	return &targetCode, err
+}
+
+func ParseDailyCodeMessage(message * string) (* DailyCode, error) {
+	var dailyCode DailyCode
+	err := json.Unmarshal([]byte(*message), &dailyCode)
+	return &dailyCode, err
 }
 
 func ParseChartCodeMessage(message * string) (* ChartCode, error) {

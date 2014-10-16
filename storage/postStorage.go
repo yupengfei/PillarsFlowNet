@@ -16,7 +16,7 @@ func StoreToPost(post * utility.Post) (* utility.Post, error){
 
 func GetAllPostByTargetCode(targetCode * string) ([] utility.Post, error) {
 	var postSlice [] utility.Post
-	iter := PostCollection.Find(bson.M{"targetcode":*targetCode}).Iter()
+	iter := PostCollection.Find(bson.M{"code":*targetCode, "posttype":2}).Iter()
 	err := iter.All(&postSlice)
 	if err != nil {
 		return postSlice, err

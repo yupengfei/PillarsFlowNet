@@ -62,6 +62,10 @@ type TargetCode struct {
     TargetCode string
 }
 
+type DailyCode struct {
+    DailyCode string
+}
+
 type ChartCode struct {
     ChartCode string
 }
@@ -137,6 +141,17 @@ type Target struct {
     UpdateDatetime string
 }
 
+type Daily struct {
+    DailyCode string
+    MissionCode string
+    ProjectCode string
+    VersionTag string
+    StoragePosition string
+    Picture string
+    InsertDatetime string
+    UpdateDatetime string
+}
+
 type Chart struct {
     ChartCode string
     IsPicture int
@@ -152,7 +167,10 @@ type Chart struct {
 
 type Post struct {
     PostCode string
-    TargetCode string
+    MissionCode string
+    PostType int
+    Code string
+    IsPicture int
     Message string
     ReplyTo string
     UserCode string

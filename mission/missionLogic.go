@@ -141,3 +141,68 @@ func QueryMissionByMissionCode(userCodeAndParameter * string) ([] byte, *string)
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &(inputParameters[0]))
 	return result, &(inputParameters[0])
 }
+
+
+func GetPersonAllWaitingMission(userCodeAndParameter * string) ([] byte, *string) {
+	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
+	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+	var errorCode int
+	if (auth == false) {
+		errorCode = 3
+	}
+	var opResult []utility.Mission
+	if (errorCode == 0) {
+		opResult, _ =storage.QueryWaitingMissionByUserCode(&(inputParameters[0]))
+	}
+	command := "getPersonAllWaitingMission"
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &(inputParameters[0]))
+	return result, &(inputParameters[0])
+}
+
+func GetPersonAllUndergoingMission(userCodeAndParameter * string) ([] byte, *string) {
+	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
+	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+	var errorCode int
+	if (auth == false) {
+		errorCode = 3
+	}
+	var opResult []utility.Mission
+	if (errorCode == 0) {
+		opResult, _ =storage.QueryUndergoingMissionByUserCode(&(inputParameters[0]))
+	}
+	command := "getPersonAllUndergoingMission"
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &(inputParameters[0]))
+	return result, &(inputParameters[0])
+}
+
+func GetPersonAllReviewingMission(userCodeAndParameter * string) ([]byte, *string) {
+	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
+	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+	var errorCode int
+	if (auth == false) {
+		errorCode = 3
+	}
+	var opResult []utility.Mission
+	if (errorCode == 0) {
+		opResult, _ =storage.QueryReviewingMissionByUserCode(&(inputParameters[0]))
+	}
+	command := "getPersonAllReviewingMission"
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &(inputParameters[0]))
+	return result, &(inputParameters[0])
+}
+
+func GetPersonAllFinishedMission(userCodeAndParameter * string) ([]byte, *string) {
+	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
+	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+	var errorCode int
+	if (auth == false) {
+		errorCode = 3
+	}
+	var opResult []utility.Mission
+	if (errorCode == 0) {
+		opResult, _ =storage.QueryFinishedMissionByUserCode(&(inputParameters[0]))
+	}
+	command := "getPersonAllFinishedMission"
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &(inputParameters[0]))
+	return result, &(inputParameters[0])
+}
