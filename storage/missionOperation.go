@@ -360,3 +360,33 @@ func QueryFinishedMissionByUserCode(userCode * string) ([] utility.Mission, erro
 	}
 	return missionSlice, err
 }
+
+
+func QueryAllUndesignatedMission() ([] utility.Mission, error) {
+	stmt, err := DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, is_campaign, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission where status=4")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	result, err := stmt.Query()
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+	//this is easy to imply but may not very fast
+	var missionSlice [] utility.Mission
+	for result.Next() {
+		var mission utility.Mission
+		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
+		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
+		&(mission.InsertDatetime), 
+		&(mission.UpdateDatetime))
+		if err != nil {
+			pillarsLog.Logger.Print(err.Error())
+		}
+		missionSlice = append(missionSlice, mission)
+	}
+	return missionSlice, err
+}

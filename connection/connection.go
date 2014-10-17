@@ -181,6 +181,8 @@ func (c * connection) readPump() {
 				Hub.getPersonAllReviewingMission <- &userCodeAndParameter
 			} else if * command == "getPersonAllFinishedMission" {
 				Hub.getPersonAllFinishedMission <- &userCodeAndParameter
+			} else if * command == "getAllUndesignatedMission" {
+				Hub.getAllUndesignatedMission <- &userCodeAndParameter
 			}
 		}
 	}

@@ -63,6 +63,8 @@ type hub struct {
 	getPersonAllUndergoingMission chan * string
 	getPersonAllReviewingMission chan * string
 	getPersonAllFinishedMission chan * string
+	getAllUndesignatedMission chan * string
+
 
 
 	productionMutex * sync.Mutex
@@ -112,6 +114,7 @@ var Hub = hub {
 	getPersonAllUndergoingMission: make(chan * string),
 	getPersonAllReviewingMission: make(chan * string),
 	getPersonAllFinishedMission: make(chan * string),
+	getAllUndesignatedMission: make(chan * string),
 
 	productionMutex: new(sync.Mutex),
 }
@@ -298,6 +301,10 @@ func (h *hub) Run() {
 
 		case m := <- h.getPersonAllFinishedMission:
 			result, userCode := mission.GetPersonAllFinishedMission(m)
+			h.SendToUserCode(result, userCode)
+
+		case m := <- h.getAllUndesignatedMission:
+			result, userCode := mission.GetAllUndesignatedMission(m)
 			h.SendToUserCode(result, userCode)
 		}
 

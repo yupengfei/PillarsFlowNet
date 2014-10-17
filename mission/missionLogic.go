@@ -206,3 +206,19 @@ func GetPersonAllFinishedMission(userCodeAndParameter * string) ([]byte, *string
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &(inputParameters[0]))
 	return result, &(inputParameters[0])
 }
+
+func GetAllUndesignatedMission(userCodeAndParameter * string) ([]byte, *string) {
+	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
+	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+	var errorCode int
+	if (auth == false) {
+		errorCode = 3
+	}
+	var opResult []utility.Mission
+	if (errorCode == 0) {
+		opResult, _ =storage.QueryAllUndesignatedMission()
+	}
+	command := "getPersonAllFinishedMission"
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &(inputParameters[0]))
+	return result, &(inputParameters[0])
+}
