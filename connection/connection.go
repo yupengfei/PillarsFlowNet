@@ -12,16 +12,16 @@ import (
 
 const (
 	// Time allowed to write a message to the client.
-	writeWait = 10 * time.Second
+	writeWait = 100 * time.Second
 
 	// Time allowed to read the next pong message from the client.
-	pongWait = 60 * time.Second
+	pongWait = 600 * time.Second
 
 	// Send pings to client with this period. Must be less than pongWait.
 	pingPeriod = (pongWait * 9) / 10
 
 	// Maximum message size allowed from client.
-	maxMessageSize = 512*512
+	maxMessageSize = 512*512000000
 )
 
 //use package websocket provied by gorilla, 
@@ -51,6 +51,7 @@ func (c *connection) writePump() {
 	//ping the client, ifthere is no message in pingPeriod
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
+		fmt.Println("writePump closing")
 		ticker.Stop()
 		c.ws.Close()
 		fmt.Println("writePump closed")
@@ -75,9 +76,12 @@ func (c *connection) writePump() {
 //readPump pumps messages from the websocket connection to the hub
 func (c * connection) readPump() {
 	defer func() {
+		fmt.Println("readPump closing")
 		Hub.unregister <- c
+		close(c.send)
 		c.ws.Close()
 		fmt.Println("readPump closed")
+
 	}()
 	c.ws.SetReadLimit(maxMessageSize)
 	c.ws.SetReadDeadline(time.Now().Add(pongWait))
@@ -93,8 +97,8 @@ func (c * connection) readPump() {
 			pillarsLog.Logger.Println(error.Error())
 		}
 		//if userCode is nil, login first
-		fmt.Println(*command)
-		fmt.Println(*parameter)
+		//fmt.Println(*command)
+		//fmt.Println(*parameter)
 		if c.userCode == nil {
 			if *command != "login" {
 				continue

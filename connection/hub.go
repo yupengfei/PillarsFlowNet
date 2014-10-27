@@ -127,7 +127,7 @@ func (h *hub) Run() {
 			fmt.Println(*(c.userCode))
 			h.connections[*(c.userCode)] = c
 		case c := <- h.unregister:
-			close(c.send)
+			//close(c.send)
 			//if x.userCode is not nil, then h.connections contains the conresponding connection
 			if c.userCode != nil {
 				if _, ok := h.connections[*(c.userCode)]; ok {				
@@ -312,23 +312,20 @@ func (h *hub) Run() {
 }
 
 func (h *hub) Dispatch(result []byte) {
-	fmt.Println(string(result[:]))
+	//fmt.Println(string(result[:]))
+	fmt.Println("Dispatch")
 	for userCode := range h.connections {
-		select {
-		case h.connections[userCode].send <- result:
-		default:
-			close(h.connections[userCode].send)
-			delete(h.connections, userCode)
-		}
+		h.connections[userCode].send <- result
 	}
 }
 
 func (h *hub) SendToUserCode(result []byte, userCode * string) {
-	fmt.Println(string(result[:]))
-	select {
-	case h.connections[*userCode].send <- result:
-	default:
-		close(h.connections[*userCode].send)
-		delete(h.connections, *userCode)
+	//fmt.Println(string(result[:]))
+	fmt.Println("send to user", *userCode)
+	if _, ok := h.connections[*userCode]; ok {				
+		h.connections[*userCode].send <- result			
+	} else {
+		fmt.Println("can not find user")
 	}
+	
 }
