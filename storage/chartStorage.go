@@ -28,7 +28,8 @@ func StoreToChart(chart * utility.Chart) (* utility.Chart, error){
 }
 
 func MarkAsReceiveByChartCode(chartCode * string) (* string, error) {
-	err := ChartCollection.Update(bson.M{"chartcode": *chartCode}, bson.M{"$set": bson.M{"isreceived": 1, "receivedtime": time.Now().Format("2006-01-02 15:04:05")}})
+	err := ChartCollection.Update(bson.M{"chartcode": *chartCode}, bson.M{"$set": bson.M{"isreceived": 1, 
+		"receivedtime": time.Now().Format("2006-01-02 15:04:05")}})
 	if err != nil {
 		return chartCode, err
 	}
