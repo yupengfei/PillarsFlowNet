@@ -22,17 +22,17 @@ func InsertIntoUser(user * utility.User) (bool, error) {
 		user.Group, user.DisplayName, user.Position, user.Picture, user.Email,
 		user.Phone)
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		panic(err.Error())
 	}
 	//insert return Result, it does not have interface Close
 	//query return Rows ,which must be closed
 	err = tx.Commit()
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			pillarsLog.PillarsLogger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -56,10 +56,10 @@ func DeleteUserByUserName(userName * string) (bool, error) {
 	err = tx.Commit()
 
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			pillarsLog.PillarsLogger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -85,7 +85,7 @@ func QueryUserByUserName(userName * string) (* utility.User, error) {
 		&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
 		&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 	}
 	return &user, err
@@ -111,7 +111,7 @@ func QueryUserByUserCode(userCode * string) (* utility.User, error) {
 		&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
 		&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 	}
 	return &user, err
@@ -158,7 +158,7 @@ func QueryAllUser() ([] utility.User, error) {
 		&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
 		&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 		users = append(users, user)
 	}

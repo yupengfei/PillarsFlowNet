@@ -19,17 +19,17 @@ func InsertIntoTarget(target * utility.Target) (bool, error) {
 	defer stmt.Close()
 	_, err = stmt.Exec(target.TargetCode, target.MissionCode, target.ProjectCode, target.VersionTag, target.StoragePosition, target.Picture)
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		panic(err.Error())
 	}
 	//insert return Result, it does not have interface Close
 	//query return Rows ,which must be closed
 	err = tx.Commit()
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			pillarsLog.PillarsLogger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -45,17 +45,17 @@ func ModifyTarget(target * utility.Target) (bool, error) {
 	defer stmt.Close()
 	_, err = stmt.Exec(target.MissionCode, target.ProjectCode, target.VersionTag, target.StoragePosition, target.Picture, target.TargetCode)
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		panic(err.Error())
 	}
 	//insert return Result, it does not have interface Close
 	//query return Rows ,which must be closed
 	err = tx.Commit()
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			pillarsLog.PillarsLogger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -68,17 +68,17 @@ func DeleteTargetByTargetCode(targetCode * string) (bool, error){
 	defer stmt.Close()
 	_, err = stmt.Exec(targetCode)
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		panic(err.Error())
 	}
 	//insert return Result, it does not have interface Close
 	//query return Rows ,which must be closed
 	err = tx.Commit()
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			pillarsLog.PillarsLogger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -104,7 +104,7 @@ func QueryTargetsByMissionCode(missionCode * string) ([] utility.Target, error) 
 		err = result.Scan(&(target.TargetCode), &(target.MissionCode), &(target.ProjectCode), &(target.VersionTag), &(target.StoragePosition),
 		&(target.Picture), &(target.InsertDatetime), &(target.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 		targetSlice = append(targetSlice, target)
 	}
@@ -127,7 +127,7 @@ func QueryTargetByTargetCode(targetCode * string) (* utility.Target, error) {
 		err = result.Scan(&(target.TargetCode), &(target.MissionCode), &(target.ProjectCode), &(target.VersionTag), &(target.StoragePosition),
 		&(target.Picture), &(target.InsertDatetime), &(target.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 	}
 	return &target, err

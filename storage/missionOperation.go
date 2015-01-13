@@ -33,10 +33,10 @@ func InsertIntoMission(mission * utility.Mission) (bool, error) {
 	err = tx.Commit()
 	if err != nil {
 		fmt.Println(err.Error())
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			pillarsLog.PillarsLogger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -67,10 +67,10 @@ func ModifyMission(mission * utility.Mission) (bool, error) {
 	err = tx.Commit()
 	if err != nil {
 		fmt.Println(err.Error())
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			pillarsLog.PillarsLogger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -149,10 +149,10 @@ func DeleteMissionByMissionCode(missionCode * string) (bool, error) {
 	err = tx.Commit()
 	if err != nil {
 		fmt.Println(err.Error())
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			pillarsLog.PillarsLogger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -181,7 +181,7 @@ func QueryMissionByMissionCode(missionCode * string) (* utility.Mission, error) 
 		&(mission.InsertDatetime), 
 		&(mission.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 	}
 	return &mission, err
@@ -209,7 +209,7 @@ func QueryMissionsByProjectCode(projectCode * string) ([] utility.Mission, error
 		&(mission.InsertDatetime), 
 		&(mission.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 		missionSlice = append(missionSlice, mission)
 	}
@@ -238,7 +238,7 @@ func QueryCampaignsByProjectCode(projectCode * string) ([] utility.Mission, erro
 		&(mission.InsertDatetime), 
 		&(mission.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 		missionSlice = append(missionSlice, mission)
 	}
@@ -267,7 +267,7 @@ func QueryWaitingMissionByUserCode(userCode * string) ([] utility.Mission, error
 		&(mission.InsertDatetime), 
 		&(mission.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 		missionSlice = append(missionSlice, mission)
 	}
@@ -296,7 +296,7 @@ func QueryUndergoingMissionByUserCode(userCode * string) ([] utility.Mission, er
 		&(mission.InsertDatetime), 
 		&(mission.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 		missionSlice = append(missionSlice, mission)
 	}
@@ -325,7 +325,7 @@ func QueryReviewingMissionByUserCode(userCode * string) ([] utility.Mission, err
 		&(mission.InsertDatetime), 
 		&(mission.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 		missionSlice = append(missionSlice, mission)
 	}
@@ -354,7 +354,7 @@ func QueryFinishedMissionByUserCode(userCode * string) ([] utility.Mission, erro
 		&(mission.InsertDatetime), 
 		&(mission.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 		missionSlice = append(missionSlice, mission)
 	}
@@ -384,7 +384,7 @@ func QueryAllUndesignatedMission() ([] utility.Mission, error) {
 		&(mission.InsertDatetime), 
 		&(mission.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 		missionSlice = append(missionSlice, mission)
 	}

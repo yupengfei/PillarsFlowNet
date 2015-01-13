@@ -4,7 +4,7 @@ import "testing"
 import "os"
 import "io/ioutil"
 import "PillarsFlowNet/pillarsLog"
-import "fmt"
+// import "fmt"
 
 
 func TestParseInMessage(t * testing.T) {
@@ -20,7 +20,7 @@ func TestParseInMessage(t * testing.T) {
 
 	command, parameter, err := ParseInMessage(data)
 	if err != nil {
-		pillarsLog.Logger.Panic(err.Error())
+		pillarsLog.PillarsLogger.Panic(err.Error())
 	}
 
 	if *command != "login" {
@@ -40,22 +40,22 @@ func TestParseInMessage(t * testing.T) {
 	}
 }
 
-func TestObjectToJson(t * testing.T) {
-	var error = Error {
-		ErrorCode: 0,
-		ErrorMessage: "",
-	}
-	var login = LoginInMessage {
-		Auth: "success",
-		AuthMessage : "",
-	}
-	loginStr := ObjectToJsonString(login)
-	var out = OutMessage {
-		Error: error,
-		Command: "login",
-		Result: *loginStr,
-	}
-	fmt.Println(ObjectToJsonString(out))
-}
+// func TestObjectToJson(t * testing.T) {
+// 	var error = Error {
+// 		ErrorCode: 0,
+// 		ErrorMessage: "",
+// 	}
+// 	var login = LoginInMessage {
+// 		Auth: "success",
+// 		AuthMessage : "",
+// 	}
+// 	loginStr := ObjectToJsonString(login)
+// 	var out = OutMessage {
+// 		Error: error,
+// 		Command: "login",
+// 		Result: *loginStr,
+// 	}
+// 	fmt.Println(ObjectToJsonString(out))
+// }
 
 

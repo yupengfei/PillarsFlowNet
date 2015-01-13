@@ -2,7 +2,7 @@ package storage
 
 import (
 	"PillarsFlowNet/utility"
-	"PillarsFlowNet/pillarsLog"
+	//"PillarsFlowNet/pillarsLog"
 	// "fmt"
 )
 //we should use persistence layer instead, but the logic id not so confusing
@@ -19,17 +19,17 @@ func InsertIntoDaily(daily * utility.Daily) (bool, error) {
 	defer stmt.Close()
 	_, err = stmt.Exec(daily.DailyCode, daily.MissionCode, daily.ProjectCode, daily.VersionTag, daily.StoragePosition, daily.Picture)
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		//pillarsLog.Logger.Print(err.Error())
 		panic(err.Error())
 	}
 	//insert return Result, it does not have interface Close
 	//query return Rows ,which must be closed
 	err = tx.Commit()
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		//pillarsLog.Logger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			//pillarsLog.Logger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -45,17 +45,17 @@ func ModifyDaily(daily * utility.Daily) (bool, error) {
 	defer stmt.Close()
 	_, err = stmt.Exec(daily.MissionCode, daily.ProjectCode, daily.VersionTag, daily.StoragePosition, daily.Picture, daily.DailyCode)
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		//pillarsLog.Logger.Print(err.Error())
 		panic(err.Error())
 	}
 	//insert return Result, it does not have interface Close
 	//query return Rows ,which must be closed
 	err = tx.Commit()
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		//pillarsLog.Logger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			//pillarsLog.Logger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -68,17 +68,17 @@ func DeleteDailyByDailyCode(dailyCode * string) (bool, error){
 	defer stmt.Close()
 	_, err = stmt.Exec(dailyCode)
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		//pillarsLog.Logger.Print(err.Error())
 		panic(err.Error())
 	}
 	//insert return Result, it does not have interface Close
 	//query return Rows ,which must be closed
 	err = tx.Commit()
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		//pillarsLog.Logger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			//pillarsLog.Logger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -104,7 +104,7 @@ func QueryDailysByMissionCode(missionCode * string) ([] utility.Daily, error) {
 		err = result.Scan(&(daily.DailyCode), &(daily.MissionCode), &(daily.ProjectCode), &(daily.VersionTag), &(daily.StoragePosition),
 		&(daily.Picture), &(daily.InsertDatetime), &(daily.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			//pillarsLog.Logger.Print(err.Error())
 		}
 		targetSlice = append(targetSlice, daily)
 	}
@@ -127,7 +127,7 @@ func QueryDailyByDailyCode(dailyCode * string) (* utility.Daily, error) {
 		err = result.Scan(&(daily.DailyCode), &(daily.MissionCode), &(daily.ProjectCode), &(daily.VersionTag), &(daily.StoragePosition),
 		&(daily.Picture), &(daily.InsertDatetime), &(daily.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			//pillarsLog.Logger.Print(err.Error())
 		}
 	}
 	return &daily, err

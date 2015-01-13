@@ -20,7 +20,7 @@ func TestStoreToPost(t * testing.T) {
 	// Code：post关联到某个daily或者mission自身或者target
 	// IsPicture int #0不是图片，1是图片
 	post := utility.Post {
-		PostCode: *postCode,
+		Id: *postCode,
     	Code: targetCode,
     	PostType: 0,
     	IsPicture:0,

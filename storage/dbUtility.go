@@ -30,7 +30,7 @@ func ConnectToDB() * sql.DB {
 	sqlString := userName + ":" + password + "@tcp(" + host + ":" + port + ")/" + database
 	DBConn, err := sql.Open("mysql", sqlString)
 	if err != nil {
-		pillarsLog.Logger.Panic("can not connect to mysql server")
+		pillarsLog.PillarsLogger.Panic("can not connect to mysql server")
 	}
 	return DBConn
 }

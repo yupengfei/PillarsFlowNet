@@ -10,7 +10,7 @@ func StoreToPost(post * utility.Post) (* utility.Post, error){
 	if err != nil {
 		return post, err
 	}
-	PostCollection.Find(bson.M{"postcode":post.PostCode}).One(post)
+	PostCollection.Find(bson.M{"postcode":post.Id}).One(post)
 	return post, err
 }
 

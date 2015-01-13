@@ -23,7 +23,7 @@ func StoreToChart(chart * utility.Chart) (* utility.Chart, error){
 	if err != nil {
 		return chart, err
 	}
-	ChartCollection.Find(bson.M{"chartcode":chart.ChartCode}).One(chart)
+	ChartCollection.Find(bson.M{"_id":chart.Id}).One(chart)
 	return chart, err
 }
 

@@ -24,10 +24,10 @@ func InsertIntoProject(project * utility.Project) (bool, error) {
 	//query return Rows ,which must be closed
 	err = tx.Commit()
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			pillarsLog.PillarsLogger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -52,10 +52,10 @@ func ModifyProject(project * utility.Project) (bool, error) {
 	//query return Rows ,which must be closed
 	err = tx.Commit()
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			pillarsLog.PillarsLogger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -75,10 +75,10 @@ func DeleteProjectByProjectCode(projectCode * string) (bool, error) {
 	}
 	err = tx.Commit()
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		pillarsLog.PillarsLogger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			pillarsLog.PillarsLogger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -102,7 +102,7 @@ func QueryProjectByProjectCode(projectCode * string) (* utility.Project, error) 
 		&(project.PlanBeginDatetime), &(project.PlanEndDatetime), &(project.RealBeginDatetime), &(project.PlanEndDatetime), &(project.PersonInCharge),
 		&(project.Status), &(project.Picture), &(project.InsertDatetime), &(project.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 	}
 	return &project, err
@@ -127,7 +127,7 @@ func QueryAllProject() ([] utility.Project, error) {
 		&(project.PlanBeginDatetime), &(project.PlanEndDatetime), &(project.RealBeginDatetime), &(project.RealEndDatetime), &(project.PersonInCharge),
 		&(project.Status), &(project.Picture), &(project.InsertDatetime), &(project.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			pillarsLog.PillarsLogger.Print(err.Error())
 		}
 		projectSlice = append(projectSlice, project)
 	}

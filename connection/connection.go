@@ -93,8 +93,8 @@ func (c * connection) readPump() {
 		}
 		command, parameter, error := utility.ParseInMessage(message)
 		if error != nil {
-			pillarsLog.Logger.Println("parse in message error")
-			pillarsLog.Logger.Println(error.Error())
+			pillarsLog.PillarsLogger.Println("parse in message error")
+			pillarsLog.PillarsLogger.Println(error.Error())
 		}
 		//if userCode is nil, login first
 		//fmt.Println(*command)

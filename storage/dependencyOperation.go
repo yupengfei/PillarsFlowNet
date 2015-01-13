@@ -2,7 +2,7 @@ package storage
 
 import (
 	"PillarsFlowNet/utility"
-	"PillarsFlowNet/pillarsLog"
+	//"PillarsFlowNet/pillarsLog"
 	// "fmt"
 )
 
@@ -24,10 +24,10 @@ func InsertIntoDependency(dependency * utility.Dependency) (bool, error) {
 	//query return Rows ,which must be closed
 	err = tx.Commit()
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		//pillarsLog.Logger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			//pillarsLog.Logger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -50,10 +50,10 @@ func ModifyDependency(dependency * utility.Dependency) (bool, error) {
 	//query return Rows ,which must be closed
 	err = tx.Commit()
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		//pillarsLog.Logger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			//pillarsLog.Logger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -73,10 +73,10 @@ func DeleteDependencyByDependencyCode(projectCode * string) (bool, error) {
 	}
 	err = tx.Commit()
 	if err != nil {
-		pillarsLog.Logger.Print(err.Error())
+		//pillarsLog.Logger.Print(err.Error())
 		err = tx.Rollback()
 		if err != nil {
-			pillarsLog.Logger.Panic(err.Error())
+			//pillarsLog.Logger.Panic(err.Error())
 		}
 		return false, err
 	}
@@ -102,7 +102,7 @@ func QueryDependenciesByProjectCode(projectCode * string) ([] utility.Dependency
 		err = result.Scan(&(dependency.DependencyCode), &(dependency.CampaignCode), &(dependency.ProjectCode), &(dependency.StartMissionCode), &(dependency.EndMissionCode),
 		&(dependency.DependencyType), &(dependency.InsertDatetime), &(dependency.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			//pillarsLog.Logger.Print(err.Error())
 		}
 		dependencySlice = append(dependencySlice, dependency)
 	}
@@ -129,7 +129,7 @@ func QueryDependenciesByCampaignCode(campaignCode * string) ([] utility.Dependen
 		err = result.Scan(&(dependency.DependencyCode), &(dependency.CampaignCode), &(dependency.ProjectCode), &(dependency.StartMissionCode), &(dependency.EndMissionCode),
 		&(dependency.DependencyType), &(dependency.InsertDatetime), &(dependency.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			//pillarsLog.Logger.Print(err.Error())
 		}
 		dependencySlice = append(dependencySlice, dependency)
 	}
@@ -155,7 +155,7 @@ func QueryDependencyByDependencyCode(dependencyCode * string) (* utility.Depende
 		err = result.Scan(&(dependency.DependencyCode), &(dependency.CampaignCode), &(dependency.ProjectCode), &(dependency.StartMissionCode), &(dependency.EndMissionCode),
 		&(dependency.DependencyType), &(dependency.InsertDatetime), &(dependency.UpdateDatetime))
 		if err != nil {
-			pillarsLog.Logger.Print(err.Error())
+			//pillarsLog.Logger.Print(err.Error())
 		}
 	}
 	return &dependency, err

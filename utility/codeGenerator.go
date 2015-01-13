@@ -6,7 +6,8 @@ import (
 	"strconv"
 	"fmt"
 )
-
+//Generate a random integer
+//use time.Now().UTC().UnixNano() as Seed
 func RandomInt() int {
 
 	magicNumber := 10000

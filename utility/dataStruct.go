@@ -1,10 +1,21 @@
 package utility
 
+import (
+    // "labix.org/v2/mgo/bson"
+)
 
+//Error is one part of out message that is returned to client, it consists of a error code and a error message
+//when error code is zero, it means everything is going well.
 type Error struct {
 	ErrorCode int
 	ErrorMessage string
 }
+
+//out message is consist of 
+//1. the error message, 
+//2. which command it is corresponding
+//3. user code of person who start the command
+//4. the result of the command
 type OutMessage struct {
 	Error Error
 	Command string
@@ -12,18 +23,23 @@ type OutMessage struct {
 	Result string
 }
 
+//in message consist of
+//1. the user's command
+//2. parameter of this command
 type InMessage struct {
 	Command string
 	Parameter string
 }
 
+//user login struct consist of
+//1. user name
+//2. use password
 type UserLogin struct{
     UserName string
     Password string
 }
 
-
-
+//user struct is corresponding to the mysql user table
 type User struct {
     UserCode string
     UserName string
@@ -38,6 +54,7 @@ type User struct {
     UpdateDatetime string
 }
 
+//project code struct
 type ProjectCode struct {
     ProjectCode string
 }
@@ -70,6 +87,11 @@ type ChartCode struct {
     ChartCode string
 }
 
+//project struct is corresponding to the mysql project table
+//project contains many missions
+//mission can contain other missions
+//if mission contain other missions, it is called a campaign and its iscampaign
+//should be set to 1
 type Project struct {
     ProjectCode string
     ProjectName string
@@ -85,6 +107,7 @@ type Project struct {
     UpdateDatetime string
 }
 
+//mission struct is corresponding to the mysql mission table
 type Mission struct {
     //MissionId string
     MissionCode string
@@ -105,6 +128,11 @@ type Mission struct {
     UpdateDatetime string
 }
 
+//graph struct is corresponding to the mysql graph table
+//every campaign contains many missions which is formed out of
+//many missions, these messions make up a directed acyclic graph
+//this struct only contains the node position
+//the dependency relationship is stored in dependency table
 type Graph struct {
     GraphCode string
     CampaignCode string
@@ -118,7 +146,9 @@ type Graph struct {
     UpdateDatetime string
 }
 
-
+//dependency struct is corresponding to the mysql dependency table
+//every depency is a vector which contains a start mission code
+//and a end mission code
 type Dependency struct {
     DependencyCode string
     CampaignCode string
@@ -130,6 +160,8 @@ type Dependency struct {
     UpdateDatetime string
 }
 
+//target struct is corresponding to mysql target table
+//every mission may have one or many target
 type Target struct {
     TargetCode string
     MissionCode string
@@ -141,6 +173,9 @@ type Target struct {
     UpdateDatetime string
 }
 
+//daily struct is corresponding to mysql daily table
+//every mission may have one or many daily
+//daily is used to review the rate of progress of mission
 type Daily struct {
     DailyCode string
     MissionCode string
@@ -152,8 +187,11 @@ type Daily struct {
     UpdateDatetime string
 }
 
+//chart struct is corresponding to mongodb chart table
+//a chart maybe a picture or a string
+//chart is from someuser to someuser
 type Chart struct {
-    ChartCode string
+    Id string `json:"id"    bson:"_id"`
     IsPicture int
     Message string
     From string
@@ -165,8 +203,9 @@ type Chart struct {
     DeletedTime string
 }
 
+//post struct is corresponding to mongodb post table
 type Post struct {
-    PostCode string
+    Id string `json:"id"    bson:"_id"`
     MissionCode string
     PostType int
     Code string

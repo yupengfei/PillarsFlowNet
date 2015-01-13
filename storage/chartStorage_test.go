@@ -18,7 +18,7 @@ func TestStoreToChart(t * testing.T) {
 
 	chartCode := utility.GenerateCode(&fromUserCode)
 	chart := utility.Chart {
-		ChartCode: *chartCode,
+		Id: *chartCode,
 		IsPicture: isPicture,
 		Message: message,
 		From: fromUserCode,
