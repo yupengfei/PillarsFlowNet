@@ -8,10 +8,7 @@ import (
 	"strings"
 )
 
-func GetAllProject(userCodeAndParameter * string) ([] byte, *string) {
-	//userCode, parameter 
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func GetAllProject(userCode * string, parameter * string) ([] byte, *string) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -23,16 +20,12 @@ func GetAllProject(userCodeAndParameter * string) ([] byte, *string) {
 	}
 
 	command := "getAllProject"
-	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &(inputParameters[0]))
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
 
-	return result, &(inputParameters[0])
+	return result, userCode
 }
 
-//userCode + @ + parameter
-func AddProject(userCodeAndParameter * string) ([] byte, *string) {
-	//userCode, parameter 
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func AddProject(userCode * string, parameter * string) ([] byte, *string) {
 	var errorCode int
 	
 	if (auth == false) {
@@ -41,8 +34,8 @@ func AddProject(userCodeAndParameter * string) ([] byte, *string) {
 	var projectCode * string
 	var projectOut * utility.Project
 	if (errorCode == 0) {
-		project, _ := utility.ParseProjectMessage(&(inputParameters[1]))
-		project.ProjectCode = *(utility.GenerateCode(&(inputParameters[0])))
+		project, _ := utility.ParseProjectMessage(parameter)
+		project.ProjectCode = *(utility.GenerateCode(userCode))
 		projectCode = &(project.ProjectCode)
 		opResult, _ :=storage.InsertIntoProject(project)
 		if opResult == false {
@@ -52,15 +45,12 @@ func AddProject(userCodeAndParameter * string) ([] byte, *string) {
 		}
 	}
 	var command = "addProject"
-	result := utility.BoolResultToOutMessage(&command, projectOut, errorCode, &inputParameters[0])
-	return result, &(inputParameters[0])
+	result := utility.BoolResultToOutMessage(&command, projectOut, errorCode, userCode)
+	return result, userCode
 }
 
 
-func ModifyProject(userCodeAndParameter * string) ([] byte, *string) {
-	//userCode, parameter 
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func ModifyProject(userCode * string, parameter * string) ([] byte, *string) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -68,7 +58,7 @@ func ModifyProject(userCodeAndParameter * string) ([] byte, *string) {
 	var projectCode * string
 	var projectOut * utility.Project
 	if (errorCode == 0) {
-		project, _ := utility.ParseProjectMessage(&(inputParameters[1]))
+		project, _ := utility.ParseProjectMessage(parameter)
 		projectCode = &(project.ProjectCode)
 		opResult, _ :=storage.ModifyProject(project)
 		if opResult == false {
@@ -78,7 +68,7 @@ func ModifyProject(userCodeAndParameter * string) ([] byte, *string) {
 		}
 	}
 	var command = "modifyProject"
-	result := utility.BoolResultToOutMessage(&command, projectOut, errorCode, &inputParameters[0])
-	return result, &(inputParameters[0])
+	result := utility.BoolResultToOutMessage(&command, projectOut, errorCode, userCode)
+	return result, userCode
 }
 

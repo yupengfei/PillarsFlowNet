@@ -2,16 +2,13 @@ package userStorage
 
 import (
 	"PillarsFlowNet/utility"
+	"PillarsFlowNet/mysqlUtility"
 	"PillarsFlowNet/pillarsLog"
 	// "fmt"
 )
-//we should use persistence layer instead, but the logic id not so confusing
-//we are in hurry 
 
-
-//insert is a Transaction
 func InsertIntoUser(user * utility.User) (bool, error) {
-	stmt, err := tx.Prepare("INSERT INTO user(user_code, user_name, password, `group`, display_name, position, picture, email, phone) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := mysqlUtility.DBConn.Prepare("INSERT INTO user(user_code, user_name, password, `group`, display_name, position, picture, email, phone) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		// fmt.Print(err.Error())
 		panic(err.Error())
@@ -24,24 +21,11 @@ func InsertIntoUser(user * utility.User) (bool, error) {
 		pillarsLog.PillarsLogger.Print(err.Error())
 		panic(err.Error())
 	}
-	//insert return Result, it does not have interface Close
-	//query return Rows ,which must be closed
-	err = tx.Commit()
-	if err != nil {
-		pillarsLog.PillarsLogger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			pillarsLog.PillarsLogger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func DeleteUserByUserName(userName * string) (bool, error) {
-	tx, err := DBConn.Begin()
-
-	stmt, err := tx.Prepare("DELETE FROM user WHERE user_name = ?")
+	stmt, err := mysqlUtility.DBConn.Prepare("DELETE FROM user WHERE user_name = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -51,24 +35,11 @@ func DeleteUserByUserName(userName * string) (bool, error) {
 	if err != nil {
 		panic(err.Error())
 	}
-
-	err = tx.Commit()
-
-	if err != nil {
-		pillarsLog.PillarsLogger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			pillarsLog.PillarsLogger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func QueryUserByUserName(userName * string) (* utility.User, error) {
-	
-
-	stmt, err := DBConn.Prepare("SELECT user_code, user_name, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user WHERE user_name=?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code, user_name, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user WHERE user_name=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -92,9 +63,7 @@ func QueryUserByUserName(userName * string) (* utility.User, error) {
 }
 
 func QueryUserByUserCode(userCode * string) (* utility.User, error) {
-	
-
-	stmt, err := DBConn.Prepare("SELECT user_code, user_name, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user WHERE user_code=?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code, user_name, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user WHERE user_code=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -118,7 +87,7 @@ func QueryUserByUserCode(userCode * string) (* utility.User, error) {
 }
 
 func QueryUserCode(userName * string) (* string, error) {
-	stmt, err := DBConn.Prepare("SELECT user_code FROM user WHERE user_name=?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code FROM user WHERE user_name=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -138,9 +107,7 @@ func QueryUserCode(userName * string) (* string, error) {
 }
 
 func QueryAllUser() ([] utility.User, error) {
-	
-
-	stmt, err := DBConn.Prepare("SELECT user_code, user_name, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code, user_name, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -166,7 +133,7 @@ func QueryAllUser() ([] utility.User, error) {
 }
 
 func CheckUserNameAndPassword(userName * string, password * string) (* string, error) {
-	stmt, err := DBConn.Prepare("SELECT user_code FROM user WHERE user_name=? AND password=?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code FROM user WHERE user_name=? AND password=?")
 	if err != nil {
 		panic(err.Error())
 	}

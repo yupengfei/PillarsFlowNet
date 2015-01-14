@@ -11,17 +11,15 @@ import (
 //获取特定战役所有的node
 //TODO
 //将该参数改名为GetCampaignNode
-func GetAllNode(userCodeAndParameter * string) ([] byte, *string) {
-	//userCode, parameter 
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func GetCampaignNode(userCode * string, parameter * string) ([] byte, *string) {
+	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
 	}
 	var opResult []utility.Graph
 	if (errorCode == 0) {
-		campaignCode, _ := utility.ParseCampaignCodeMessage(&(inputParameters[1]))
+		campaignCode, _ := utility.ParseCampaignCodeMessage(parameter)
 		opResult, _ =storage.QueryGraphNodesByCampaignCode(&(campaignCode.CampaignCode))
 	}
 	var missionSlice []utility.Mission
@@ -41,14 +39,12 @@ func GetAllNode(userCodeAndParameter * string) ([] byte, *string) {
 		resultSlice = append(resultSlice, *utility.ObjectToJsonString(missionSlice[i]))
 	}
 	command := "getAllNode"
-	result := utility.SliceResultToOutMessage(&command, resultSlice, errorCode, &(inputParameters[0]))
-	return result, &(inputParameters[0])
+	result := utility.SliceResultToOutMessage(&command, resultSlice, errorCode, userCode)
+	return result, userCode
 }
 
-func AddNode(userCodeAndParameter * string) ([] byte, *string) {
-	//userCode, parameter 
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func AddNode(userCode * string, parameter * string) ([] byte, *string) {
+	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -56,8 +52,8 @@ func AddNode(userCodeAndParameter * string) ([] byte, *string) {
 	var graphCode * string
 	var resultSlice [] string
 	if (errorCode == 0) {
-		graph, _ := utility.ParseGraphMessage(&(inputParameters[1]))
-		graph.GraphCode = *(utility.GenerateCode(&(inputParameters[0])))
+		graph, _ := utility.ParseGraphMessage(parameter)
+		graph.GraphCode = *(utility.GenerateCode(userCode))
 		graphCode = &(graph.GraphCode)
 		opResult, _ :=storage.InsertIntoGraph(graph)
 		if opResult == false {
@@ -72,14 +68,12 @@ func AddNode(userCodeAndParameter * string) ([] byte, *string) {
 	}
 
 	var command = "addNode"
-	result := utility.BoolResultToOutMessage(&command, resultSlice, errorCode, &inputParameters[0])
-	return result, &(inputParameters[0])
+	result := utility.BoolResultToOutMessage(&command, resultSlice, errorCode, userCode)
+	return result, userCode
 }
 
-func ModifyNode(userCodeAndParameter * string) ([] byte, *string) {
-	//userCode, parameter 
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func ModifyNode(userCode * string, parameter * string) ([] byte, *string) {
+	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -87,7 +81,7 @@ func ModifyNode(userCodeAndParameter * string) ([] byte, *string) {
 	var graphCode * string
 	var graphOut * utility.Graph
 	if (errorCode == 0) {
-		graph, _ := utility.ParseGraphMessage(&(inputParameters[1]))
+		graph, _ := utility.ParseGraphMessage(parameter)
 		graphCode = &(graph.GraphCode)
 		opResult, _ :=storage.ModifyGraph(graph)
 		if opResult == false {
@@ -97,28 +91,26 @@ func ModifyNode(userCodeAndParameter * string) ([] byte, *string) {
 		}
 	}
 	var command = "modifyNode"
-	result := utility.BoolResultToOutMessage(&command, graphOut, errorCode, &inputParameters[0])
-	return result, &(inputParameters[0])
+	result := utility.BoolResultToOutMessage(&command, graphOut, errorCode, userCode)
+	return result, userCode
 }
 
 
-func DeleteNode(userCodeAndParameter * string) ([] byte, *string) {
-	//userCode, parameter 
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func DeleteNode(userCode * string, parameter * string) ([] byte, *string) {
+	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
 	}
 
 	if (errorCode == 0) {
-		graphCode, _ := utility.ParseGraphCodeMessage(&(inputParameters[1]))
+		graphCode, _ := utility.ParseGraphCodeMessage(parameter)
 		opResult, _ :=storage.DeleteGraphByGraphCode(&(graphCode.GraphCode))
 		if opResult == false {
 			errorCode = 1
 		}
 	}
 	var command = "deleteNode"
-	result := utility.StringResultToOutMessage(&command, &inputParameters[1], errorCode, &inputParameters[0])
-	return result, &(inputParameters[0])
+	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
+	return result, userCode
 }

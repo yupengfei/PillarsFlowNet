@@ -40,9 +40,7 @@ func ValidateUser(parameter * string) (* string,  * string,  error) {
 	return result, userCode, err
 }
 
-func GetAllUser(userCodeAndParameter * string) ([] byte, *string) {
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func GetAllUser(userCode * string, parameter * string) ([] byte, *string) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -52,6 +50,6 @@ func GetAllUser(userCodeAndParameter * string) ([] byte, *string) {
 		userSlice, _ = storage.QueryAllUser()
 	}
 	command := "getAllUser"
-	result := utility.SliceResultToOutMessage(&command, userSlice, errorCode, &(inputParameters[0]))
-	return result, &(inputParameters[0])
+	result := utility.SliceResultToOutMessage(&command, userSlice, errorCode, userCode)
+	return result, userCode
 }

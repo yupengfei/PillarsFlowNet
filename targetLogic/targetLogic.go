@@ -8,10 +8,7 @@ import (
 	"strings"
 )
 
-func AddTarget(userCodeAndParameter * string) ([] byte, *string) {
-	//userCode, parameter 
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func AddTarget(userCode * string, parameter * string) ([] byte, *string) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -19,8 +16,8 @@ func AddTarget(userCodeAndParameter * string) ([] byte, *string) {
 	var targetCode * string
 	var targetOut * utility.Target
 	if (errorCode == 0) {
-		target, _ := utility.ParseTargetMessage(&(inputParameters[1]))
-		target.TargetCode = *(utility.GenerateCode(&(inputParameters[0])))
+		target, _ := utility.ParseTargetMessage(parameter)
+		target.TargetCode = *(utility.GenerateCode(userCode))
 		targetCode = &(target.TargetCode)
 		opResult, _ :=storage.InsertIntoTarget(target)
 		if opResult == false {
@@ -30,15 +27,12 @@ func AddTarget(userCodeAndParameter * string) ([] byte, *string) {
 		}
 	}
 	var command = "addTarget"
-	result := utility.BoolResultToOutMessage(&command, targetOut, errorCode, &inputParameters[0])
-	return result, &(inputParameters[0])
+	result := utility.BoolResultToOutMessage(&command, targetOut, errorCode, userCode)
+	return result, userCode
 }
 
 
-func ModifyTarget(userCodeAndParameter * string) ([] byte, *string) {
-	//userCode, parameter 
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func ModifyTarget(userCode * string, parameter * string) ([] byte, *string) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -46,7 +40,7 @@ func ModifyTarget(userCodeAndParameter * string) ([] byte, *string) {
 	var targetCode * string
 	var targetOut * utility.Target
 	if (errorCode == 0) {
-		target, _ := utility.ParseTargetMessage(&(inputParameters[1]))
+		target, _ := utility.ParseTargetMessage(parameter)
 		targetCode = &(target.TargetCode)
 		opResult, _ :=storage.ModifyTarget(target)
 		if opResult == false {
@@ -56,46 +50,40 @@ func ModifyTarget(userCodeAndParameter * string) ([] byte, *string) {
 		}
 	}
 	var command = "modifyTarget"
-	result := utility.BoolResultToOutMessage(&command, targetOut, errorCode, &inputParameters[0])
-	return result, &(inputParameters[0])
+	result := utility.BoolResultToOutMessage(&command, targetOut, errorCode, userCode)
+	return result, userCode
 }
 
-func DeleteTarget(userCodeAndParameter * string) ([] byte, *string) {
-	//userCode, parameter 
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func DeleteTarget(userCode * string, parameter * string) ([] byte, *string) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
 	}
 	if (errorCode == 0) {
-		targetCode, _ := utility.ParseTargetCodeMessage(&(inputParameters[1]))
+		targetCode, _ := utility.ParseTargetCodeMessage(parameter)
 		opResult, _ :=storage.DeleteTargetByTargetCode(&(targetCode.TargetCode))
 		if opResult == false {
 			errorCode = 1
 		}
 	}
 	var command = "deleteTarget"
-	result := utility.StringResultToOutMessage(&command, &inputParameters[1], errorCode, &inputParameters[0])
-	return result, &(inputParameters[0])
+	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
+	return result, userCode
 }
 
 
-func QueryTargetByMissionCode(userCodeAndParameter * string) ([] byte, *string) {
-	//userCode, parameter 
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func QueryTargetByMissionCode(userCode * string, parameter * string) ([] byte, *string) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
 	}
 	var opResult [] utility.Target
 	if (errorCode == 0) {
-		missionCode, _ := utility.ParseMissionCodeMessage(&(inputParameters[1]))
+		missionCode, _ := utility.ParseMissionCodeMessage(parameter)
 		opResult, _ =storage.QueryTargetsByMissionCode(&(missionCode.MissionCode))
 
 	}
 	command := "queryTargetByMissionCode"
-	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &(inputParameters[0]))
-	return result, &(inputParameters[0])
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
+	return result, userCode
 }

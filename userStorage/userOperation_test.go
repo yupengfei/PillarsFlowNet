@@ -27,7 +27,6 @@ import (
 // }
 
 func TestInsertIntoUser1(t * testing.T) {
-	DBConn = ConnectToDB()
 	var user utility.User
 
 	user.UserName = "er.wang"
@@ -41,39 +40,29 @@ func TestInsertIntoUser1(t * testing.T) {
 	if result != true {
 		t.Error("insert failed")
 	}
-	CloseDBConnection()
 }
 
 func TestQueryByUserName(t * testing.T) {
-	DBConn = ConnectToDB()
-
 	userName := "er.wang"
-
 	user, _ := QueryUserByUserName(&userName)
 	fmt.Println("testing query user by name " + user.UserName)
-	CloseDBConnection()
 }
 
 func TestDeleteUserByUserName(t * testing.T) {
-	DBConn = ConnectToDB()
 	userName := string("er.wang")
 	result, err := DeleteUserByUserName(&userName)
 	if result == false || err != nil {
 		t.Error("test delete user failed")
 	}
-
-	CloseDBConnection()
 }
 
 func TestQueryAllUser(t * testing.T) {
-	DBConn = ConnectToDB()
 	result, err := QueryAllUser()
 	if err != nil {
 		panic(err.Error())
 	} else {
 		fmt.Println(*(utility.ObjectToJsonString(result)))
 	}
-	CloseDBConnection()
 }
 
 

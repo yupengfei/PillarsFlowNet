@@ -9,9 +9,7 @@ import (
 	"strings"
 )
 
-func AddPost(userCodeAndParameter * string) ([] byte, *string) {
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func AddPost(userCode * string, parameter * string) ([] byte, *string) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -20,10 +18,10 @@ func AddPost(userCodeAndParameter * string) ([] byte, *string) {
 	var err error
 	//var toUserCode * string
 	if (errorCode == 0) {
-		post, _ := utility.ParsePostMessage(&(inputParameters[1]))
+		post, _ := utility.ParsePostMessage(parameter)
 		//toUserCode = &(chart.To)
 
-		post.Id = *(utility.GenerateCode(&inputParameters[0]))
+		post.Id = *(utility.GenerateCode(userCode)
 		post.UserCode = inputParameters[0]
 		
 		post.Deleted = 0
@@ -34,14 +32,11 @@ func AddPost(userCodeAndParameter * string) ([] byte, *string) {
 		}
 	}
 	var command = "addPost"
-	result := utility.BoolResultToOutMessage(&command, postOut, errorCode, &inputParameters[0])
-	return result, &(inputParameters[0])
+	result := utility.BoolResultToOutMessage(&command, postOut, errorCode, userCode)
+	return result, userCode)
 }
 
-func GetAllTargetPost(userCodeAndParameter * string) ([] byte, *string) {
-	//userCode, parameter 
-	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
-	auth := authentication.GetAuthInformation(&(inputParameters[0]))
+func GetAllTargetPost(userCode * string, parameter * string) ([] byte, *string) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -49,13 +44,13 @@ func GetAllTargetPost(userCodeAndParameter * string) ([] byte, *string) {
 	var opResult []utility.Post
 	var err error
 	if (errorCode == 0) {
-		targetCode, _ := utility.ParseTargetCodeMessage(&(inputParameters[1]))
+		targetCode, _ := utility.ParseTargetCodeMessage(parameter)
 		opResult, err = storage.GetAllPostByTargetCode(&(targetCode.TargetCode))
 		if err != nil {
 			errorCode = 1
 		}
 	}
 	var command = "getAllTargetPost"
-	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &inputParameters[0])
-	return result, &(inputParameters[0])
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
+	return result, userCode
 }
