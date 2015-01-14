@@ -5,17 +5,15 @@ import (
 )
 
 //hub handle all kind of request
-//add more channel to realize more kind of request
-//ugly through, modify hub and connection both to add a request
 type HubStruct struct {
 
-	connections map[string]*connection
-	
-	register chan * connection
-	unregister chan * connection
+    connections map[string]*connection
+    
+    register chan * connection
+    unregister chan * connection
 }
 
-var Hub = hub {
+var Hub = HubStruct {
 	connections: make(map[string]*connection),
 	
 	register: make(chan * connection),

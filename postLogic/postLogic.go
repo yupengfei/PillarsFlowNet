@@ -1,19 +1,13 @@
-package post
+package postLogic
 
 import (
 	"time"
-	"PillarsFlowNet/storage"
+	"PillarsFlowNet/postStorage"
 	"PillarsFlowNet/utility"
-	"PillarsFlowNet/authentication"
-	// "fmt"
-	"strings"
 )
 
-func AddPost(userCode * string, parameter * string, h * connection.HubStruct) {
+func AddPost(userCode * string, parameter * string, h * utility.HubStruct) {
 	var errorCode int
-	if (auth == false) {
-		errorCode = 3
-	}
 	var postOut * utility.Post
 	var err error
 	//var toUserCode * string
@@ -21,12 +15,12 @@ func AddPost(userCode * string, parameter * string, h * connection.HubStruct) {
 		post, _ := utility.ParsePostMessage(parameter)
 		//toUserCode = &(chart.To)
 
-		post.Id = *(utility.GenerateCode(userCode)
-		post.UserCode = inputParameters[0]
+		post.Id = *(utility.GenerateCode(userCode))
+		post.UserCode = *userCode
 		
 		post.Deleted = 0
 		post.DeletedTime = time.Now().Format("2006-01-02 15:04:05")
-		postOut, err = storage.StoreToPost(post)
+		postOut, err = postStorage.StoreToPost(post)
 		if err != nil {
 			errorCode = 1
 		}
@@ -36,16 +30,13 @@ func AddPost(userCode * string, parameter * string, h * connection.HubStruct) {
 	h.Dispatch(result)
 }
 
-func GetAllTargetPost(userCode * string, parameter * string, h * connection.HubStruct) {
+func GetAllTargetPost(userCode * string, parameter * string, h * utility.HubStruct) {
 	var errorCode int
-	if (auth == false) {
-		errorCode = 3
-	}
 	var opResult []utility.Post
 	var err error
 	if (errorCode == 0) {
 		targetCode, _ := utility.ParseTargetCodeMessage(parameter)
-		opResult, err = storage.GetAllPostByTargetCode(&(targetCode.TargetCode))
+		opResult, err = postStorage.GetAllPostByTargetCode(&(targetCode.TargetCode))
 		if err != nil {
 			errorCode = 1
 		}

@@ -1,18 +1,17 @@
-package chart
+package chartLogic
 
 import (
 	"time"
-	"PillarsFlowNet/storage"
+	"PillarsFlowNet/chartStorage"
 	"PillarsFlowNet/utility"
 	"PillarsFlowNet/authentication"
 	// "fmt"
-	"strings"
 )
 
 //向chart表添加一条记录
 //其中inputParameters[0]是执行该操作的用户的code
 //inputParameters[1]包含了更多的聊天信息
-func AddChart(userCode * string, parameter * string, h * connection.HubStruct) {//result, fromUserCode, ToUserCode
+func AddChart(userCode * string, parameter * string, h * utility.HubStruct) {//result, fromUserCode, ToUserCode
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -26,12 +25,12 @@ func AddChart(userCode * string, parameter * string, h * connection.HubStruct) {
 		toUserCode = &(chart.To)
 
 		chart.Id = *(utility.GenerateCode(userCode))
-		chart.From = inputParameters[0]
+		chart.From = *userCode
 		chart.ReceivedTime = time.Now().Format("2006-01-02 15:04:05")
 		chart.IsReceived = 0
 		chart.Deleted = 0
 		chart.DeletedTime = time.Now().Format("2006-01-02 15:04:05")
-		chartOut, err = storage.StoreToChart(chart)
+		chartOut, err = chartStorage.StoreToChart(chart)
 		if err != nil {
 			errorCode = 1
 		}
@@ -43,7 +42,7 @@ func AddChart(userCode * string, parameter * string, h * connection.HubStruct) {
 }
 
 //用户在阅读完某条信息后会将该条信息标记为已读
-func ReceiveChart(userCode * string, parameter * string, h * connection.HubStruct) {
+func ReceiveChart(userCode * string, parameter * string, h * utility.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -51,7 +50,7 @@ func ReceiveChart(userCode * string, parameter * string, h * connection.HubStruc
 	}
 	if (errorCode == 0) {
 		chartCode, _ := utility.ParseChartCodeMessage(parameter)
-		_, err :=storage.MarkAsReceiveByChartCode(&(chartCode.ChartCode))
+		_, err :=chartStorage.MarkAsReceiveByChartCode(&(chartCode.ChartCode))
 		if err != nil {
 			errorCode = 1
 		}
@@ -63,7 +62,7 @@ func ReceiveChart(userCode * string, parameter * string, h * connection.HubStruc
 }
 
 //用户登陆后，会向服务器请求所有发给自己的未读信息
-func GetAllUnreceivedChart(userCode * string, parameter * string, h * connection.HubStruct) {
+func GetAllUnreceivedChart(userCode * string, parameter * string, h * utility.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -72,7 +71,7 @@ func GetAllUnreceivedChart(userCode * string, parameter * string, h * connection
 	var opResult []utility.Chart
 	var err error
 	if (errorCode == 0) {
-		opResult, err = storage.GetAllUnreceivedMessageByUserCode(parameter)
+		opResult, err = chartStorage.GetAllUnreceivedMessageByUserCode(parameter)
 		if err != nil {
 			errorCode = 1
 		}

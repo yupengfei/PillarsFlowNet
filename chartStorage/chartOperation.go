@@ -1,4 +1,4 @@
-package storage
+package chartStorage
 import (
 	"PillarsFlowNet/mongoUtility"
 	"PillarsFlowNet/utility"

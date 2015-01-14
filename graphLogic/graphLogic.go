@@ -1,17 +1,16 @@
-package graph
+package graphLogic
 
 import (
-	"PillarsFlowNet/storage"
+	"PillarsFlowNet/graphStorage"
+	"PillarsFlowNet/missionStorage"
 	"PillarsFlowNet/utility"
 	"PillarsFlowNet/authentication"
-	// "fmt"
-	"strings"
 )
 
 //获取特定战役所有的node
 //TODO
 //将该参数改名为GetCampaignNode
-func GetCampaignNode(userCode * string, parameter * string, h * connection.HubStruct) {
+func GetCampaignNode(userCode * string, parameter * string, h * utility.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -20,14 +19,14 @@ func GetCampaignNode(userCode * string, parameter * string, h * connection.HubSt
 	var opResult []utility.Graph
 	if (errorCode == 0) {
 		campaignCode, _ := utility.ParseCampaignCodeMessage(parameter)
-		opResult, _ =storage.QueryGraphNodesByCampaignCode(&(campaignCode.CampaignCode))
+		opResult, _ =graphStorage.QueryGraphNodesByCampaignCode(&(campaignCode.CampaignCode))
 	}
 	var missionSlice []utility.Mission
 	opResultLength := len(opResult)
 	var i int
 	for i = 0; i < opResultLength; i++ {
 		var mission * utility.Mission
-		mission, err := storage.QueryMissionByMissionCode(&(opResult[i].NodeCode))
+		mission, err := missionStorage.QueryMissionByMissionCode(&(opResult[i].NodeCode))
 		if err != nil {
 			mission = new(utility.Mission)
 		}
@@ -43,7 +42,7 @@ func GetCampaignNode(userCode * string, parameter * string, h * connection.HubSt
 	h.SendToUserCode(result, userCode)
 }
 
-func AddNode(userCode * string, parameter * string, h * connection.HubStruct) {
+func AddNode(userCode * string, parameter * string, h * utility.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -55,14 +54,14 @@ func AddNode(userCode * string, parameter * string, h * connection.HubStruct) {
 		graph, _ := utility.ParseGraphMessage(parameter)
 		graph.GraphCode = *(utility.GenerateCode(userCode))
 		graphCode = &(graph.GraphCode)
-		opResult, _ :=storage.InsertIntoGraph(graph)
+		opResult, _ :=graphStorage.InsertIntoGraph(graph)
 		if opResult == false {
 			errorCode = 1
 		} else {
-			graphOut, _ := storage.QueryGraphNodeByGraphCode(graphCode)
+			graphOut, _ := graphStorage.QueryGraphNodeByGraphCode(graphCode)
 		
 			resultSlice = append(resultSlice, *utility.ObjectToJsonString(graphOut))
-			mission, _ := storage.QueryMissionByMissionCode(&(graphOut.NodeCode))
+			mission, _ := missionStorage.QueryMissionByMissionCode(&(graphOut.NodeCode))
 			resultSlice = append(resultSlice, *utility.ObjectToJsonString(mission))
 		}
 	}
@@ -72,7 +71,7 @@ func AddNode(userCode * string, parameter * string, h * connection.HubStruct) {
 	h.Dispatch(result)
 }
 
-func ModifyNode(userCode * string, parameter * string, h * connection.HubStruct) {
+func ModifyNode(userCode * string, parameter * string, h * utility.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -83,11 +82,11 @@ func ModifyNode(userCode * string, parameter * string, h * connection.HubStruct)
 	if (errorCode == 0) {
 		graph, _ := utility.ParseGraphMessage(parameter)
 		graphCode = &(graph.GraphCode)
-		opResult, _ :=storage.ModifyGraph(graph)
+		opResult, _ :=graphStorage.ModifyGraph(graph)
 		if opResult == false {
 			errorCode = 1
 		} else {
-			graphOut, _ = storage.QueryGraphNodeByGraphCode(graphCode)
+			graphOut, _ = graphStorage.QueryGraphNodeByGraphCode(graphCode)
 		}
 	}
 	var command = "modifyNode"
@@ -96,7 +95,7 @@ func ModifyNode(userCode * string, parameter * string, h * connection.HubStruct)
 }
 
 
-func DeleteNode(userCode * string, parameter * string, h * connection.HubStruct) {
+func DeleteNode(userCode * string, parameter * string, h * utility.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -105,7 +104,7 @@ func DeleteNode(userCode * string, parameter * string, h * connection.HubStruct)
 
 	if (errorCode == 0) {
 		graphCode, _ := utility.ParseGraphCodeMessage(parameter)
-		opResult, _ :=storage.DeleteGraphByGraphCode(&(graphCode.GraphCode))
+		opResult, _ :=graphStorage.DeleteGraphByGraphCode(&(graphCode.GraphCode))
 		if opResult == false {
 			errorCode = 1
 		}

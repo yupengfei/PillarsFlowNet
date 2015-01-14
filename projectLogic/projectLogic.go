@@ -1,23 +1,16 @@
-package project
+package projectLogic
 
 import (
-	"PillarsFlowNet/storage"
+	"PillarsFlowNet/projectStorage"
 	"PillarsFlowNet/utility"
-	"PillarsFlowNet/authentication"
-	"PillarsFlowNet/connection"
-	// "fmt"
-	"strings"
 )
 
-func GetAllProject(userCode * string, parameter * string, h * connection.HubStruct) ([] byte, *string) {
+func GetAllProject(userCode * string, parameter * string, h * utility.HubStruct) ([] byte, *string) {
 	var errorCode int
-	if (auth == false) {
-		errorCode = 3
-	}
 	var opResult [] utility.Project
 
 	if (errorCode == 0) {
-		opResult, _ = storage.QueryAllProject()
+		opResult, _ = projectStorage.QueryAllProject()
 	}
 
 	command := "getAllProject"
@@ -26,23 +19,19 @@ func GetAllProject(userCode * string, parameter * string, h * connection.HubStru
 	return result, userCode
 }
 
-func AddProject(userCode * string, parameter * string, h * connection.HubStruct) ([] byte, *string) {
+func AddProject(userCode * string, parameter * string, h * utility.HubStruct) ([] byte, *string) {
 	var errorCode int
-	
-	if (auth == false) {
-		errorCode = 3
-	}
 	var projectCode * string
 	var projectOut * utility.Project
 	if (errorCode == 0) {
 		project, _ := utility.ParseProjectMessage(parameter)
 		project.ProjectCode = *(utility.GenerateCode(userCode))
 		projectCode = &(project.ProjectCode)
-		opResult, _ :=storage.InsertIntoProject(project)
+		opResult, _ :=projectStorage.InsertIntoProject(project)
 		if opResult == false {
 			errorCode = 1
 		} else {
-			projectOut, _ = storage.QueryProjectByProjectCode(projectCode)
+			projectOut, _ = projectStorage.QueryProjectByProjectCode(projectCode)
 		}
 	}
 	var command = "addProject"
@@ -52,21 +41,18 @@ func AddProject(userCode * string, parameter * string, h * connection.HubStruct)
 }
 
 
-func ModifyProject(userCode * string, parameter * string, h * connection.HubStruct) ([] byte, *string) {
+func ModifyProject(userCode * string, parameter * string, h * utility.HubStruct) ([] byte, *string) {
 	var errorCode int
-	if (auth == false) {
-		errorCode = 3
-	}
 	var projectCode * string
 	var projectOut * utility.Project
 	if (errorCode == 0) {
 		project, _ := utility.ParseProjectMessage(parameter)
 		projectCode = &(project.ProjectCode)
-		opResult, _ :=storage.ModifyProject(project)
+		opResult, _ :=projectStorage.ModifyProject(project)
 		if opResult == false {
 			errorCode = 1
 		} else {
-			projectOut, _ = storage.QueryProjectByProjectCode(projectCode)
+			projectOut, _ = projectStorage.QueryProjectByProjectCode(projectCode)
 		}
 	}
 	var command = "modifyProject"

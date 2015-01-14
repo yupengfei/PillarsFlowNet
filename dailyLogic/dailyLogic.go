@@ -1,17 +1,15 @@
-package daily
+package dailyLogic
 
 import (
-	"PillarsFlowNet/storage"
+	"PillarsFlowNet/dailyStorage"
 	"PillarsFlowNet/utility"
 	"PillarsFlowNet/authentication"
-	// "fmt"
-	"strings"
 )
 
 //向Daily表中增加一条记录
 //inputParameters[0]为发起该操作的用户的usercode
 //inputParameters[1]为具体的参数
-func AddDaily(userCode * string, parameter * string, h * connection.HubStruct) {
+func AddDaily(userCode * string, parameter * string, h * utility.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -23,11 +21,11 @@ func AddDaily(userCode * string, parameter * string, h * connection.HubStruct) {
 		daily, _ := utility.ParseDailyMessage(parameter)
 		daily.DailyCode = *(utility.GenerateCode(userCode))
 		dailyCode = &(daily.DailyCode)
-		opResult, _ :=storage.InsertIntoDaily(daily)
+		opResult, _ :=dailyStorage.InsertIntoDaily(daily)
 		if opResult == false {
 			errorCode = 1
 		} else {
-			dailyOut, _ = storage.QueryDailyByDailyCode(dailyCode)
+			dailyOut, _ = dailyStorage.QueryDailyByDailyCode(dailyCode)
 		}
 	}
 	var command = "addDaily"
@@ -38,7 +36,7 @@ func AddDaily(userCode * string, parameter * string, h * connection.HubStruct) {
 //修改Daily表中的某一条数据
 //inputParameters[0]为发起该操作的用户的UserCode
 //inputParameters[1]为具体的参数
-func ModifyDaily(userCode * string, parameter * string, h * connection.HubStruct) {
+func ModifyDaily(userCode * string, parameter * string, h * utility.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -49,11 +47,11 @@ func ModifyDaily(userCode * string, parameter * string, h * connection.HubStruct
 	if (errorCode == 0) {
 		daily, _ := utility.ParseDailyMessage(parameter)
 		dailyCode = &(daily.DailyCode)
-		opResult, _ :=storage.ModifyDaily(daily)
+		opResult, _ :=dailyStorage.ModifyDaily(daily)
 		if opResult == false {
 			errorCode = 1
 		} else {
-			dailyOut, _ = storage.QueryDailyByDailyCode(dailyCode)
+			dailyOut, _ = dailyStorage.QueryDailyByDailyCode(dailyCode)
 		}
 	}
 	var command = "modifyDaily"
@@ -64,7 +62,7 @@ func ModifyDaily(userCode * string, parameter * string, h * connection.HubStruct
 //删除某条Daily
 //inputParameters[0]为发起该操作的用户的UserCOde
 //inputParameters[1]为具体的参数
-func DeleteDaily(userCode * string, parameter * string, h * connection.HubStruct) {
+func DeleteDaily(userCode * string, parameter * string, h * utility.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -72,7 +70,7 @@ func DeleteDaily(userCode * string, parameter * string, h * connection.HubStruct
 	}
 	if (errorCode == 0) {
 		dailyCode, _ := utility.ParseDailyCodeMessage(parameter)
-		opResult, _ :=storage.DeleteDailyByDailyCode(&(dailyCode.DailyCode))
+		opResult, _ :=dailyStorage.DeleteDailyByDailyCode(&(dailyCode.DailyCode))
 		if opResult == false {
 			errorCode = 1
 		}
@@ -85,7 +83,7 @@ func DeleteDaily(userCode * string, parameter * string, h * connection.HubStruct
 //获取missionCode相关的所有Daily
 //inputParameters[0]为发起该操作的用户的code
 //inputParameters[1]为具体的参数
-func QueryDailyByMissionCode(userCode * string, parameter * string, h * connection.HubStruct) {
+func QueryDailyByMissionCode(userCode * string, parameter * string, h * utility.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -94,7 +92,7 @@ func QueryDailyByMissionCode(userCode * string, parameter * string, h * connecti
 	var opResult [] utility.Daily
 	if (errorCode == 0) {
 		missionCode, _ := utility.ParseMissionCodeMessage(parameter)
-		opResult, _ =storage.QueryDailysByMissionCode(&(missionCode.MissionCode))
+		opResult, _ =dailyStorage.QueryDailysByMissionCode(&(missionCode.MissionCode))
 
 	}
 	command := "queryDailyByMissionCode"

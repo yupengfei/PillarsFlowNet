@@ -1,10 +1,8 @@
-package user
+package userLogic
 
 import (
 	"PillarsFlowNet/utility"
-	"PillarsFlowNet/storage"
-	"strings"
-	"PillarsFlowNet/authentication"
+	"PillarsFlowNet/userStorage"
 )
 
 //result, userName, err
@@ -15,7 +13,7 @@ func ValidateUser(parameter * string) (* string,  * string,  error) {
 		//TO DO need to made more rebust
 		panic("wrong login message")
 	}
-	userCode, _ := storage.CheckUserNameAndPassword(&((*user).UserName), &((*user).Password))
+	userCode, _ := userStorage.CheckUserNameAndPassword(&((*user).UserName), &((*user).Password))
 	var sysError = utility.Error {
 			ErrorCode: 0,
 			ErrorMessage: "",
@@ -25,7 +23,7 @@ func ValidateUser(parameter * string) (* string,  * string,  error) {
 		tmpResultString := ""
 		resultString = &tmpResultString
 	} else {
-		user, _ := storage.QueryUserByUserCode(userCode)
+		user, _ := userStorage.QueryUserByUserCode(userCode)
 		resultString = utility.ObjectToJsonString(user)
 	}
 
@@ -40,14 +38,11 @@ func ValidateUser(parameter * string) (* string,  * string,  error) {
 	return result, userCode, err
 }
 
-func GetAllUser(userCode * string, parameter * string, h * connection.HubStruct) {
+func GetAllUser(userCode * string, parameter * string, h * utility.HubStruct) {
 	var errorCode int
-	if (auth == false) {
-		errorCode = 3
-	}
 	var userSlice [] utility.User
 	if errorCode == 0 {
-		userSlice, _ = storage.QueryAllUser()
+		userSlice, _ = userStorage.QueryAllUser()
 	}
 	command := "getAllUser"
 	result := utility.SliceResultToOutMessage(&command, userSlice, errorCode, userCode)
