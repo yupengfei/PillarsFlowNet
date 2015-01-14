@@ -8,6 +8,11 @@ import (
 	"strings"
 )
 
+//获取特定战役所有的依赖
+//inputParameters[0]为发起该操作的用户的usercode
+//inputParameters[1]为具体的参数，即战役的code
+//TODO
+//将该函数改名为GetCampaignDependency
 func GetAllDependency(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
@@ -26,6 +31,9 @@ func GetAllDependency(userCodeAndParameter * string) ([] byte, *string) {
 	return result, &(inputParameters[0])
 }
 
+//增加依赖
+//inputParameters[0]为发起该操作的用户的UserCode
+//inputParameters[1]为具体的参数
 func AddDependency(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)

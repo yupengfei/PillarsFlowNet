@@ -14,7 +14,7 @@ var outFile *os.File
 func init() {
 
     if PillarsLogger == nil {
-        propertyMap := utility.ReadProperty("../log.properties")
+        propertyMap := utility.ReadProperty("./log.properties")
         logFileName := propertyMap["LogFile"]
         fmt.Println(logFileName)
         var err error

@@ -8,6 +8,9 @@ import (
 	"strings"
 )
 
+//获取某个Project所有的Campaign
+//TODO
+//将该函数改名为GetProjectCampaign
 func GetAllCampaign(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)

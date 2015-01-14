@@ -23,7 +23,7 @@ func AddPost(userCodeAndParameter * string) ([] byte, *string) {
 		post, _ := utility.ParsePostMessage(&(inputParameters[1]))
 		//toUserCode = &(chart.To)
 
-		post.PostCode = *(utility.GenerateCode(&inputParameters[0]))
+		post.Id = *(utility.GenerateCode(&inputParameters[0]))
 		post.UserCode = inputParameters[0]
 		
 		post.Deleted = 0

@@ -8,6 +8,9 @@ import (
 	"strings"
 )
 
+//获取特定战役所有的node
+//TODO
+//将该参数改名为GetCampaignNode
 func GetAllNode(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)

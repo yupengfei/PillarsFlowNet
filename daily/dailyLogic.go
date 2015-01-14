@@ -8,6 +8,9 @@ import (
 	"strings"
 )
 
+//向Daily表中增加一条记录
+//inputParameters[0]为发起该操作的用户的usercode
+//inputParameters[1]为具体的参数
 func AddDaily(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
@@ -34,7 +37,9 @@ func AddDaily(userCodeAndParameter * string) ([] byte, *string) {
 	return result, &(inputParameters[0])
 }
 
-
+//修改Daily表中的某一条数据
+//inputParameters[0]为发起该操作的用户的UserCode
+//inputParameters[1]为具体的参数
 func ModifyDaily(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
@@ -60,6 +65,9 @@ func ModifyDaily(userCodeAndParameter * string) ([] byte, *string) {
 	return result, &(inputParameters[0])
 }
 
+//删除某条Daily
+//inputParameters[0]为发起该操作的用户的UserCOde
+//inputParameters[1]为具体的参数
 func DeleteDaily(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
@@ -80,7 +88,9 @@ func DeleteDaily(userCodeAndParameter * string) ([] byte, *string) {
 	return result, &(inputParameters[0])
 }
 
-
+//获取missionCode相关的所有Daily
+//inputParameters[0]为发起该操作的用户的code
+//inputParameters[1]为具体的参数
 func QueryDailyByMissionCode(userCodeAndParameter * string) ([] byte, *string) {
 	//userCode, parameter 
 	inputParameters := strings.SplitN(*userCodeAndParameter, "@", 2)
