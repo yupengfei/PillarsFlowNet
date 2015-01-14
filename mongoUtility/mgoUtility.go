@@ -18,7 +18,7 @@ func ConnectToMgo() * mgo.Session {
 		return Session
 	}
 
-	propertyMap := utility.ReadProperty("../Mgo.properties")
+	propertyMap := utility.ReadProperty("./Mgo.properties")
 
 	var  host, database string
 	userName :=  propertyMap["DBUserName"]

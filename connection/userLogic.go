@@ -1,4 +1,4 @@
-package userLogic
+package connection
 
 import (
 	"PillarsFlowNet/utility"
@@ -38,7 +38,7 @@ func ValidateUser(parameter * string) (* string,  * string,  error) {
 	return result, userCode, err
 }
 
-func GetAllUser(userCode * string, parameter * string, h * utility.HubStruct) {
+func GetAllUser(userCode * string, parameter * string) {
 	var errorCode int
 	var userSlice [] utility.User
 	if errorCode == 0 {
@@ -46,5 +46,5 @@ func GetAllUser(userCode * string, parameter * string, h * utility.HubStruct) {
 	}
 	command := "getAllUser"
 	result := utility.SliceResultToOutMessage(&command, userSlice, errorCode, userCode)
-	h.SendToUserCode(result, userCode)
+	Hub.SendToUserCode(result, userCode)
 }

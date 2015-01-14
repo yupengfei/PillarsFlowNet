@@ -1,4 +1,4 @@
-package dailyLogic
+package connection
 
 import (
 	"PillarsFlowNet/dailyStorage"
@@ -9,7 +9,7 @@ import (
 //向Daily表中增加一条记录
 //inputParameters[0]为发起该操作的用户的usercode
 //inputParameters[1]为具体的参数
-func AddDaily(userCode * string, parameter * string, h * utility.HubStruct) {
+func AddDaily(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -30,13 +30,13 @@ func AddDaily(userCode * string, parameter * string, h * utility.HubStruct) {
 	}
 	var command = "addDaily"
 	result := utility.BoolResultToOutMessage(&command, dailyOut, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 }
 
 //修改Daily表中的某一条数据
 //inputParameters[0]为发起该操作的用户的UserCode
 //inputParameters[1]为具体的参数
-func ModifyDaily(userCode * string, parameter * string, h * utility.HubStruct) {
+func ModifyDaily(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -56,13 +56,13 @@ func ModifyDaily(userCode * string, parameter * string, h * utility.HubStruct) {
 	}
 	var command = "modifyDaily"
 	result := utility.BoolResultToOutMessage(&command, dailyOut, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 }
 
 //删除某条Daily
 //inputParameters[0]为发起该操作的用户的UserCOde
 //inputParameters[1]为具体的参数
-func DeleteDaily(userCode * string, parameter * string, h * utility.HubStruct) {
+func DeleteDaily(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -77,13 +77,13 @@ func DeleteDaily(userCode * string, parameter * string, h * utility.HubStruct) {
 	}
 	var command = "deleteDaily"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 }
 
 //获取missionCode相关的所有Daily
 //inputParameters[0]为发起该操作的用户的code
 //inputParameters[1]为具体的参数
-func QueryDailyByMissionCode(userCode * string, parameter * string, h * utility.HubStruct) {
+func GetDailyByMissionCode(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -97,5 +97,5 @@ func QueryDailyByMissionCode(userCode * string, parameter * string, h * utility.
 	}
 	command := "queryDailyByMissionCode"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	h.SendToUserCode(result, userCode)
+	Hub.SendToUserCode(result, userCode)
 }

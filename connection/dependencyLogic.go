@@ -1,4 +1,4 @@
-package dependencyLogic
+package connection
 
 import (
 	"PillarsFlowNet/dependencyStorage"
@@ -11,7 +11,7 @@ import (
 //inputParameters[1]为具体的参数，即战役的code
 //TODO
 //将该函数改名为GetCampaignDependency
-func GetCampaignDependency(userCode * string, parameter * string, h * utility.HubStruct) {
+func GetCampaignDependency(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -24,13 +24,13 @@ func GetCampaignDependency(userCode * string, parameter * string, h * utility.Hu
 	}
 	command := "getAllDependency"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	h.SendToUserCode(result, userCode)
+	Hub.SendToUserCode(result, userCode)
 }
 
 //增加依赖
 //inputParameters[0]为发起该操作的用户的UserCode
 //inputParameters[1]为具体的参数
-func AddDependency(userCode * string, parameter * string, h * utility.HubStruct) {
+func AddDependency(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -51,10 +51,10 @@ func AddDependency(userCode * string, parameter * string, h * utility.HubStruct)
 	}
 	var command = "addDependency"
 	result := utility.BoolResultToOutMessage(&command, dependencyOut, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 }
 
-func DeleteDependency(userCode * string, parameter * string, h * utility.HubStruct) {
+func DeleteDependency(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -71,10 +71,10 @@ func DeleteDependency(userCode * string, parameter * string, h * utility.HubStru
 
 	var command = "deleteDependency"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 }
 
-func ModifyDependency(userCode * string, parameter * string, h * utility.HubStruct) {
+func ModifyDependency(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -94,6 +94,6 @@ func ModifyDependency(userCode * string, parameter * string, h * utility.HubStru
 	}
 	var command = "modifyDependency"
 	result := utility.BoolResultToOutMessage(&command, dependencyOut, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 }
 

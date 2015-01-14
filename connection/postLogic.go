@@ -1,4 +1,4 @@
-package postLogic
+package connection
 
 import (
 	"time"
@@ -6,7 +6,7 @@ import (
 	"PillarsFlowNet/utility"
 )
 
-func AddPost(userCode * string, parameter * string, h * utility.HubStruct) {
+func AddPost(userCode * string, parameter * string) {
 	var errorCode int
 	var postOut * utility.Post
 	var err error
@@ -27,10 +27,10 @@ func AddPost(userCode * string, parameter * string, h * utility.HubStruct) {
 	}
 	var command = "addPost"
 	result := utility.BoolResultToOutMessage(&command, postOut, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 }
 
-func GetAllTargetPost(userCode * string, parameter * string, h * utility.HubStruct) {
+func GetAllTargetPost(userCode * string, parameter * string) {
 	var errorCode int
 	var opResult []utility.Post
 	var err error
@@ -43,5 +43,5 @@ func GetAllTargetPost(userCode * string, parameter * string, h * utility.HubStru
 	}
 	var command = "getAllTargetPost"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	h.SendToUserCode(result, userCode)
+	Hub.SendToUserCode(result, userCode)
 }

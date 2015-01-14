@@ -1,11 +1,11 @@
-package targetLogic
+package connection
 
 import (
 	"PillarsFlowNet/targetStorage"
 	"PillarsFlowNet/utility"
 )
 
-func AddTarget(userCode * string, parameter * string, h * utility.HubStruct) {
+func AddTarget(userCode * string, parameter * string) {
 	var errorCode int
 	var targetCode * string
 	var targetOut * utility.Target
@@ -22,11 +22,11 @@ func AddTarget(userCode * string, parameter * string, h * utility.HubStruct) {
 	}
 	var command = "addTarget"
 	result := utility.BoolResultToOutMessage(&command, targetOut, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 }
 
 
-func ModifyTarget(userCode * string, parameter * string, h * utility.HubStruct) {
+func ModifyTarget(userCode * string, parameter * string) {
 	var errorCode int
 	var targetCode * string
 	var targetOut * utility.Target
@@ -42,10 +42,10 @@ func ModifyTarget(userCode * string, parameter * string, h * utility.HubStruct) 
 	}
 	var command = "modifyTarget"
 	result := utility.BoolResultToOutMessage(&command, targetOut, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 }
 
-func DeleteTarget(userCode * string, parameter * string, h * utility.HubStruct) {
+func DeleteTarget(userCode * string, parameter * string) {
 	var errorCode int
 	if (errorCode == 0) {
 		targetCode, _ := utility.ParseTargetCodeMessage(parameter)
@@ -56,11 +56,11 @@ func DeleteTarget(userCode * string, parameter * string, h * utility.HubStruct) 
 	}
 	var command = "deleteTarget"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 }
 
 
-func GetTargetByMissionCode(userCode * string, parameter * string, h * utility.HubStruct) {
+func GetTargetByMissionCode(userCode * string, parameter * string) {
 	var errorCode int
 	var opResult [] utility.Target
 	if (errorCode == 0) {
@@ -70,5 +70,5 @@ func GetTargetByMissionCode(userCode * string, parameter * string, h * utility.H
 	}
 	command := "queryTargetByMissionCode"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	h.SendToUserCode(result, userCode)
+	Hub.SendToUserCode(result, userCode)
 }

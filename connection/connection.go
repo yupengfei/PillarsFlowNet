@@ -6,16 +6,16 @@ import (
 	"net/http"
 	"fmt"
 	"PillarsFlowNet/utility"
-	"PillarsFlowNet/projectLogic"
-	"PillarsFlowNet/missionLogic"
-	"PillarsFlowNet/graphLogic"
-	"PillarsFlowNet/dependencyLogic"
-	"PillarsFlowNet/targetLogic"
-	"PillarsFlowNet/chartLogic"
-	"PillarsFlowNet/postLogic"
-	"PillarsFlowNet/userLogic"
-	"PillarsFlowNet/dailyLogic"
 	"PillarsFlowNet/pillarsLog"
+	// "PillarsFlowNet/chartLogic"
+	// "PillarsFlowNet/dailyLogic"
+	// "PillarsFlowNet/dependencyLogic"
+	// "PillarsFlowNet/graphLogic"
+	// "PillarsFlowNet/missionLogic"
+	// "PillarsFlowNet/postLogic"
+	// "PillarsFlowNet/projectLogic"
+	// "PillarsFlowNet/targetLogic"
+	// "PillarsFlowNet/userLogic"
 )
 
 const (
@@ -111,7 +111,7 @@ func (c * connection) readPump() {
 			if *command != "login" {
 				continue
 			} else {
-				result, userCode, err := user.ValidateUser(parameter)
+				result, userCode, err := ValidateUser(parameter)
 				fmt.Println(*userCode)
 				fmt.Println(*result)
 
@@ -128,73 +128,73 @@ func (c * connection) readPump() {
 		} else {//else do some other command
 
 			if *command == "getAllProject" {
-				go projectLogic.GetAllProject(c.userCode, parameter, Hub)
+				go GetAllProject(c.userCode, parameter)
 			} else if *command == "addProject" {
-				go projectLogic.AddProject(c.userCode, parameter, Hub)
+				go AddProject(c.userCode, parameter)
 			} else if *command == "modifyProject" {
-				go projectLogic.ModifyProject(c.userCode, parameter, Hub)
+				go ModifyProject(c.userCode, parameter)
 			} else if *command == "getProjectCampaign" {
-				go missionLogic.GetProjectCampaign(c.userCode, parameter, Hub)
+				go GetProjectCampaign(c.userCode, parameter)
 			} else if *command == "addMission" {
-				go missionLogic.AddMission(c.userCode, parameter, Hub)
+				go AddMission(c.userCode, parameter)
 			} else if *command == "modifyMission" {
-				go missionLogic.ModifyMission(c.userCode, parameter, Hub)
+				go ModifyMission(c.userCode, parameter)
 			} else if *command == "deleteMission" {
-				go missionLogic.ModifyProject(c.userCode, parameter, Hub)
+				go ModifyProject(c.userCode, parameter)
 			} else if *command == "getCampaignNode" {
-				go graphLogic.GetCampaignNode(c.userCode, parameter, Hub)
+				go GetCampaignNode(c.userCode, parameter)
 			} else if *command == "addNode" {
-				go graphLogic.AddNode(c.userCode, parameter, Hub)
+				go AddNode(c.userCode, parameter)
 			} else if *command == "modifyNode" {
-				go graphLogic.ModifyNode(c.userCode, parameter, Hub)
+				go ModifyNode(c.userCode, parameter)
 			} else if *command == "deleteNode" {
-				go graphLogic.DeleteNode(c.userCode, parameter, Hub)
-			} else if *command == "getAllDependency" {
-				go dependencyLogic.GetAllDependency(c.userCode, parameter, Hub)
+				go DeleteNode(c.userCode, parameter)
+			} else if *command == "getCampaignDependency" {
+				go GetCampaignDependency(c.userCode, parameter)
 			} else if *command == "addDependency" {
-				go dependencyLogic.AddDependency(c.userCode, parameter, Hub)
+				go AddDependency(c.userCode, parameter)
 			} else if *command == "modifyDependency" {
-				go dependencyLogic.ModifyDependency(c.userCode, parameter, Hub)
+				go ModifyDependency(c.userCode, parameter)
 			} else if *command == "deleteDependency" {
-				go dependencyLogic.DeleteDependency(c.userCode, parameter, Hub)
+				go DeleteDependency(c.userCode, parameter)
 			} else if *command == "addTarget" {
-				go targetLogic.AddTarget(c.userCode, parameter, Hub)
+				go AddTarget(c.userCode, parameter)
 			} else if *command == "modifyTarget" {
-				go targetLogic.ModifyTarget(c.userCode, parameter, Hub)
+				go ModifyTarget(c.userCode, parameter)
 			} else if *command == "deleteTarget" {
-				go targetLogic.DeleteTarget(c.userCode, parameter, Hub)
+				go DeleteTarget(c.userCode, parameter)
 			} else if *command == "getTargetByMissionCode" {
-				go targetLogic.GetTargetByMissionCode(c.userCode, parameter, Hub)
+				go GetTargetByMissionCode(c.userCode, parameter)
 			} else if *command == "addDaily" {
-				go dailytLogic.AddDaily(c.userCode, parameter, Hub)
+				go AddDaily(c.userCode, parameter)
 			} else if *command == "modifyDaily" {
-				go dailytLogic.ModifyDaily(c.userCode, parameter, Hub)
+				go ModifyDaily(c.userCode, parameter)
 			} else if *command == "deleteDaily" {
-				go dailytLogic.DeleteDaily(c.userCode, parameter, Hub)
+				go DeleteDaily(c.userCode, parameter)
 			} else if *command == "getDailyByMissionCode" {
-				go dailytLogic.GetDailyByMissionCode(c.userCode, parameter, Hub)
+				go GetDailyByMissionCode(c.userCode, parameter)
 			} else if *command == "getAllUser" {
-				go userLogic.GetAllUser(c.userCode, parameter, Hub)
+				go GetAllUser(c.userCode, parameter)
 			} else if * command == "addChart" {
-				go chartLogic.AddChart(c.userCode, parameter, Hub)
+				go AddChart(c.userCode, parameter)
 			} else if * command == "receiveChart" {
-				go chartLogic.ReceiveChart(c.userCode, parameter, Hub)
+				go ReceiveChart(c.userCode, parameter)
 			} else if * command == "getAllUnreceivedChart" {
-				go chartLogic.GetAllUnreceivedChart(c.userCode, parameter, Hub)
+				go GetAllUnreceivedChart(c.userCode, parameter)
 			} else if * command == "addPost" {
-				go postLogic.AddPost(c.userCode, parameter, Hub)
+				go AddPost(c.userCode, parameter)
 			} else if * command == "getAllTargetPost" {
-				go postLogic.GetAllTargetPost(c.userCode, parameter, Hub)
+				go GetAllTargetPost(c.userCode, parameter)
 			} else if * command == "getPersonAllWaitingMission" {
-				go missionLogic.GetPersonAllWaitingMission(c.userCode, parameter, Hub)
+				go GetPersonAllWaitingMission(c.userCode, parameter)
 			} else if * command == "getPersonAllUndergoingMission" {
-				go missionLogic.GetPersonAllUndergoingMission(c.userCode, parameter, Hub)
+				go GetPersonAllUndergoingMission(c.userCode, parameter)
 			} else if * command == "getPersonAllReviewingMission" {
-				go missionLogic.GetPersonAllReviewingMission(c.userCode, parameter, Hub)
+				go GetPersonAllReviewingMission(c.userCode, parameter)
 			} else if * command == "getPersonAllFinishedMission" {
-				go missionLogic.GetPersonAllFinishedMission(c.userCode, parameter, Hub)
+				go GetPersonAllFinishedMission(c.userCode, parameter)
 			} else if * command == "getAllUndesignatedMission" {
-				go missionLogic.GetAllUndesignatedMission(c.userCode, parameter, Hub)
+				go GetAllUndesignatedMission(c.userCode, parameter)
 			}
 		}
 	}

@@ -1,11 +1,11 @@
-package projectLogic
+package connection
 
 import (
 	"PillarsFlowNet/projectStorage"
 	"PillarsFlowNet/utility"
 )
 
-func GetAllProject(userCode * string, parameter * string, h * utility.HubStruct) ([] byte, *string) {
+func GetAllProject(userCode * string, parameter * string) ([] byte, *string) {
 	var errorCode int
 	var opResult [] utility.Project
 
@@ -15,11 +15,11 @@ func GetAllProject(userCode * string, parameter * string, h * utility.HubStruct)
 
 	command := "getAllProject"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	h.SendToUserCode(result, userCode)
+	Hub.SendToUserCode(result, userCode)
 	return result, userCode
 }
 
-func AddProject(userCode * string, parameter * string, h * utility.HubStruct) ([] byte, *string) {
+func AddProject(userCode * string, parameter * string) ([] byte, *string) {
 	var errorCode int
 	var projectCode * string
 	var projectOut * utility.Project
@@ -36,12 +36,12 @@ func AddProject(userCode * string, parameter * string, h * utility.HubStruct) ([
 	}
 	var command = "addProject"
 	result := utility.BoolResultToOutMessage(&command, projectOut, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 	return result, userCode
 }
 
 
-func ModifyProject(userCode * string, parameter * string, h * utility.HubStruct) ([] byte, *string) {
+func ModifyProject(userCode * string, parameter * string) ([] byte, *string) {
 	var errorCode int
 	var projectCode * string
 	var projectOut * utility.Project
@@ -57,7 +57,7 @@ func ModifyProject(userCode * string, parameter * string, h * utility.HubStruct)
 	}
 	var command = "modifyProject"
 	result := utility.BoolResultToOutMessage(&command, projectOut, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 	return result, userCode
 }
 

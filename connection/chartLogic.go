@@ -1,4 +1,4 @@
-package chartLogic
+package connection
 
 import (
 	"time"
@@ -11,7 +11,7 @@ import (
 //向chart表添加一条记录
 //其中inputParameters[0]是执行该操作的用户的code
 //inputParameters[1]包含了更多的聊天信息
-func AddChart(userCode * string, parameter * string, h * utility.HubStruct) {//result, fromUserCode, ToUserCode
+func AddChart(userCode * string, parameter * string) {//result, fromUserCode, ToUserCode
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -37,12 +37,12 @@ func AddChart(userCode * string, parameter * string, h * utility.HubStruct) {//r
 	}
 	var command = "addChart"
 	result := utility.BoolResultToOutMessage(&command, chartOut, errorCode, userCode)
-	h.SendToUserCode(result, userCode)
-	h.SendToUserCode(result, toUserCode)
+	Hub.SendToUserCode(result, userCode)
+	Hub.SendToUserCode(result, toUserCode)
 }
 
 //用户在阅读完某条信息后会将该条信息标记为已读
-func ReceiveChart(userCode * string, parameter * string, h * utility.HubStruct) {
+func ReceiveChart(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -58,11 +58,11 @@ func ReceiveChart(userCode * string, parameter * string, h * utility.HubStruct) 
 
 	var command = "receiveChart"
 	result := utility.BoolResultToOutMessage(&command, parameter, errorCode, userCode)
-	h.SendToUserCode(result, userCode)
+	Hub.SendToUserCode(result, userCode)
 }
 
 //用户登陆后，会向服务器请求所有发给自己的未读信息
-func GetAllUnreceivedChart(userCode * string, parameter * string, h * utility.HubStruct) {
+func GetAllUnreceivedChart(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -79,5 +79,5 @@ func GetAllUnreceivedChart(userCode * string, parameter * string, h * utility.Hu
 
 	command := "getAllUnreceivedChart"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	h.SendToUserCode(result, userCode)
+	Hub.SendToUserCode(result, userCode)
 }

@@ -1,4 +1,4 @@
-package graphLogic
+package connection
 
 import (
 	"PillarsFlowNet/graphStorage"
@@ -10,7 +10,7 @@ import (
 //获取特定战役所有的node
 //TODO
 //将该参数改名为GetCampaignNode
-func GetCampaignNode(userCode * string, parameter * string, h * utility.HubStruct) {
+func GetCampaignNode(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -39,10 +39,10 @@ func GetCampaignNode(userCode * string, parameter * string, h * utility.HubStruc
 	}
 	command := "getAllNode"
 	result := utility.SliceResultToOutMessage(&command, resultSlice, errorCode, userCode)
-	h.SendToUserCode(result, userCode)
+	Hub.SendToUserCode(result, userCode)
 }
 
-func AddNode(userCode * string, parameter * string, h * utility.HubStruct) {
+func AddNode(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -68,10 +68,10 @@ func AddNode(userCode * string, parameter * string, h * utility.HubStruct) {
 
 	var command = "addNode"
 	result := utility.BoolResultToOutMessage(&command, resultSlice, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 }
 
-func ModifyNode(userCode * string, parameter * string, h * utility.HubStruct) {
+func ModifyNode(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -91,11 +91,11 @@ func ModifyNode(userCode * string, parameter * string, h * utility.HubStruct) {
 	}
 	var command = "modifyNode"
 	result := utility.BoolResultToOutMessage(&command, graphOut, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 }
 
 
-func DeleteNode(userCode * string, parameter * string, h * utility.HubStruct) {
+func DeleteNode(userCode * string, parameter * string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -111,5 +111,5 @@ func DeleteNode(userCode * string, parameter * string, h * utility.HubStruct) {
 	}
 	var command = "deleteNode"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	h.Dispatch(result)
+	Hub.Dispatch(result)
 }
