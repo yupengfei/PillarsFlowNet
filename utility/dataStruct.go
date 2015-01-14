@@ -115,6 +115,7 @@ type Mission struct {
     ProjectCode string
     ProductType string
     IsCampaign int
+    IsAssert int
     MissionType string
     MissionDetail string
     PlanBeginDatetime string
