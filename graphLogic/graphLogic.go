@@ -11,7 +11,7 @@ import (
 //获取特定战役所有的node
 //TODO
 //将该参数改名为GetCampaignNode
-func GetCampaignNode(userCode * string, parameter * string) ([] byte, *string) {
+func GetCampaignNode(userCode * string, parameter * string, h * connection.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -40,10 +40,10 @@ func GetCampaignNode(userCode * string, parameter * string) ([] byte, *string) {
 	}
 	command := "getAllNode"
 	result := utility.SliceResultToOutMessage(&command, resultSlice, errorCode, userCode)
-	return result, userCode
+	h.SendToUserCode(result, userCode)
 }
 
-func AddNode(userCode * string, parameter * string) ([] byte, *string) {
+func AddNode(userCode * string, parameter * string, h * connection.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -69,10 +69,10 @@ func AddNode(userCode * string, parameter * string) ([] byte, *string) {
 
 	var command = "addNode"
 	result := utility.BoolResultToOutMessage(&command, resultSlice, errorCode, userCode)
-	return result, userCode
+	h.Dispatch(result)
 }
 
-func ModifyNode(userCode * string, parameter * string) ([] byte, *string) {
+func ModifyNode(userCode * string, parameter * string, h * connection.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -92,11 +92,11 @@ func ModifyNode(userCode * string, parameter * string) ([] byte, *string) {
 	}
 	var command = "modifyNode"
 	result := utility.BoolResultToOutMessage(&command, graphOut, errorCode, userCode)
-	return result, userCode
+	h.Dispatch(result)
 }
 
 
-func DeleteNode(userCode * string, parameter * string) ([] byte, *string) {
+func DeleteNode(userCode * string, parameter * string, h * connection.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -112,5 +112,5 @@ func DeleteNode(userCode * string, parameter * string) ([] byte, *string) {
 	}
 	var command = "deleteNode"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	return result, userCode
+	h.Dispatch(result)
 }

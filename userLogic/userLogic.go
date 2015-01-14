@@ -40,7 +40,7 @@ func ValidateUser(parameter * string) (* string,  * string,  error) {
 	return result, userCode, err
 }
 
-func GetAllUser(userCode * string, parameter * string) ([] byte, *string) {
+func GetAllUser(userCode * string, parameter * string, h * connection.HubStruct) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -51,5 +51,5 @@ func GetAllUser(userCode * string, parameter * string) ([] byte, *string) {
 	}
 	command := "getAllUser"
 	result := utility.SliceResultToOutMessage(&command, userSlice, errorCode, userCode)
-	return result, userCode
+	h.SendToUserCode(result, userCode)
 }

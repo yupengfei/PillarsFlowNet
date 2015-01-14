@@ -11,7 +11,7 @@ import (
 //获取某个Project所有的Campaign
 //TODO
 //将该函数改名为GetProjectCampaign
-func GetAllCampaign(userCode * string, parameter * string) ([] byte, *string) {
+func GetProjectCampaign(userCode * string, parameter * string, h * connection.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -24,7 +24,38 @@ func GetAllCampaign(userCode * string, parameter * string) ([] byte, *string) {
 	}
 	command := "getAllCampaign"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
+	h.SendToUserCode(result, userCode)
 	return result, userCode
+}
+
+func GetProjectAssertCampaign(userCode * string, parameter * string, h * connection.HubStruct) {
+	auth := authentication.GetAuthInformation(userCode)
+	var errorCode int
+	if (auth == false) {
+		errorCode = 3
+	}
+	var opResult []utility.Mission
+	if (errorCode == 0) {
+		projectCode, _ := utility.ParseProjectCodeMessage(parameter)
+		opResult, _ =storage.QueryAssertCampaignsByProjectCode(&(projectCode.ProjectCode))
+	}
+	command := "getAllCampaign"
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
+}
+
+func GetProjectUnassertCampaign(userCode * string, parameter * string, h * connection.HubStruct) {
+	auth := authentication.GetAuthInformation(userCode)
+	var errorCode int
+	if (auth == false) {
+		errorCode = 3
+	}
+	var opResult []utility.Mission
+	if (errorCode == 0) {
+		projectCode, _ := utility.ParseProjectCodeMessage(parameter)
+		opResult, _ =storage.QueryUnassertCampaignsByProjectCode(&(projectCode.ProjectCode))
+	}
+	command := "getAllCampaign"
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
 }
 
 func AddMission(userCode * string, parameter * string) ([] byte, *string) {
@@ -48,10 +79,10 @@ func AddMission(userCode * string, parameter * string) ([] byte, *string) {
 	}
 	command := "addMission"
 	result := utility.BoolResultToOutMessage(&command, missionOut, errorCode, userCode)
-	return result, userCode
+	h.Dispatch(result)
 }
 
-func ModifyMission(userCode * string, parameter * string) ([] byte, *string) {
+func ModifyMission(userCode * string, parameter * string, h * connection.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -71,10 +102,10 @@ func ModifyMission(userCode * string, parameter * string) ([] byte, *string) {
 	}
 	command := "modifyMission"
 	result := utility.BoolResultToOutMessage(&command, missionOut, errorCode, userCode)
-	return result, userCode
+	h.Dispatch(result)
 }
 
-func DeleteMission(userCode * string, parameter * string) ([] byte, *string) {
+func DeleteMission(userCode * string, parameter * string, h * connection.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -89,10 +120,10 @@ func DeleteMission(userCode * string, parameter * string) ([] byte, *string) {
 	}
 	var command = "deleteMission"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	return result, userCode
+	h.Dispatch(result)
 }
 
-func QueryMissionByMissionCode(userCode * string, parameter * string) ([] byte, *string) {
+func QueryMissionByMissionCode(userCode * string, parameter * string, h * connection.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -105,11 +136,11 @@ func QueryMissionByMissionCode(userCode * string, parameter * string) ([] byte, 
 	}
 	command := "queryMissionByMissionCode"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	return result, userCode
+	h.SendToUserCode(result, userCode)
 }
 
 
-func GetPersonAllWaitingMission(userCode * string, parameter * string) ([] byte, *string) {
+func GetPersonAllWaitingMission(userCode * string, parameter * string, h * connection.HubStruct) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -120,10 +151,10 @@ func GetPersonAllWaitingMission(userCode * string, parameter * string) ([] byte,
 	}
 	command := "getPersonAllWaitingMission"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	return result, userCode
+	h.SendToUserCode(result, userCode)
 }
 
-func GetPersonAllUndergoingMission(userCode * string, parameter * string) ([] byte, *string) {
+func GetPersonAllUndergoingMission(userCode * string, parameter * string, h * connection.HubStruct) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -134,10 +165,10 @@ func GetPersonAllUndergoingMission(userCode * string, parameter * string) ([] by
 	}
 	command := "getPersonAllUndergoingMission"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	return result, userCode
+	h.SendToUserCode(result, userCode)
 }
 
-func GetPersonAllReviewingMission(userCode * string, parameter * string) ([]byte, *string) {
+func GetPersonAllReviewingMission(userCode * string, parameter * string, h * connection.HubStruct) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -148,10 +179,10 @@ func GetPersonAllReviewingMission(userCode * string, parameter * string) ([]byte
 	}
 	command := "getPersonAllReviewingMission"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	return result, userCode
+	h.SendToUserCode(result, userCode)
 }
 
-func GetPersonAllFinishedMission(userCode * string, parameter * string) ([]byte, *string) {
+func GetPersonAllFinishedMission(userCode * string, parameter * string, h * connection.HubStruct) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -162,10 +193,10 @@ func GetPersonAllFinishedMission(userCode * string, parameter * string) ([]byte,
 	}
 	command := "getPersonAllFinishedMission"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	return result, &(inputParameters[0])
+	h.SendToUserCode(result, userCode)
 }
 
-func GetAllUndesignatedMission(userCode * string, parameter * string) ([]byte, *string) {
+func GetAllUndesignatedMission(userCode * string, parameter * string, h * connection.HubStruct) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -176,5 +207,5 @@ func GetAllUndesignatedMission(userCode * string, parameter * string) ([]byte, *
 	}
 	command := "getPersonAllFinishedMission"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	return result, userCode
+	h.SendToUserCode(result, userCode)
 }

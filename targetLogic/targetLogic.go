@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func AddTarget(userCode * string, parameter * string) ([] byte, *string) {
+func AddTarget(userCode * string, parameter * string, h * connection.HubStruct) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -28,11 +28,11 @@ func AddTarget(userCode * string, parameter * string) ([] byte, *string) {
 	}
 	var command = "addTarget"
 	result := utility.BoolResultToOutMessage(&command, targetOut, errorCode, userCode)
-	return result, userCode
+	h.Dispatch(result)
 }
 
 
-func ModifyTarget(userCode * string, parameter * string) ([] byte, *string) {
+func ModifyTarget(userCode * string, parameter * string, h * connection.HubStruct) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -51,10 +51,10 @@ func ModifyTarget(userCode * string, parameter * string) ([] byte, *string) {
 	}
 	var command = "modifyTarget"
 	result := utility.BoolResultToOutMessage(&command, targetOut, errorCode, userCode)
-	return result, userCode
+	h.Dispatch(result)
 }
 
-func DeleteTarget(userCode * string, parameter * string) ([] byte, *string) {
+func DeleteTarget(userCode * string, parameter * string, h * connection.HubStruct) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -68,11 +68,11 @@ func DeleteTarget(userCode * string, parameter * string) ([] byte, *string) {
 	}
 	var command = "deleteTarget"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	return result, userCode
+	h.Dispatch(result)
 }
 
 
-func QueryTargetByMissionCode(userCode * string, parameter * string) ([] byte, *string) {
+func GetTargetByMissionCode(userCode * string, parameter * string, h * connection.HubStruct) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -85,5 +85,5 @@ func QueryTargetByMissionCode(userCode * string, parameter * string) ([] byte, *
 	}
 	command := "queryTargetByMissionCode"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	return result, userCode
+	h.SendToUserCode(result, userCode)
 }

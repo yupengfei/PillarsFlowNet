@@ -12,16 +12,17 @@ import (
 
 //insert is a Transaction
 func InsertIntoMission(mission * utility.Mission) (bool, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare(`INSERT INTO mission(mission_code, mission_name, project_code, product_type, is_campaign,
+	stmt, err := mysqlUtility.DBConn.Prepare(`INSERT INTO mission(mission_code, mission_name, 
+		project_code, product_type, is_campaign, is_assert,
 		mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, 
 		real_begin_datetime, real_end_datetime, person_in_charge, status, 
-		picture) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+		picture) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		panic(err.Error())
 	}
 	defer stmt.Close()
 	_, err = stmt.Exec(mission.MissionCode, mission.MissionName, mission.ProjectCode,
-		mission.ProductType, mission.IsCampaign, mission.MissionType, mission.MissionDetail,
+		mission.ProductType, mission.IsCampaign, mission.IsAssert, mission.MissionType, mission.MissionDetail,
 		mission.PlanBeginDatetime, mission.PlanEndDatetime, mission.RealBeginDatetime, 
 		mission.RealEndDatetime, mission.PersonIncharge,
 		mission.Status, mission.Picture)
@@ -33,7 +34,8 @@ func InsertIntoMission(mission * utility.Mission) (bool, error) {
 
 //is_campaign is not checked
 func ModifyMission(mission * utility.Mission) (bool, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare(`UPDATE mission SET mission_name=?, project_code=?, product_type=?, is_campaign=?,
+	stmt, err := mysqlUtility.DBConn.Prepare(`UPDATE mission SET mission_name=?, project_code=?, 
+		product_type=?, is_campaign=?, is_assert=?,
 		mission_type=?, mission_detail=?, plan_begin_datetime=?, plan_end_datetime=?, 
 		real_begin_datetime=?, real_end_datetime=?, person_in_charge=?, status=?, 
 		picture=? WHERE mission_code=?`)
@@ -42,7 +44,7 @@ func ModifyMission(mission * utility.Mission) (bool, error) {
 	}
 	defer stmt.Close()
 	_, err = stmt.Exec(mission.MissionName, mission.ProjectCode,
-		mission.ProductType, mission.IsCampaign, mission.MissionType, mission.MissionDetail,
+		mission.ProductType, mission.IsCampaign, mission.IsAssert, mission.MissionType, mission.MissionDetail,
 		mission.PlanBeginDatetime, mission.PlanEndDatetime, mission.RealBeginDatetime, 
 		mission.RealEndDatetime, mission.PersonIncharge,
 		mission.Status, mission.Picture, mission.MissionCode)
@@ -137,7 +139,10 @@ func DeleteMissionByMissionCode(missionCode * string) (bool, error) {
 
 
 func QueryMissionByMissionCode(missionCode * string) (* utility.Mission, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, is_campaign, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission WHERE mission_code=?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, 
+		is_campaign, is_assert, mission_type, mission_detail, plan_begin_datetime, 
+		plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, 
+		status, picture, insert_datetime, update_datetime FROM mission WHERE mission_code=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -150,7 +155,7 @@ func QueryMissionByMissionCode(missionCode * string) (* utility.Mission, error) 
 	var mission utility.Mission
 	if result.Next() {
 		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
-		&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.IsAssert), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.RealEndDatetime), 
 		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
 		&(mission.InsertDatetime), 
@@ -163,7 +168,9 @@ func QueryMissionByMissionCode(missionCode * string) (* utility.Mission, error) 
 }
 
 func QueryMissionsByProjectCode(projectCode * string) ([] utility.Mission, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, is_campaign, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission where project_code = ?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, 
+		is_campaign, is_assert,
+		mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission where project_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -178,7 +185,7 @@ func QueryMissionsByProjectCode(projectCode * string) ([] utility.Mission, error
 	for result.Next() {
 		var mission utility.Mission
 		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
-		&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.IsAssert), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
 		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
 		&(mission.InsertDatetime), 
@@ -192,7 +199,11 @@ func QueryMissionsByProjectCode(projectCode * string) ([] utility.Mission, error
 }
 
 func QueryCampaignsByProjectCode(projectCode * string) ([] utility.Mission, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, is_campaign, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission where project_code = ? AND is_campaign=1")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, 
+		is_campaign, is_assert, 
+		mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, 
+		real_begin_datetime, real_end_datetime, person_in_charge, status, picture, 
+		insert_datetime, update_datetime FROM mission where project_code = ? AND is_campaign=1")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -207,7 +218,74 @@ func QueryCampaignsByProjectCode(projectCode * string) ([] utility.Mission, erro
 	for result.Next() {
 		var mission utility.Mission
 		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
-		&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.IsAssert), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
+		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
+		&(mission.InsertDatetime), 
+		&(mission.UpdateDatetime))
+		if err != nil {
+			pillarsLog.PillarsLogger.Print(err.Error())
+		}
+		missionSlice = append(missionSlice, mission)
+	}
+	return missionSlice, err
+}
+
+func QueryAssertCampaignsByProjectCode(projectCode * string) ([] utility.Mission, error) {
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, 
+		project_code, product_type, 
+		is_campaign, is_assert, 
+		mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, 
+		real_begin_datetime, real_end_datetime, person_in_charge, status, picture, 
+		insert_datetime, update_datetime FROM mission where project_code = ? AND is_campaign=1 and is_assert=1")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	result, err := stmt.Query(projectCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+	//this is easy to imply but may not very fast
+	var missionSlice [] utility.Mission
+	for result.Next() {
+		var mission utility.Mission
+		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.IsAssert), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
+		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
+		&(mission.InsertDatetime), 
+		&(mission.UpdateDatetime))
+		if err != nil {
+			pillarsLog.PillarsLogger.Print(err.Error())
+		}
+		missionSlice = append(missionSlice, mission)
+	}
+	return missionSlice, err
+}
+
+func QueryUnassertCampaignsByProjectCode(projectCode * string) ([] utility.Mission, error) {
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, 
+		product_type, is_campaign, is_assert, mission_type, mission_detail, 
+		plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, 
+		person_in_charge, status, picture, insert_datetime, update_datetime FROM mission 
+		where project_code = ? AND is_campaign=1 and is_assert=0")
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	result, err := stmt.Query(projectCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+	//this is easy to imply but may not very fast
+	var missionSlice [] utility.Mission
+	for result.Next() {
+		var mission utility.Mission
+		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.IsAssert), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
 		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
 		&(mission.InsertDatetime), 
@@ -221,7 +299,11 @@ func QueryCampaignsByProjectCode(projectCode * string) ([] utility.Mission, erro
 }
 
 func QueryWaitingMissionByUserCode(userCode * string) ([] utility.Mission, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, is_campaign, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission where person_in_charge = ? AND status=0")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, 
+		product_type, is_campaign, is_assert, mission_type, mission_detail, 
+		plan_begin_datetime, plan_end_datetime, real_begin_datetime, 
+		real_end_datetime, person_in_charge, status, picture, insert_datetime, 
+		update_datetime FROM mission where person_in_charge = ? AND status=0")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -236,7 +318,7 @@ func QueryWaitingMissionByUserCode(userCode * string) ([] utility.Mission, error
 	for result.Next() {
 		var mission utility.Mission
 		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
-		&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.IsAssert), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
 		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
 		&(mission.InsertDatetime), 
@@ -250,7 +332,11 @@ func QueryWaitingMissionByUserCode(userCode * string) ([] utility.Mission, error
 }
 
 func QueryUndergoingMissionByUserCode(userCode * string) ([] utility.Mission, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, is_campaign, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission where person_in_charge = ? AND status=3")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, 
+		project_code, product_type, is_campaign, mission_type, mission_detail, 
+		plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, 
+		person_in_charge, status, picture, insert_datetime, update_datetime 
+		FROM mission where person_in_charge = ? AND status=3")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -265,7 +351,7 @@ func QueryUndergoingMissionByUserCode(userCode * string) ([] utility.Mission, er
 	for result.Next() {
 		var mission utility.Mission
 		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
-		&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.IsAssert), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
 		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
 		&(mission.InsertDatetime), 
@@ -279,7 +365,11 @@ func QueryUndergoingMissionByUserCode(userCode * string) ([] utility.Mission, er
 }
 
 func QueryReviewingMissionByUserCode(userCode * string) ([] utility.Mission, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, is_campaign, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission where person_in_charge = ? AND status=1")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, 
+		project_code, product_type, is_campaign, is_assert, mission_type, mission_detail, 
+		plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, 
+		person_in_charge, status, picture, insert_datetime, update_datetime FROM mission 
+		where person_in_charge = ? AND status=1")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -294,7 +384,7 @@ func QueryReviewingMissionByUserCode(userCode * string) ([] utility.Mission, err
 	for result.Next() {
 		var mission utility.Mission
 		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
-		&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.IsAssert), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
 		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
 		&(mission.InsertDatetime), 
@@ -308,7 +398,11 @@ func QueryReviewingMissionByUserCode(userCode * string) ([] utility.Mission, err
 }
 
 func QueryFinishedMissionByUserCode(userCode * string) ([] utility.Mission, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, is_campaign, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission where person_in_charge = ? AND status=2")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, 
+		project_code, product_type, is_campaign, is_assert, mission_type, mission_detail, 
+		plan_begin_datetime, plan_end_datetime, real_begin_datetime, 
+		real_end_datetime, person_in_charge, status, picture, insert_datetime, 
+		update_datetime FROM mission where person_in_charge = ? AND status=2")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -323,7 +417,7 @@ func QueryFinishedMissionByUserCode(userCode * string) ([] utility.Mission, erro
 	for result.Next() {
 		var mission utility.Mission
 		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
-		&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.IsAssert), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
 		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
 		&(mission.InsertDatetime), 
@@ -338,7 +432,10 @@ func QueryFinishedMissionByUserCode(userCode * string) ([] utility.Mission, erro
 
 
 func QueryAllUndesignatedMission() ([] utility.Mission, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, product_type, is_campaign, mission_type, mission_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM mission where status=4")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT mission_code, mission_name, project_code, 
+		product_type, is_campaign, is_assert, mission_type, mission_detail, plan_begin_datetime, 
+		plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, 
+		status, picture, insert_datetime, update_datetime FROM mission where status=4")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -353,7 +450,7 @@ func QueryAllUndesignatedMission() ([] utility.Mission, error) {
 	for result.Next() {
 		var mission utility.Mission
 		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
-		&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionType), &(mission.MissionDetail),
+		&(mission.ProductType), &(mission.IsCampaign), &(mission.IsAssert), &(mission.MissionType), &(mission.MissionDetail),
 		&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime), 
 		&(mission.PersonIncharge), &(mission.Status), &(mission.Picture), 
 		&(mission.InsertDatetime), 

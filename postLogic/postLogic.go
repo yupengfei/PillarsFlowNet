@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func AddPost(userCode * string, parameter * string) ([] byte, *string) {
+func AddPost(userCode * string, parameter * string, h * connection.HubStruct) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -33,10 +33,10 @@ func AddPost(userCode * string, parameter * string) ([] byte, *string) {
 	}
 	var command = "addPost"
 	result := utility.BoolResultToOutMessage(&command, postOut, errorCode, userCode)
-	return result, userCode)
+	h.Dispatch(result)
 }
 
-func GetAllTargetPost(userCode * string, parameter * string) ([] byte, *string) {
+func GetAllTargetPost(userCode * string, parameter * string, h * connection.HubStruct) {
 	var errorCode int
 	if (auth == false) {
 		errorCode = 3
@@ -52,5 +52,5 @@ func GetAllTargetPost(userCode * string, parameter * string) ([] byte, *string) 
 	}
 	var command = "getAllTargetPost"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	return result, userCode
+	h.SendToUserCode(result, userCode)
 }

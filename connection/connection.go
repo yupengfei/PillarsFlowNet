@@ -6,7 +6,15 @@ import (
 	"net/http"
 	"fmt"
 	"PillarsFlowNet/utility"
-	"PillarsFlowNet/user"
+	"PillarsFlowNet/projectLogic"
+	"PillarsFlowNet/missionLogic"
+	"PillarsFlowNet/graphLogic"
+	"PillarsFlowNet/dependencyLogic"
+	"PillarsFlowNet/targetLogic"
+	"PillarsFlowNet/chartLogic"
+	"PillarsFlowNet/postLogic"
+	"PillarsFlowNet/userLogic"
+	"PillarsFlowNet/dailyLogic"
 	"PillarsFlowNet/pillarsLog"
 )
 
@@ -118,75 +126,75 @@ func (c * connection) readPump() {
 			}
 
 		} else {//else do some other command
-			userCodeAndParameter := *(c.userCode) + "@" + *parameter;
+
 			if *command == "getAllProject" {
-				Hub.getAllProject <- &userCodeAndParameter
+				go projectLogic.GetAllProject(c.userCode, parameter, Hub)
 			} else if *command == "addProject" {
-				Hub.addProject <- &userCodeAndParameter
+				go projectLogic.AddProject(c.userCode, parameter, Hub)
 			} else if *command == "modifyProject" {
-				Hub.modifyProject <- &userCodeAndParameter
-			} else if *command == "getAllCampaign" {
-				Hub.getAllCampaign <- &userCodeAndParameter
+				go projectLogic.ModifyProject(c.userCode, parameter, Hub)
+			} else if *command == "getProjectCampaign" {
+				go missionLogic.GetProjectCampaign(c.userCode, parameter, Hub)
 			} else if *command == "addMission" {
-				Hub.addMission <- &userCodeAndParameter
+				go missionLogic.AddMission(c.userCode, parameter, Hub)
 			} else if *command == "modifyMission" {
-				Hub.modifyMission <- &userCodeAndParameter
+				go missionLogic.ModifyMission(c.userCode, parameter, Hub)
 			} else if *command == "deleteMission" {
-				Hub.deleteMission <- &userCodeAndParameter
-			} else if *command == "getAllNode" {
-				Hub.getAllNode <- &userCodeAndParameter
+				go missionLogic.ModifyProject(c.userCode, parameter, Hub)
+			} else if *command == "getCampaignNode" {
+				go graphLogic.GetCampaignNode(c.userCode, parameter, Hub)
 			} else if *command == "addNode" {
-				Hub.addNode <- &userCodeAndParameter
+				go graphLogic.AddNode(c.userCode, parameter, Hub)
 			} else if *command == "modifyNode" {
-				Hub.modifyNode <- &userCodeAndParameter
+				go graphLogic.ModifyNode(c.userCode, parameter, Hub)
 			} else if *command == "deleteNode" {
-				Hub.deleteNode <- &userCodeAndParameter
+				go graphLogic.DeleteNode(c.userCode, parameter, Hub)
 			} else if *command == "getAllDependency" {
-				Hub.getAllDependency <- &userCodeAndParameter
+				go dependencyLogic.GetAllDependency(c.userCode, parameter, Hub)
 			} else if *command == "addDependency" {
-				Hub.addDependency <- &userCodeAndParameter
+				go dependencyLogic.AddDependency(c.userCode, parameter, Hub)
 			} else if *command == "modifyDependency" {
-				Hub.modifyDependency <- &userCodeAndParameter
+				go dependencyLogic.ModifyDependency(c.userCode, parameter, Hub)
 			} else if *command == "deleteDependency" {
-				Hub.deleteDependency <- &userCodeAndParameter
+				go dependencyLogic.DeleteDependency(c.userCode, parameter, Hub)
 			} else if *command == "addTarget" {
-				Hub.addTarget <- &userCodeAndParameter
+				go targetLogic.AddTarget(c.userCode, parameter, Hub)
 			} else if *command == "modifyTarget" {
-				Hub.modifyTarget <- &userCodeAndParameter
+				go targetLogic.ModifyTarget(c.userCode, parameter, Hub)
 			} else if *command == "deleteTarget" {
-				Hub.deleteTarget <- &userCodeAndParameter
-			} else if *command == "queryTargetByMissionCode" {
-				Hub.queryTargetByMissionCode <- &userCodeAndParameter
+				go targetLogic.DeleteTarget(c.userCode, parameter, Hub)
+			} else if *command == "getTargetByMissionCode" {
+				go targetLogic.GetTargetByMissionCode(c.userCode, parameter, Hub)
 			} else if *command == "addDaily" {
-				Hub.addTarget <- &userCodeAndParameter
+				go dailytLogic.AddDaily(c.userCode, parameter, Hub)
 			} else if *command == "modifyDaily" {
-				Hub.modifyTarget <- &userCodeAndParameter
+				go dailytLogic.ModifyDaily(c.userCode, parameter, Hub)
 			} else if *command == "deleteDaily" {
-				Hub.deleteTarget <- &userCodeAndParameter
-			} else if *command == "queryDailyByMissionCode" {
-				Hub.queryTargetByMissionCode <- &userCodeAndParameter
+				go dailytLogic.DeleteDaily(c.userCode, parameter, Hub)
+			} else if *command == "getDailyByMissionCode" {
+				go dailytLogic.GetDailyByMissionCode(c.userCode, parameter, Hub)
 			} else if *command == "getAllUser" {
-				Hub.getAllUser <- &userCodeAndParameter
+				go userLogic.GetAllUser(c.userCode, parameter, Hub)
 			} else if * command == "addChart" {
-				Hub.addChart <- &userCodeAndParameter
+				go chartLogic.AddChart(c.userCode, parameter, Hub)
 			} else if * command == "receiveChart" {
-				Hub.receiveChart <- &userCodeAndParameter
+				go chartLogic.ReceiveChart(c.userCode, parameter, Hub)
 			} else if * command == "getAllUnreceivedChart" {
-				Hub.getAllUnreceivedChart <- &userCodeAndParameter
+				go chartLogic.GetAllUnreceivedChart(c.userCode, parameter, Hub)
 			} else if * command == "addPost" {
-				Hub.addPost <- &userCodeAndParameter
+				go postLogic.AddPost(c.userCode, parameter, Hub)
 			} else if * command == "getAllTargetPost" {
-				Hub.getAllTargetPost <- &userCodeAndParameter
+				go postLogic.GetAllTargetPost(c.userCode, parameter, Hub)
 			} else if * command == "getPersonAllWaitingMission" {
-				Hub.getPersonAllWaitingMission <- &userCodeAndParameter
+				go missionLogic.GetPersonAllWaitingMission(c.userCode, parameter, Hub)
 			} else if * command == "getPersonAllUndergoingMission" {
-				Hub.getPersonAllUndergoingMission <- &userCodeAndParameter
+				go missionLogic.GetPersonAllUndergoingMission(c.userCode, parameter, Hub)
 			} else if * command == "getPersonAllReviewingMission" {
-				Hub.getPersonAllReviewingMission <- &userCodeAndParameter
+				go missionLogic.GetPersonAllReviewingMission(c.userCode, parameter, Hub)
 			} else if * command == "getPersonAllFinishedMission" {
-				Hub.getPersonAllFinishedMission <- &userCodeAndParameter
+				go missionLogic.GetPersonAllFinishedMission(c.userCode, parameter, Hub)
 			} else if * command == "getAllUndesignatedMission" {
-				Hub.getAllUndesignatedMission <- &userCodeAndParameter
+				go missionLogic.GetAllUndesignatedMission(c.userCode, parameter, Hub)
 			}
 		}
 	}

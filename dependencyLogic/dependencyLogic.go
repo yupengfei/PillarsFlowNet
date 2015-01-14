@@ -13,7 +13,7 @@ import (
 //inputParameters[1]为具体的参数，即战役的code
 //TODO
 //将该函数改名为GetCampaignDependency
-func GetCampaignDependency(userCode * string, parameter * string) ([] byte, *string) {
+func GetCampaignDependency(userCode * string, parameter * string, h * connection.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -25,14 +25,14 @@ func GetCampaignDependency(userCode * string, parameter * string) ([] byte, *str
 		opResult, _ =storage.QueryDependenciesByCampaignCode(&(campaignCode.CampaignCode))
 	}
 	command := "getAllDependency"
-	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, &(inputParameters[0]))
-	return result, &(inputParameters[0])
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
+	h.SendToUserCode(result, userCode)
 }
 
 //增加依赖
 //inputParameters[0]为发起该操作的用户的UserCode
 //inputParameters[1]为具体的参数
-func AddDependency(userCode * string, parameter * string) ([] byte, *string) {
+func AddDependency(userCode * string, parameter * string, h * connection.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -53,10 +53,10 @@ func AddDependency(userCode * string, parameter * string) ([] byte, *string) {
 	}
 	var command = "addDependency"
 	result := utility.BoolResultToOutMessage(&command, dependencyOut, errorCode, userCode)
-	return result, userCode)
+	h.Dispatch(result)
 }
 
-func DeleteDependency(userCode * string, parameter * string) ([] byte, *string) {
+func DeleteDependency(userCode * string, parameter * string, h * connection.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -73,10 +73,10 @@ func DeleteDependency(userCode * string, parameter * string) ([] byte, *string) 
 
 	var command = "deleteDependency"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	return result, userCode
+	h.Dispatch(result)
 }
 
-func ModifyDependency(userCode * string, parameter * string) ([] byte, *string) {
+func ModifyDependency(userCode * string, parameter * string, h * connection.HubStruct) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if (auth == false) {
@@ -96,6 +96,6 @@ func ModifyDependency(userCode * string, parameter * string) ([] byte, *string) 
 	}
 	var command = "modifyDependency"
 	result := utility.BoolResultToOutMessage(&command, dependencyOut, errorCode, userCode)
-	return result, userCode
+	h.Dispatch(result)
 }
 
