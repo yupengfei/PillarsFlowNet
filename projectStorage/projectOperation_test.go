@@ -1,4 +1,4 @@
-package storage
+package projectStorage
 
 import (
 	"testing"	
@@ -7,16 +7,10 @@ import (
 )
 
 func TestQueryAllProject(t * testing.T) {
-	DBConn = ConnectToDB()
 	QueryAllProject()
-	// projects, _ := QueryAllProject()
-	//message, _ := json.Marshal(projects)
-	//fmt.Println(*utility.ObjectToJsonString(projects))
-	CloseDBConnection()
 }
 
 func TestInsertIntoProject(t * testing.T) {
-	DBConn = ConnectToDB()
 	projectName := string("very maim")
 	projectCode := string("890b2f1b208f93586e0ad86cb6f16668")
 	project := utility.Project{
@@ -35,26 +29,21 @@ func TestInsertIntoProject(t * testing.T) {
 	if (result == false) {
 		t.Error("insert project error")
 	}
-	CloseDBConnection()
 }
 // func QueryProjectByProjectCode(projectCode * string) * utility.Project
 func TestQueryProjectByProjectCode(t * testing.T) {
-	DBConn = ConnectToDB()
 	projectCode := string("890b2f1b208f93586e0ad86cb6f16669")
 	project, err := QueryProjectByProjectCode(&projectCode)
 	if (err != nil) {
 		t.Error(err.Error())
 	}
 	fmt.Println(*utility.ObjectToJsonString(project))
-	CloseDBConnection()
 }
 
 func TestDeleteProjectByProjectCode(t * testing.T) {
-	DBConn = ConnectToDB()
 	projectCode := string("890b2f1b208f93586e0ad86cb6f16668")
 	result, _ := DeleteProjectByProjectCode(&projectCode)
 	if result == false {
 		t.Error("delete project failed")
 	}
-	CloseDBConnection()
 }

@@ -1,5 +1,5 @@
 
-package storage
+package mysqlUtility
 
 import (
 	"database/sql"
@@ -19,7 +19,7 @@ func ConnectToDB() * sql.DB {
 		return DBConn
 	}
 	//connection not exist
-	propertyMap := utility.ReadProperty("./DB.properties")
+	propertyMap := utility.ReadProperty("../DB.properties")
 	var userName, password, host, port, database string
 	userName =  propertyMap["DBUserName"]
 	password = propertyMap["DBPassword"]

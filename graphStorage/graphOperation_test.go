@@ -1,4 +1,4 @@
-package storage
+package graphStorage
 
 import (
 	"PillarsFlowNet/utility"
@@ -8,7 +8,6 @@ import (
 )
 
 func TestInsertIntoGraph(t * testing.T) {
-	DBConn = ConnectToDB()
 	graphCode := string("a11e99a9e0c8b37a2622e6752117cf96")
 	campaignCode := string("a11e99a9e0c8b37a2622e6752117cf92")
 	projectCode := string("d43e421cb4f0d2cd6a91f309facf944b")
@@ -31,7 +30,6 @@ func TestInsertIntoGraph(t * testing.T) {
 	if result == false {
 		t.Error("insert graph failed")
 	}
-	CloseDBConnection()
 }
 
 // func TestInsertIntoGraph2(t * testing.T) {
@@ -62,21 +60,17 @@ func TestInsertIntoGraph(t * testing.T) {
 // }
 
 func TestDeleteGraphByGraphCode(t * testing.T) {
-	DBConn = ConnectToDB()
 	graphCode := string("a11e99a9e0c8b37a2622e6752117cf96")
 	result, _ := DeleteGraphByGraphCode(&graphCode)
 	if result == false {
 		t.Error("DeleteGraphByGraphCode failed")
 	}
-	CloseDBConnection()
 }
 
 func TestDeleteNodeByNodeCode(t * testing.T) {
-	DBConn = ConnectToDB()
 	nodeCode := string("a11e99a9e0c8b37a2622e6752117cf94")
 	result, _ := DeleteNodeByNodeCode(&nodeCode)
 	if result == false {
 		t.Error("DeleteNodeByNodeCode failed")
 	}
-	CloseDBConnection()
 }

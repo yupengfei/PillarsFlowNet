@@ -1,4 +1,4 @@
-package storage
+package targetStorage
 
 import (
 	"testing"
@@ -18,8 +18,6 @@ import (
 // }
 
 func TestInsertIntoTarget(t * testing.T) {
-	DBConn = ConnectToDB()
-
 	target := utility.Target {
 		TargetCode: string("ae0b2f1b208f93586e0ad86cb6f16662"),
 		MissionCode: string("a0bb2f1b208f93586e0ad86cb6f16668"),
@@ -38,13 +36,9 @@ func TestInsertIntoTarget(t * testing.T) {
 	if result == false {
 		t.Error("insert Test failed")
 	}
-	CloseDBConnection()
-
 }
 
 func TestQueryTargetsByMissionCode(t * testing.T) {
-	DBConn = ConnectToDB()
-
 	missionCode := string("a0bb2f1b208f93586e0ad86cb6f16668")
 	targets, err := QueryTargetsByMissionCode(&missionCode)
 
@@ -53,16 +47,12 @@ func TestQueryTargetsByMissionCode(t * testing.T) {
 	}
 
 	fmt.Println(*(utility.ObjectToJsonString(targets)))
-	CloseDBConnection()
 }
 
 func TestDeleteTargetByTargetCode(t * testing.T) {
-	DBConn = ConnectToDB()
-
 	targetCode := string("ae0b2f1b208f93586e0ad86cb6f16662")
 	result, _ := DeleteTargetByTargetCode(&targetCode)
 	if result == false {
 		t.Error("delete target failed")
 	}
-	CloseDBConnection()
 }

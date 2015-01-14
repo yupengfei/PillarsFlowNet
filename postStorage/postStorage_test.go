@@ -1,4 +1,4 @@
-package storage
+package postStorage
 
 import (
 	"testing"
@@ -9,7 +9,6 @@ import (
 
 
 func TestStoreToPost(t * testing.T) {
-	ConnectToMgo()
 	message := "test"
 	replyTo := "123"
 	userCode := "456"
@@ -37,12 +36,9 @@ func TestStoreToPost(t * testing.T) {
 	} else {
 		// fmt.Println(*(utility.ObjectToJsonString(result)))
 	}
-	CloseMgoConnection()
-	
 }
 
 func TestGetAllPostByTargetCode(t * testing.T) {
-	ConnectToMgo()
 	targetCode := "789"
 	_, err := GetAllPostByTargetCode(&targetCode)
 	if err != nil {
@@ -50,5 +46,4 @@ func TestGetAllPostByTargetCode(t * testing.T) {
 	} else {
 		// fmt.Println(*(utility.ObjectToJsonString(result)))
 	}
-	CloseMgoConnection()
 }

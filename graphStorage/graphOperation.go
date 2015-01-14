@@ -1,13 +1,13 @@
-package storage
+package graphStorage
 
 import (
 	"PillarsFlowNet/utility"
+	"PillarsFlowNet/mysqlUtility"
 )
 
 
 func InsertIntoGraph(graph * utility.Graph) (bool, error) {
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare(`INSERT INTO graph(graph_code, campaign_code, project_code, node_code, 
+	stmt, err := mysqlUtility.DBConn.Prepare(`INSERT INTO graph(graph_code, campaign_code, project_code, node_code, 
 		width, height, x_coordinate, y_coordinate) VALUES(?, ?, ?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		panic(err.Error())
@@ -18,21 +18,11 @@ func InsertIntoGraph(graph * utility.Graph) (bool, error) {
 	if err != nil {
 		panic(err.Error())
 	}
-	err = tx.Commit()
-	if err != nil {
-		panic(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func ModifyGraph(graph * utility.Graph) (bool, error) {
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare(`UPDATE graph SET campaign_code=?, project_code=?, node_code=?, 
+	stmt, err := mysqlUtility.DBConn.Prepare(`UPDATE graph SET campaign_code=?, project_code=?, node_code=?, 
 		width=?, height=?, x_coordinate=?, y_coordinate=? WHERE graph_code=?`)
 	if err != nil {
 		panic(err.Error())
@@ -43,60 +33,31 @@ func ModifyGraph(graph * utility.Graph) (bool, error) {
 	if err != nil {
 		panic(err.Error())
 	}
-	err = tx.Commit()
-	if err != nil {
-		panic(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 
 func DeleteGraphByGraphCode(graphCode * string) (bool, error) {
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare(`DELETE FROM graph WHERE graph_code = ?`)
+	stmt, err := mysqlUtility.DBConn.Prepare(`DELETE FROM graph WHERE graph_code = ?`)
 	defer stmt.Close()
 	_, err = stmt.Exec(graphCode)
 	if err != nil {
 		panic(err.Error())
 	}
-	err = tx.Commit()
-	if err != nil {
-		// pillarsLog.Logger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 func DeleteNodeByNodeCode(nodeCode * string) (bool, error) {
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare(`DELETE FROM graph WHERE node_code = ?`)
+	stmt, err := mysqlUtility.DBConn.Prepare(`DELETE FROM graph WHERE node_code = ?`)
 	defer stmt.Close()
 	_, err = stmt.Exec(nodeCode)
 	if err != nil {
 		panic(err.Error())
 	}
-	err = tx.Commit()
-	if err != nil {
-		// pillarsLog.Logger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func QueryGraphNodesByCampaignCode(campaignCode * string) ([] utility.Graph, error) {
-	stmt, err := DBConn.Prepare(`SELECT graph_code, campaign_code, project_code, node_code, width, height, x_coordinate, y_coordinate, 
+	stmt, err := mysqlUtility.DBConn.Prepare(`SELECT graph_code, campaign_code, project_code, node_code, width, height, x_coordinate, y_coordinate, 
 		insert_datetime, update_datetime 
 		FROM graph WHERE campaign_code = ?`)
 	if err != nil {
@@ -122,7 +83,7 @@ func QueryGraphNodesByCampaignCode(campaignCode * string) ([] utility.Graph, err
 }
 
 func QueryGraphNodeByGraphCode(graphCode * string) (* utility.Graph, error) {
-	stmt, err := DBConn.Prepare(`SELECT graph_code, campaign_code, project_code, node_code, width, height, x_coordinate, y_coordinate, 
+	stmt, err := mysqlUtility.DBConn.Prepare(`SELECT graph_code, campaign_code, project_code, node_code, width, height, x_coordinate, y_coordinate, 
 		insert_datetime, update_datetime 
 		FROM graph WHERE graph_code = ?`)
 	if err != nil {

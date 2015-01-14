@@ -1,7 +1,8 @@
-package storage
+package dependencyStorage
 
 import (
 	"PillarsFlowNet/utility"
+	"PillarsFlowNet/mysqlUtility"
 	//"PillarsFlowNet/pillarsLog"
 	// "fmt"
 )
@@ -9,9 +10,7 @@ import (
 
 //insert is a Transaction
 func InsertIntoDependency(dependency * utility.Dependency) (bool, error) {
-
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("INSERT INTO dependency(dependency_code, campaign_code, project_code, start_mission_code, end_mission_code, dependency_type) VALUES(?, ?, ?, ?, ?, ?)")
+	stmt, err := mysqlUtility.DBConn.Prepare("INSERT INTO dependency(dependency_code, campaign_code, project_code, start_mission_code, end_mission_code, dependency_type) VALUES(?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -20,24 +19,11 @@ func InsertIntoDependency(dependency * utility.Dependency) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	//insert return Result, it does not have interface Close
-	//query return Rows ,which must be closed
-	err = tx.Commit()
-	if err != nil {
-		//pillarsLog.Logger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			//pillarsLog.Logger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func ModifyDependency(dependency * utility.Dependency) (bool, error) {
-
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("UPDATE dependency SET campaign_code=?, project_code=?, start_mission_code=?, end_mission_code=?, dependency_type=? WHERE dependency_code=?")
+	stmt, err := mysqlUtility.DBConn.Prepare("UPDATE dependency SET campaign_code=?, project_code=?, start_mission_code=?, end_mission_code=?, dependency_type=? WHERE dependency_code=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -46,23 +32,11 @@ func ModifyDependency(dependency * utility.Dependency) (bool, error) {
 	if err != nil {
 		panic(err.Error())
 	}
-	//insert return Result, it does not have interface Close
-	//query return Rows ,which must be closed
-	err = tx.Commit()
-	if err != nil {
-		//pillarsLog.Logger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			//pillarsLog.Logger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func DeleteDependencyByDependencyCode(projectCode * string) (bool, error) {
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("DELETE FROM dependency WHERE dependency_code = ?")
+	stmt, err := mysqlUtility.DBConn.Prepare("DELETE FROM dependency WHERE dependency_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -71,22 +45,11 @@ func DeleteDependencyByDependencyCode(projectCode * string) (bool, error) {
 	if err != nil {
 		panic(err.Error())
 	}
-	err = tx.Commit()
-	if err != nil {
-		//pillarsLog.Logger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			//pillarsLog.Logger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func QueryDependenciesByProjectCode(projectCode * string) ([] utility.Dependency, error){
-	
-
-	stmt, err := DBConn.Prepare("SELECT dependency_code, campaign_code, project_code, start_mission_code, end_mission_code, dependency_type, insert_datetime, update_datetime FROM dependency WHERE project_code = ?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT dependency_code, campaign_code, project_code, start_mission_code, end_mission_code, dependency_type, insert_datetime, update_datetime FROM dependency WHERE project_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -111,9 +74,7 @@ func QueryDependenciesByProjectCode(projectCode * string) ([] utility.Dependency
 }
 
 func QueryDependenciesByCampaignCode(campaignCode * string) ([] utility.Dependency, error){
-	
-
-	stmt, err := DBConn.Prepare("SELECT dependency_code, campaign_code, project_code, start_mission_code, end_mission_code, dependency_type, insert_datetime, update_datetime FROM dependency WHERE campaign_code = ?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT dependency_code, campaign_code, project_code, start_mission_code, end_mission_code, dependency_type, insert_datetime, update_datetime FROM dependency WHERE campaign_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -138,9 +99,7 @@ func QueryDependenciesByCampaignCode(campaignCode * string) ([] utility.Dependen
 }
 
 func QueryDependencyByDependencyCode(dependencyCode * string) (* utility.Dependency, error){
-	
-
-	stmt, err := DBConn.Prepare("SELECT dependency_code, campaign_code, project_code, start_mission_code, end_mission_code, dependency_type, insert_datetime, update_datetime FROM dependency WHERE dependency_code = ?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT dependency_code, campaign_code, project_code, start_mission_code, end_mission_code, dependency_type, insert_datetime, update_datetime FROM dependency WHERE dependency_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}

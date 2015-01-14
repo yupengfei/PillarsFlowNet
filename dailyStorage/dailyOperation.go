@@ -1,7 +1,8 @@
-package storage
+package dailyStorage
 
 import (
 	"PillarsFlowNet/utility"
+	"PillarsFlowNet/mysqlUtility"
 	//"PillarsFlowNet/pillarsLog"
 	// "fmt"
 )
@@ -11,8 +12,7 @@ import (
 
 //insert is a Transaction
 func InsertIntoDaily(daily * utility.Daily) (bool, error) {
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("INSERT INTO daily(daily_code, mission_code, project_code, version_tag, storage_position, picture) VALUES(?, ?, ?, ?, ?, ?)")
+	stmt, err := mysqlUtility.DBConn.Prepare("INSERT INTO daily(daily_code, mission_code, project_code, version_tag, storage_position, picture) VALUES(?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -22,23 +22,11 @@ func InsertIntoDaily(daily * utility.Daily) (bool, error) {
 		//pillarsLog.Logger.Print(err.Error())
 		panic(err.Error())
 	}
-	//insert return Result, it does not have interface Close
-	//query return Rows ,which must be closed
-	err = tx.Commit()
-	if err != nil {
-		//pillarsLog.Logger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			//pillarsLog.Logger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func ModifyDaily(daily * utility.Daily) (bool, error) {
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("UPDATE daily SET mission_code=?, project_code=?, version_tag=?, storage_position=?, picture=? WHERE daily_code=?")
+	stmt, err := mysqlUtility.DBConn.Prepare("UPDATE daily SET mission_code=?, project_code=?, version_tag=?, storage_position=?, picture=? WHERE daily_code=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -48,47 +36,22 @@ func ModifyDaily(daily * utility.Daily) (bool, error) {
 		//pillarsLog.Logger.Print(err.Error())
 		panic(err.Error())
 	}
-	//insert return Result, it does not have interface Close
-	//query return Rows ,which must be closed
-	err = tx.Commit()
-	if err != nil {
-		//pillarsLog.Logger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			//pillarsLog.Logger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func DeleteDailyByDailyCode(dailyCode * string) (bool, error){
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("DELETE FROM daily WHERE daily_code = ?")
+	stmt, err := mysqlUtility.DBConn.Prepare("DELETE FROM daily WHERE daily_code = ?")
 	defer stmt.Close()
 	_, err = stmt.Exec(dailyCode)
 	if err != nil {
 		//pillarsLog.Logger.Print(err.Error())
 		panic(err.Error())
 	}
-	//insert return Result, it does not have interface Close
-	//query return Rows ,which must be closed
-	err = tx.Commit()
-	if err != nil {
-		//pillarsLog.Logger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			//pillarsLog.Logger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func QueryDailysByMissionCode(missionCode * string) ([] utility.Daily, error) {
-	
-
-	stmt, err := DBConn.Prepare("SELECT daily_code, mission_code, project_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM daily WHERE mission_code = ?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT daily_code, mission_code, project_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM daily WHERE mission_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -112,7 +75,7 @@ func QueryDailysByMissionCode(missionCode * string) ([] utility.Daily, error) {
 }
 
 func QueryDailyByDailyCode(dailyCode * string) (* utility.Daily, error) {
-	stmt, err := DBConn.Prepare("SELECT daily_code, mission_code, project_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM daily WHERE daily_code = ?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT daily_code, mission_code, project_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM daily WHERE daily_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}

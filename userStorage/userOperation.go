@@ -1,4 +1,4 @@
-package storage
+package userStorage
 
 import (
 	"PillarsFlowNet/utility"
@@ -11,7 +11,6 @@ import (
 
 //insert is a Transaction
 func InsertIntoUser(user * utility.User) (bool, error) {
-	tx, err := DBConn.Begin()
 	stmt, err := tx.Prepare("INSERT INTO user(user_code, user_name, password, `group`, display_name, position, picture, email, phone) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		// fmt.Print(err.Error())

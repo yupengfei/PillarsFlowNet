@@ -1,4 +1,4 @@
-package storage
+package missionStorage
 
 import (
 	"testing"
@@ -7,7 +7,6 @@ import (
 )
 // func InsertIntoMission(mission * utility.Mission) bool {
 func TestInsertIntoMission(t * testing.T) {
-	DBConn = ConnectToDB()
 	missionName := string("modify the test")
 	missionCode := "a115313c765a01505acd6a5260c7d0ea"
 
@@ -36,39 +35,32 @@ func TestInsertIntoMission(t * testing.T) {
 	if (result == false) {
 		t.Error("insert mission failed")
 	}
-	CloseDBConnection()
 }
 
 
 
 func TestQueryMissionByMissionCode(t * testing.T) {
-	DBConn = ConnectToDB()
 	missionCode := string("d655313c765a01505acd6a5260c7d1ea")
 	mission, err := QueryMissionByMissionCode(&missionCode)
 	if (err != nil) {
 		t.Error("query mission failed")
 	}
 	fmt.Println(*utility.ObjectToJsonString(mission))
-	CloseDBConnection()
 }
 
 func TestQueryMissionsByProjectCode(t * testing.T) {
-	DBConn = ConnectToDB()
 	projectCode := string("d655313c765a01505acd6a5260c7d1ee")
 	missions, err := QueryMissionsByProjectCode(&projectCode)
 	if (err != nil) {
 		t.Error("query missions by projectCode failed")
 	}
 	fmt.Println(*utility.ObjectToJsonString(missions))
-	CloseDBConnection()
 }
 
 func TestDeleteMissionByMissionCode(t * testing.T) {
-	DBConn = ConnectToDB()
 	missionCode := "a115313c765a01505acd6a5260c7d0ea"
 	result, _ := DeleteMissionByMissionCode(&missionCode)
 	if result == false {
 		t.Error("delete mission failed")
 	}
-	CloseDBConnection()
 }

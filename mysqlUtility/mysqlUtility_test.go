@@ -1,4 +1,4 @@
-package storage
+package mysqlUtility
 
 import "testing"
 // import "fmt"

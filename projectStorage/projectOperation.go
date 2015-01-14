@@ -1,14 +1,14 @@
-package storage
+package projectStorage
 
 import (
 	"PillarsFlowNet/utility"
+	"PillarsFlowNet/mysqlUtility"
 	"PillarsFlowNet/pillarsLog"
 	// "fmt"
 )
 
 func InsertIntoProject(project * utility.Project) (bool, error) {
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("INSERT INTO project(project_code, project_name, project_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := mysqlUtility.DBConn.Prepare("INSERT INTO project(project_code, project_name, project_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -20,23 +20,11 @@ func InsertIntoProject(project * utility.Project) (bool, error) {
 	if err != nil {
 		panic(err.Error())
 	}
-	//insert return Result, it does not have interface Close
-	//query return Rows ,which must be closed
-	err = tx.Commit()
-	if err != nil {
-		pillarsLog.PillarsLogger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			pillarsLog.PillarsLogger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func ModifyProject(project * utility.Project) (bool, error) {
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("UPDATE project SET project_name=?, project_detail=?, plan_begin_datetime=?, plan_end_datetime=?, real_begin_datetime=?, real_end_datetime=?, person_in_charge=?, status=?, picture=? WHERE project_code=?")
+	stmt, err := mysqlUtility.DBConn.Prepare("UPDATE project SET project_name=?, project_detail=?, plan_begin_datetime=?, plan_end_datetime=?, real_begin_datetime=?, real_end_datetime=?, person_in_charge=?, status=?, picture=? WHERE project_code=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -48,23 +36,11 @@ func ModifyProject(project * utility.Project) (bool, error) {
 	if err != nil {
 		panic(err.Error())
 	}
-	//insert return Result, it does not have interface Close
-	//query return Rows ,which must be closed
-	err = tx.Commit()
-	if err != nil {
-		pillarsLog.PillarsLogger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			pillarsLog.PillarsLogger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func DeleteProjectByProjectCode(projectCode * string) (bool, error) {
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("DELETE FROM project WHERE project_code = ?")
+	stmt, err := mysqlUtility.DBConn.Prepare("DELETE FROM project WHERE project_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -73,20 +49,11 @@ func DeleteProjectByProjectCode(projectCode * string) (bool, error) {
 	if err != nil {
 		panic(err.Error())
 	}
-	err = tx.Commit()
-	if err != nil {
-		pillarsLog.PillarsLogger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			pillarsLog.PillarsLogger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func QueryProjectByProjectCode(projectCode * string) (* utility.Project, error) {
-	stmt, err := DBConn.Prepare("SELECT project_code, project_name, project_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM project WHERE project_code=?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT project_code, project_name, project_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM project WHERE project_code=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -109,7 +76,7 @@ func QueryProjectByProjectCode(projectCode * string) (* utility.Project, error) 
 }
 
 func QueryAllProject() ([] utility.Project, error) {
-	stmt, err := DBConn.Prepare("SELECT project_code, project_name, project_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM project")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT project_code, project_name, project_detail, plan_begin_datetime, plan_end_datetime, real_begin_datetime, real_end_datetime, person_in_charge, status, picture, insert_datetime, update_datetime FROM project")
 	if err != nil {
 		panic(err.Error())
 	}

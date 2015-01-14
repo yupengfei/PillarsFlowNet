@@ -1,7 +1,8 @@
-package storage
+package targetStorage
 
 import (
 	"PillarsFlowNet/utility"
+	"PillarsFlowNet/mysqlUtility"
 	"PillarsFlowNet/pillarsLog"
 	// "fmt"
 )
@@ -11,8 +12,7 @@ import (
 
 //insert is a Transaction
 func InsertIntoTarget(target * utility.Target) (bool, error) {
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("INSERT INTO target(target_code, mission_code, project_code, version_tag, storage_position, picture) VALUES(?, ?, ?, ?, ?, ?)")
+	stmt, err := mysqlUtility.DBConn.Prepare("INSERT INTO target(target_code, mission_code, project_code, version_tag, storage_position, picture) VALUES(?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -22,23 +22,11 @@ func InsertIntoTarget(target * utility.Target) (bool, error) {
 		pillarsLog.PillarsLogger.Print(err.Error())
 		panic(err.Error())
 	}
-	//insert return Result, it does not have interface Close
-	//query return Rows ,which must be closed
-	err = tx.Commit()
-	if err != nil {
-		pillarsLog.PillarsLogger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			pillarsLog.PillarsLogger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func ModifyTarget(target * utility.Target) (bool, error) {
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("UPDATE target SET mission_code=?, project_code=?, version_tag=?, storage_position=?, picture=? WHERE target_code=?")
+	stmt, err := mysqlUtility.DBConn.Prepare("UPDATE target SET mission_code=?, project_code=?, version_tag=?, storage_position=?, picture=? WHERE target_code=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -48,47 +36,22 @@ func ModifyTarget(target * utility.Target) (bool, error) {
 		pillarsLog.PillarsLogger.Print(err.Error())
 		panic(err.Error())
 	}
-	//insert return Result, it does not have interface Close
-	//query return Rows ,which must be closed
-	err = tx.Commit()
-	if err != nil {
-		pillarsLog.PillarsLogger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			pillarsLog.PillarsLogger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func DeleteTargetByTargetCode(targetCode * string) (bool, error){
-	tx, err := DBConn.Begin()
-	stmt, err := tx.Prepare("DELETE FROM target WHERE target_code = ?")
+	stmt, err := mysqlUtility.DBConn.Prepare("DELETE FROM target WHERE target_code = ?")
 	defer stmt.Close()
 	_, err = stmt.Exec(targetCode)
 	if err != nil {
 		pillarsLog.PillarsLogger.Print(err.Error())
 		panic(err.Error())
 	}
-	//insert return Result, it does not have interface Close
-	//query return Rows ,which must be closed
-	err = tx.Commit()
-	if err != nil {
-		pillarsLog.PillarsLogger.Print(err.Error())
-		err = tx.Rollback()
-		if err != nil {
-			pillarsLog.PillarsLogger.Panic(err.Error())
-		}
-		return false, err
-	}
 	return true, err
 }
 
 func QueryTargetsByMissionCode(missionCode * string) ([] utility.Target, error) {
-	
-
-	stmt, err := DBConn.Prepare("SELECT target_code, mission_code, project_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM target WHERE mission_code = ?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT target_code, mission_code, project_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM target WHERE mission_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -112,7 +75,7 @@ func QueryTargetsByMissionCode(missionCode * string) ([] utility.Target, error) 
 }
 
 func QueryTargetByTargetCode(targetCode * string) (* utility.Target, error) {
-	stmt, err := DBConn.Prepare("SELECT target_code, mission_code, project_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM target WHERE target_code = ?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT target_code, mission_code, project_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM target WHERE target_code = ?")
 	if err != nil {
 		panic(err.Error())
 	}

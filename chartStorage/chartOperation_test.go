@@ -9,7 +9,6 @@ import (
 
 
 func TestStoreToChart(t * testing.T) {
-	ConnectToMgo()
 	fromUserCode := "123"
 	sendTime := time.Now().Format("2006-01-02 15:04:05")
 	toUserCode := "456"
@@ -36,23 +35,19 @@ func TestStoreToChart(t * testing.T) {
 	} else {
 		//fmt.Println(*(utility.ObjectToJsonString(result)))
 	}
-	CloseMgoConnection()
 }
 
-// func TestMarkAsReceiveByChartCode(t * testing.T) {
-// 	ConnectToMgo()
-// 	chartCode := "6fce4188e44a2decab8f0bc2cfbff1fd"
-// 	_, err := MarkAsReceiveByChartCode(&chartCode)
-// 	if err != nil {
-// 		panic(err.Error())
-// 	} else {
-// 		//fmt.Println(*(utility.ObjectToJsonString(result)))
-// 	}
-// 	CloseMgoConnection()
-// }
+func TestMarkAsReceiveByChartCode(t * testing.T) {
+	chartCode := "75551d43829706c067a5f8053eccc60c"
+	_, err := MarkAsReceiveByChartCode(&chartCode)
+	if err != nil {
+		panic(err.Error())
+	} else {
+		//fmt.Println(*(utility.ObjectToJsonString(result)))
+	}
+}
 
 func TestGetAllUnreceivedMessageByUserCode(t * testing.T) {
-	ConnectToMgo()
 	userCode := "456"
 	_, err := GetAllUnreceivedMessageByUserCode(&userCode)
 	if err != nil {
@@ -60,7 +55,6 @@ func TestGetAllUnreceivedMessageByUserCode(t * testing.T) {
 	} else {
 		//fmt.Println(*(utility.ObjectToJsonString(result)))
 	}
-	CloseMgoConnection()
 }
 
 
