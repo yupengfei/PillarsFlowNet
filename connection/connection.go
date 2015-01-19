@@ -133,8 +133,10 @@ func (c * connection) readPump() {
 				go AddProject(c.userCode, parameter)
 			} else if *command == "modifyProject" {
 				go ModifyProject(c.userCode, parameter)
-			} else if *command == "getProjectCampaign" {
-				go GetProjectCampaign(c.userCode, parameter)
+			} else if *command == "getProjectAssertCampaign" {
+				go GetProjectAssertCampaign(c.userCode, parameter)
+			} else if *command == "getProjectShotCampaign" {
+				go GetProjectShotCampaign(c.userCode, parameter)
 			} else if *command == "addMission" {
 				go AddMission(c.userCode, parameter)
 			} else if *command == "modifyMission" {
