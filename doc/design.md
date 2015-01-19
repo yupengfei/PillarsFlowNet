@@ -58,17 +58,16 @@
 1. 用户的基本信息存储于MySQL
 MySQL: DB: Pillars
 CREATE DATABASE IF NOT EXISTS PillarsFlow DEFAULT CHARSET utf8;
-Table: user 存储用户名、密码、组别等信息，后续改为用email登录，一处username字段
+Table: user 存储用户名、密码、组别等信息，后续改为用email登录
 Create Table `user` (
 	`user_id` int unsigned NOT NULL AUTO_INCREMENT,
 	`user_code` char(32) not null unique,#计算生成的唯一识别符
-	`user_name` char(20) NOT NULL unique,#用户名作为唯一识别符
+	`email` char(30) not null,#用户邮箱，用于登录
 	`password` char(32) not null,#用户的密码
 	`group` varchar(20) not null,#用户的组别，目前有系统管理员、统筹、八个部门的组
 	`display_name` char(20) not null,#用于展示的名称
 	`position` varchar(50) not null,#所在位置
 	`picture` mediumtext not null,#头像照片的base64编码
-	`email` char(30) not null,#用户邮箱
 	`phone` char(20)not null,#用户电话号码
 	`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -259,7 +258,7 @@ Post
 {
 	"command" : "login",
 	"parameter": “{
-		"UserName": "yupengfei",
+		"Email": "yupengfei@qq.com",
 		"Password": "123456"
 	}”
 }
@@ -286,13 +285,12 @@ Post
 	“UserCode”: string,//发起该操作的user
 	"result":“ {
 		UserCode string
-		UserName string
+		Email string
 		Password string，返回只里面该字段为空
 		Group string
 		DisplayName string
 		Position string
 		Picture string
-		Email string
 		Phone string
 		InsertDatetime string
 		UpdateDatetime string
@@ -310,13 +308,12 @@ Post
 	“UserCode”: string,//发起该操作的user
 	"result":“ {
 		UserCode string
-		UserName string
+		Email string
 		Password string，返回只里面该字段为空
 		Group string
 		DisplayName string
 		Position string
 		Picture string
-		Email string
 		Phone string
 		InsertDatetime string
 		UpdateDatetime string
@@ -1191,13 +1188,12 @@ Post
 	“UserCode”: string,//发起该操作的user
 	“result”:”[{
 		UserCode string
-		UserName string
+		Email string
 		Password string，返回只里面该字段为空
 		Group string
 		DisplayName string
 		Position string
 		Picture string
-		Email string
 		Phone string
 		InsertDatetime string
 		UpdateDatetime string
@@ -1483,6 +1479,60 @@ Post
 }
 
 ##软件架构
+软件的架构图如下
+
+![架构图](design/Client-Server.png) 
+
+架构图说明如下：//TODO
+
+##软件界面说明
+
+本软件可以跨平台，需要做的特殊考虑包括：
+
+1. 对不同分辨率和尺寸的屏幕的适配问题，我们需要适配从10寸平板到50寸的超大号显示器，从1024*768的分辨率到iMac 5K，因此我们需要界面按照比例显示，图标尽可能的使用矢量图标；
+
+1. 对移动设备的支持，简化一些操作，将菜单的层级做的更浅；
+
+目前我们的界面包括登录界面、home页面、镜头页面、资产页面、daily页面、people页面
+
+##登录界面
+
+![登录界面](design/Login.png)
+
+登录界面主要由四部分组成：
+
+1. 邮箱的输入框，用于输入邮箱登录，目前是用用户名登录的；
+
+1. 密码的输入框，用于输入密码；
+
+1. 登录按钮，点击登录后向服务器发送登录请求，如果登录失败则在登录按钮下方显示一行红字，登录失败，用户名或密码错误。如果开启时连不上服务器，则在该空白处显示红字“服务器正在维护”；
+
+1. 取消按钮，点击退出应用程序；
+
+额外的逻辑：
+
+1. 在与服务器连接意外断开时直接跳到该页面；
+
+##Home页面
+
+![Home界面](design/Home.png)
+
+Home主要由四个部分构成
+
+1. 导航栏
+
+
+##镜头页面
+
+##资产页面
+
+##Daily页面
+
+#People页面
+
+
+
+
 
 ##数据流
 
@@ -1496,13 +1546,6 @@ Post
 我们在客户端和服务器端都做一些处理，保证客户端不丢弃有效的增删改的信息，每个客户端收到的增删改信息的序列顺序相同。
 1、客户端发起查询后，阻塞所有的增删改信息的处理，在所有查询处理完之后再处理增删改；
 2、服务器端加两个互斥锁，分别锁定production的增删改查和post的增删改查。
-
-
-
-
-
-
-
 
 
 
