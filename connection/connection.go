@@ -1,12 +1,12 @@
 package connection
 
 import (
-	"github.com/gorilla/websocket"
-	"time"
-	"net/http"
-	"fmt"
-	"PillarsFlowNet/utility"
 	"PillarsFlowNet/pillarsLog"
+	"PillarsFlowNet/utility"
+	"fmt"
+	"github.com/gorilla/websocket"
+	"net/http"
+	"time"
 	// "PillarsFlowNet/chartLogic"
 	// "PillarsFlowNet/dailyLogic"
 	// "PillarsFlowNet/dependencyLogic"
@@ -29,23 +29,23 @@ const (
 	pingPeriod = (pongWait * 9) / 10
 
 	// Maximum message size allowed from client.
-	maxMessageSize = 512*512000000
+	maxMessageSize = 512 * 512000000
 )
 
-//use package websocket provied by gorilla, 
+//use package websocket provied by gorilla,
 //it will upgrade http connection to web socket connection
 var upgrader = websocket.Upgrader{
-    ReadBufferSize:  1024,
-    WriteBufferSize: 1024,
+	ReadBufferSize:  1024,
+	WriteBufferSize: 1024,
 }
 
 // connection is an middleman between the websocket connection and the hub.
 //It consists of a connection and a pointer to userCode
 //and a []byte channel, which is used for hub.
 type connection struct {
-	ws * websocket.Conn
-	send chan []byte
-	userCode * string
+	ws       *websocket.Conn
+	send     chan []byte
+	userCode *string
 }
 
 // write writes a message with the given message type and message to client.
@@ -57,7 +57,7 @@ func (c *connection) write(mt int, message []byte) error {
 //writePump pumps messages from the hub to the websocket connection
 func (c *connection) writePump() {
 	//ping the client, ifthere is no message in pingPeriod
-	ticker := time.NewTicker(pingPeriod)
+	ticker := time.NewTicker(pingPeriod) //计时器
 	defer func() {
 		fmt.Println("writePump closing")
 		ticker.Stop()
@@ -66,7 +66,7 @@ func (c *connection) writePump() {
 	}()
 	for {
 		select {
-		case message, ok := <- c.send:
+		case message, ok := <-c.send:
 			if !ok {
 				c.write(websocket.CloseMessage, []byte{})
 				return
@@ -74,15 +74,16 @@ func (c *connection) writePump() {
 			if err := c.write(websocket.TextMessage, message); err != nil {
 				return
 			}
-		case <- ticker.C:
+		case <-ticker.C:
 			if err := c.write(websocket.PingMessage, []byte{}); err != nil {
 				return
 			}
 		}
 	}
 }
+
 //readPump pumps messages from the websocket connection to the hub
-func (c * connection) readPump() {
+func (c *connection) readPump() {
 	defer func() {
 		fmt.Println("readPump closing")
 		Hub.unregister <- c
@@ -110,7 +111,7 @@ func (c * connection) readPump() {
 		if c.userCode == nil {
 			if *command != "login" {
 				continue
-			} else {
+			} else { //认为是执行登陆处理
 				result, userCode, err := ValidateUser(parameter)
 				fmt.Println(*userCode)
 				fmt.Println(*result)
@@ -125,7 +126,7 @@ func (c * connection) readPump() {
 				}
 			}
 
-		} else {//else do some other command
+		} else { //else do some other command
 
 			if *command == "getAllProject" {
 				go GetAllProject(c.userCode, parameter)
@@ -177,32 +178,30 @@ func (c * connection) readPump() {
 				go GetDailyByMissionCode(c.userCode, parameter)
 			} else if *command == "getAllUser" {
 				go GetAllUser(c.userCode, parameter)
-			} else if * command == "addChart" {
+			} else if *command == "addChart" {
 				go AddChart(c.userCode, parameter)
-			} else if * command == "receiveChart" {
+			} else if *command == "receiveChart" {
 				go ReceiveChart(c.userCode, parameter)
-			} else if * command == "getAllUnreceivedChart" {
+			} else if *command == "getAllUnreceivedChart" {
 				go GetAllUnreceivedChart(c.userCode, parameter)
-			} else if * command == "addPost" {
+			} else if *command == "addPost" {
 				go AddPost(c.userCode, parameter)
-			} else if * command == "getAllTargetPost" {
+			} else if *command == "getAllTargetPost" {
 				go GetAllTargetPost(c.userCode, parameter)
-			} else if * command == "getPersonAllWaitingMission" {
+			} else if *command == "getPersonAllWaitingMission" {
 				go GetPersonAllWaitingMission(c.userCode, parameter)
-			} else if * command == "getPersonAllUndergoingMission" {
+			} else if *command == "getPersonAllUndergoingMission" {
 				go GetPersonAllUndergoingMission(c.userCode, parameter)
-			} else if * command == "getPersonAllReviewingMission" {
+			} else if *command == "getPersonAllReviewingMission" {
 				go GetPersonAllReviewingMission(c.userCode, parameter)
-			} else if * command == "getPersonAllFinishedMission" {
+			} else if *command == "getPersonAllFinishedMission" {
 				go GetPersonAllFinishedMission(c.userCode, parameter)
-			} else if * command == "getAllUndesignatedMission" {
+			} else if *command == "getAllUndesignatedMission" {
 				go GetAllUndesignatedMission(c.userCode, parameter)
 			}
 		}
 	}
 }
-
-
 
 // serverWs handles webocket requests from the peer.
 func ServeWs(w http.ResponseWriter, r *http.Request) {

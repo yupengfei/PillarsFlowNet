@@ -1,13 +1,13 @@
 package userStorage
 
 import (
-	"PillarsFlowNet/utility"
 	"PillarsFlowNet/mysqlUtility"
 	"PillarsFlowNet/pillarsLog"
+	"PillarsFlowNet/utility"
 	// "fmt"
 )
 
-func InsertIntoUser(user * utility.User) (bool, error) {
+func InsertIntoUser(user *utility.User) (bool, error) {
 	stmt, err := mysqlUtility.DBConn.Prepare("INSERT INTO user(user_code, user_name, password, `group`, display_name, position, picture, email, phone) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		// fmt.Print(err.Error())
@@ -24,7 +24,7 @@ func InsertIntoUser(user * utility.User) (bool, error) {
 	return true, err
 }
 
-func DeleteUserByUserName(userName * string) (bool, error) {
+func DeleteUserByUserName(userName *string) (bool, error) {
 	stmt, err := mysqlUtility.DBConn.Prepare("DELETE FROM user WHERE user_name = ?")
 	if err != nil {
 		panic(err.Error())
@@ -38,7 +38,7 @@ func DeleteUserByUserName(userName * string) (bool, error) {
 	return true, err
 }
 
-func QueryUserByUserName(userName * string) (* utility.User, error) {
+func QueryUserByUserName(userName *string) (*utility.User, error) {
 	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code, user_name, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user WHERE user_name=?")
 	if err != nil {
 		panic(err.Error())
@@ -52,8 +52,8 @@ func QueryUserByUserName(userName * string) (* utility.User, error) {
 	var user utility.User
 	if result.Next() {
 		err = result.Scan(&(user.UserCode), &(user.UserName),
-		&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
-		&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
+			&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
+			&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
 		if err != nil {
 			pillarsLog.PillarsLogger.Print(err.Error())
 		}
@@ -62,8 +62,8 @@ func QueryUserByUserName(userName * string) (* utility.User, error) {
 
 }
 
-func QueryUserByUserCode(userCode * string) (* utility.User, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code, user_name, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user WHERE user_code=?")
+func QueryUserByUserCode(userCode *string) (*utility.User, error) {
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code,`group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user WHERE user_code=?")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -76,8 +76,8 @@ func QueryUserByUserCode(userCode * string) (* utility.User, error) {
 	var user utility.User
 	if result.Next() {
 		err = result.Scan(&(user.UserCode), &(user.UserName),
-		&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
-		&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
+			&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
+			&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
 		if err != nil {
 			pillarsLog.PillarsLogger.Print(err.Error())
 		}
@@ -86,7 +86,7 @@ func QueryUserByUserCode(userCode * string) (* utility.User, error) {
 
 }
 
-func QueryUserCode(userName * string) (* string, error) {
+func QueryUserCode(userName *string) (*string, error) {
 	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code FROM user WHERE user_name=?")
 	if err != nil {
 		panic(err.Error())
@@ -101,12 +101,12 @@ func QueryUserCode(userName * string) (* string, error) {
 
 	if result.Next() {
 		result.Scan(&user_code)
-		
-	} 
+
+	}
 	return &user_code, err
 }
 
-func QueryAllUser() ([] utility.User, error) {
+func QueryAllUser() ([]utility.User, error) {
 	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code, user_name, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user")
 	if err != nil {
 		panic(err.Error())
@@ -117,12 +117,12 @@ func QueryAllUser() ([] utility.User, error) {
 		panic(err.Error())
 	}
 	defer result.Close()
-	var users [] utility.User
+	var users []utility.User
 	for result.Next() {
 		var user utility.User
 		err = result.Scan(&(user.UserCode), &(user.UserName),
-		&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
-		&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
+			&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
+			&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
 		if err != nil {
 			pillarsLog.PillarsLogger.Print(err.Error())
 		}
@@ -132,7 +132,7 @@ func QueryAllUser() ([] utility.User, error) {
 
 }
 
-func CheckUserNameAndPassword(userName * string, password * string) (* string, error) {
+func CheckUserNameAndPassword(userName *string, password *string) (*string, error) {
 	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code FROM user WHERE user_name=? AND password=?")
 	if err != nil {
 		panic(err.Error())
@@ -148,8 +148,7 @@ func CheckUserNameAndPassword(userName * string, password * string) (* string, e
 	if result.Next() {
 		result.Scan(&userCode)
 		return &userCode, err
-		
-	} 
+
+	}
 	return &userCode, err
 }
-
