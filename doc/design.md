@@ -72,7 +72,7 @@ Create Table `user` (
 	`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`user_id`),
-	INDEX(`user_name`),
+	INDEX(`email`),
 	INDEX(`group`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
