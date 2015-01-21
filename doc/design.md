@@ -90,7 +90,7 @@ Create table `project`(
 	`real_end_datetime` datetime NOT NULL,#存储项目实际结束的时间
 	`person_in_charge` char(32) NOT NULL,#存储`user_code`，项目负责人的usercode
 	`status` int default 0 NOT NULL, #0未开始，1已经完成,2进行中
-	`picture` mediumtext NOT NULL,#直接往mysql中写入照片的base64编码
+	`picture` mediumtext NOT NULL,#直接往mysql中写入照片的base64编码     ??????????????????????
 	`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`project_id`),
@@ -106,8 +106,8 @@ Create Table `mission` (
 	`mission_code` char(32) not null unique,
 	`mission_name` char(50) NOT NULL,#任务的名称
 	`project_code` char(32) NOT NULL,#任务所属project
-	`product_type` tinyint NOT NULL,#标识任务产品的种类，如资产还是镜头，0代表镜头，1代表资产
-	`is_campaign` tinyint default 0 NOT NULL, #是否是一个战役，0不是，1是
+	`product_type` tinyint NOT NULL,#标识任务产品的种类，如资产还是镜头，0代表镜头，1代表资产  //*********************
+	`is_campaign` tinyint default 0 NOT NULL, #是否是一个战役，0不是，1是                 //**********************
 	`mission_detail` varchar(200) NOT NULL,#给任务一段更详细的文本说明
 	`plan_begin_datetime` datetime NOT NULL,#计划开始时间
 	`plan_end_datetime` datetime NOT NULL,#计划结束时间
@@ -120,7 +120,7 @@ Create Table `mission` (
 	`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 	PRIMARY KEY (`mission_id`),
 	INDEX(`mission_code`),
-	INDEX(`person_in_charge`)
+	INDEX(`person_in_charge`)   //?????????
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 1. 任务的有向无环图的节点信息存放在graph表
@@ -128,7 +128,7 @@ MySQL: DB: Pillars
 Table: graph存储任务有向无环图的节点信息
 一个大的mission可能有更多小的mission构成，这些小的mission构成一个图。两个具体的例子
 	
-		1. 软件打开后，在镜头页面展示所有的project列表，点击任意一个project，则向服务器请求该project的projectcode对应的graph，此时graph表中campaign_code即为projetcode，product_type为镜头，服务器查询到所有的node和dependency后返回；
+		1. 软件打开后，在镜头页面展示所有的project列表，点击任意一个project，则向服务器请求该project的projectcode对应的graph，此时graph表中campaign_code即为projetcode，product_type为镜头，服务器查询到所有的node和dependency后返回；  //*****************
 
 		1. 用户双击其中的任意一个node，则向服务器请求该node作为campaign_code，product_type为镜头的所有node和dependency并返回；
 
@@ -137,7 +137,7 @@ Create table `graph` (
 	`graph_code` char(32) not null unique,#
 	`campaign_code` char(32) not null,#实际上是一个mission code，指大的mission
 	`project_code` char(32) NOT NULL,#任务所属project
-	`node_code` char(32) not null,#实际上是一个mission code,每个campaign_code对应很多个node_code
+	`node_code` char(32) not null,#实际上是一个mission code,每个campaign_code对应很多个node_code  //X!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	`product_type` tinyint NOT NULL,#标识任务产品的种类，如资产还是镜头，0代表镜头，1代表资产
 	`x_coordinate` int NOT NULL,#该节点所在的x轴的位置
 	`y_coordinate` int NOT NULL,#该节点所在的y轴的位置
@@ -227,7 +227,7 @@ Chart
     DeletedTime string
 }
 
-1. 任务的评论信息存储到Post表 可以对mission自身、mission的daily信息和mission的target信息进行评论
+1. 任务的评论信息存储到Post表 可以对mission自身、mission的daily信息和mission的target信息进行评论   //****************************************
 MongoDB: DB: PillarsFlow
 Post
 {
@@ -320,7 +320,7 @@ Post
 
 	}”
 }
-##其它接口
+##其它接口                                         //************************************************************************
 1. 获取所有project
 {
 	“command”: “getAllProject”,
@@ -453,7 +453,7 @@ Post
 	“commnd”: “getAllCompaign”,
 	“UserCode”: string,//发起该操作的user
 	“result”:”[{
-		MissionCode string
+		    MissionCode string
     		MissionName string
     		ProjectCode string
     		ProductType string
@@ -706,7 +706,7 @@ Post
 	}]”
 }
 
-1. 新建node
+1. 新建node                                           
 {
 	“command”:”addNode”,
 	“parameter”:”[{
@@ -1108,7 +1108,7 @@ Post
 		ChartCode string
 	}”
 }
-1. getAllUnreceivedChart获取所有的未读信息
+1. getAllUnreceivedChart获取所有的未读信息                 //**************************
 {
 	“command”:”getAllUnreceivedChart”,
 	”parameter“：”{
