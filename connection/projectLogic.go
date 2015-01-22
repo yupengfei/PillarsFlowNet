@@ -5,11 +5,11 @@ import (
 	"PillarsFlowNet/utility"
 )
 
-func GetAllProject(userCode * string, parameter * string) ([] byte, *string) {
+func GetAllProject(userCode *string, parameter *string) ([]byte, *string) {
 	var errorCode int
-	var opResult [] utility.Project
+	var opResult []utility.Project
 
-	if (errorCode == 0) {
+	if errorCode == 0 {
 		opResult, _ = projectStorage.QueryAllProject()
 	}
 
@@ -19,15 +19,15 @@ func GetAllProject(userCode * string, parameter * string) ([] byte, *string) {
 	return result, userCode
 }
 
-func AddProject(userCode * string, parameter * string) ([] byte, *string) {
+func AddProject(userCode *string, parameter *string) ([]byte, *string) {
 	var errorCode int
-	var projectCode * string
-	var projectOut * utility.Project
-	if (errorCode == 0) {
+	var projectCode *string
+	var projectOut *utility.Project
+	if errorCode == 0 {
 		project, _ := utility.ParseProjectMessage(parameter)
 		project.ProjectCode = *(utility.GenerateCode(userCode))
 		projectCode = &(project.ProjectCode)
-		opResult, _ :=projectStorage.InsertIntoProject(project)
+		opResult, _ := projectStorage.InsertIntoProject(project)
 		if opResult == false {
 			errorCode = 1
 		} else {
@@ -40,15 +40,14 @@ func AddProject(userCode * string, parameter * string) ([] byte, *string) {
 	return result, userCode
 }
 
-
-func ModifyProject(userCode * string, parameter * string) ([] byte, *string) {
+func ModifyProject(userCode *string, parameter *string) ([]byte, *string) {
 	var errorCode int
-	var projectCode * string
-	var projectOut * utility.Project
-	if (errorCode == 0) {
+	var projectCode *string
+	var projectOut *utility.Project
+	if errorCode == 0 {
 		project, _ := utility.ParseProjectMessage(parameter)
 		projectCode = &(project.ProjectCode)
-		opResult, _ :=projectStorage.ModifyProject(project)
+		opResult, _ := projectStorage.ModifyProject(project)
 		if opResult == false {
 			errorCode = 1
 		} else {
@@ -60,4 +59,3 @@ func ModifyProject(userCode * string, parameter * string) ([] byte, *string) {
 	Hub.Dispatch(result)
 	return result, userCode
 }
-

@@ -135,15 +135,17 @@ func (c *connection) readPump() {
 			} else if *command == "modifyProject" {
 				go ModifyProject(c.userCode, parameter)
 			} else if *command == "getProjectAssertCampaign" {
-				go GetProjectAssertCampaign(c.userCode, parameter)
+				go GetProjectAssertCampaign(c.userCode, parameter) //
 			} else if *command == "getProjectShotCampaign" {
-				go GetProjectShotCampaign(c.userCode, parameter)
+				go GetProjectShotCampaign(c.userCode, parameter) ///////meiyou
 			} else if *command == "addMission" {
 				go AddMission(c.userCode, parameter)
+			} else if *command == "getMissionByMissionCode" {
+				go GetMissionByMissionCode(c.userCode, parameter)
 			} else if *command == "modifyMission" {
 				go ModifyMission(c.userCode, parameter)
 			} else if *command == "deleteMission" {
-				go ModifyProject(c.userCode, parameter)
+				go DeleteMission(c.userCode, parameter) //ModifyProject()
 			} else if *command == "getCampaignNode" {
 				go GetCampaignNode(c.userCode, parameter)
 			} else if *command == "addNode" {

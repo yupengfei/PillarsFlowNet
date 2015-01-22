@@ -1,26 +1,26 @@
 package connection
 
 import (
-	"time"
+	"PillarsFlowNet/authentication"
 	"PillarsFlowNet/chartStorage"
 	"PillarsFlowNet/utility"
-	"PillarsFlowNet/authentication"
+	"time"
 	// "fmt"
 )
 
 //向chart表添加一条记录
 //其中inputParameters[0]是执行该操作的用户的code
 //inputParameters[1]包含了更多的聊天信息
-func AddChart(userCode * string, parameter * string) {//result, fromUserCode, ToUserCode
+func AddChart(userCode *string, parameter *string) { //result, fromUserCode, ToUserCode
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if (auth == false) {
+	if auth == false {
 		errorCode = 3
 	}
-	var chartOut * utility.Chart
+	var chartOut *utility.Chart
 	var err error
-	var toUserCode * string
-	if (errorCode == 0) {
+	var toUserCode *string
+	if errorCode == 0 {
 		chart, _ := utility.ParseChartMessage(parameter)
 		toUserCode = &(chart.To)
 
@@ -37,20 +37,20 @@ func AddChart(userCode * string, parameter * string) {//result, fromUserCode, To
 	}
 	var command = "addChart"
 	result := utility.BoolResultToOutMessage(&command, chartOut, errorCode, userCode)
-	Hub.SendToUserCode(result, userCode)
+	Hub.SendToUserCode(result, userCode) ////这个有必要在发给自己吗
 	Hub.SendToUserCode(result, toUserCode)
 }
 
 //用户在阅读完某条信息后会将该条信息标记为已读
-func ReceiveChart(userCode * string, parameter * string) {
+func ReceiveChart(userCode *string, parameter *string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if (auth == false) {
+	if auth == false {
 		errorCode = 3
 	}
-	if (errorCode == 0) {
+	if errorCode == 0 {
 		chartCode, _ := utility.ParseChartCodeMessage(parameter)
-		_, err :=chartStorage.MarkAsReceiveByChartCode(&(chartCode.ChartCode))
+		_, err := chartStorage.MarkAsReceiveByChartCode(&(chartCode.ChartCode))
 		if err != nil {
 			errorCode = 1
 		}
@@ -62,15 +62,15 @@ func ReceiveChart(userCode * string, parameter * string) {
 }
 
 //用户登陆后，会向服务器请求所有发给自己的未读信息
-func GetAllUnreceivedChart(userCode * string, parameter * string) {
+func GetAllUnreceivedChart(userCode *string, parameter *string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if (auth == false) {
+	if auth == false {
 		errorCode = 3
 	}
 	var opResult []utility.Chart
 	var err error
-	if (errorCode == 0) {
+	if errorCode == 0 {
 		opResult, err = chartStorage.GetAllUnreceivedMessageByUserCode(parameter)
 		if err != nil {
 			errorCode = 1

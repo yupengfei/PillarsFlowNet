@@ -1,8 +1,8 @@
 package userStorage
 
 import (
-	"testing"
 	"PillarsFlowNet/utility"
+	"testing"
 	// _ "github.com/go-sql-driver/mysql"
 	"fmt"
 )
@@ -26,13 +26,13 @@ import (
 // 	CloseDBConnection()
 // }
 
-func TestInsertIntoUser1(t * testing.T) {
+func TestInsertIntoUser1(t *testing.T) {
 	var user utility.User
 
 	user.UserName = "er.wang"
 	user.UserCode = *(utility.GenerateCode(&(user.UserName)))
 	pass := "aaa"
-	user.Password =  string(utility.Md5sum(&pass))
+	user.Password = string(utility.Md5sum(&pass))
 	user.Group = "fjkdjflk"
 	user.DisplayName = "fdafae"
 
@@ -42,21 +42,23 @@ func TestInsertIntoUser1(t * testing.T) {
 	}
 }
 
-func TestQueryByUserName(t * testing.T) {
+/*****user table had deleted the user_name column*****/
+/*
+func TestQueryByUserName(t *testing.T) {
 	userName := "er.wang"
 	user, _ := QueryUserByUserName(&userName)
 	fmt.Println("testing query user by name " + user.UserName)
 }
 
-func TestDeleteUserByUserName(t * testing.T) {
+func TestDeleteUserByUserName(t *testing.T) {
 	userName := string("er.wang")
 	result, err := DeleteUserByUserName(&userName)
 	if result == false || err != nil {
 		t.Error("test delete user failed")
 	}
 }
-
-func TestQueryAllUser(t * testing.T) {
+*/
+func TestQueryAllUser(t *testing.T) {
 	result, err := QueryAllUser()
 	if err != nil {
 		panic(err.Error())
@@ -64,5 +66,3 @@ func TestQueryAllUser(t * testing.T) {
 		fmt.Println(*(utility.ObjectToJsonString(result)))
 	}
 }
-
-

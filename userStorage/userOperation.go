@@ -8,13 +8,13 @@ import (
 )
 
 func InsertIntoUser(user *utility.User) (bool, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("INSERT INTO user(user_code, user_name, password, `group`, display_name, position, picture, email, phone) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := mysqlUtility.DBConn.Prepare("INSERT INTO user(user_code, password, `group`, display_name, position, picture, email, phone) VALUES(?, ?, ?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		// fmt.Print(err.Error())
 		panic(err.Error())
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(user.UserCode, user.UserName, user.Password,
+	_, err = stmt.Exec(user.UserCode, user.Password,
 		user.Group, user.DisplayName, user.Position, user.Picture, user.Email,
 		user.Phone)
 	if err != nil {
@@ -24,6 +24,7 @@ func InsertIntoUser(user *utility.User) (bool, error) {
 	return true, err
 }
 
+/***************
 func DeleteUserByUserName(userName *string) (bool, error) {
 	stmt, err := mysqlUtility.DBConn.Prepare("DELETE FROM user WHERE user_name = ?")
 	if err != nil {
@@ -62,6 +63,7 @@ func QueryUserByUserName(userName *string) (*utility.User, error) {
 
 }
 
+****************************/
 func QueryUserByUserCode(userCode *string) (*utility.User, error) {
 	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code,`group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user WHERE user_code=?")
 	if err != nil {
@@ -75,7 +77,7 @@ func QueryUserByUserCode(userCode *string) (*utility.User, error) {
 	defer result.Close()
 	var user utility.User
 	if result.Next() {
-		err = result.Scan(&(user.UserCode), &(user.UserName),
+		err = result.Scan(&(user.UserCode),
 			&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
 			&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
 		if err != nil {
@@ -107,7 +109,7 @@ func QueryUserCode(userName *string) (*string, error) {
 }
 
 func QueryAllUser() ([]utility.User, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code, user_name, `group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code,`group`, display_name, position, picture, email, phone, insert_datetime, update_datetime FROM user")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -120,7 +122,7 @@ func QueryAllUser() ([]utility.User, error) {
 	var users []utility.User
 	for result.Next() {
 		var user utility.User
-		err = result.Scan(&(user.UserCode), &(user.UserName),
+		err = result.Scan(&(user.UserCode),
 			&(user.Group), &(user.DisplayName), &(user.Position), &(user.Picture), &(user.Email),
 			&(user.Phone), &(user.InsertDatetime), &(user.UpdateDatetime))
 		if err != nil {

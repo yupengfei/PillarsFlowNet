@@ -39,10 +39,17 @@ type UserLogin struct {
 	Password string
 }
 
+//addNode message have two struct   Graph and mission,so it's parameter is string_slice's JSON string
+//Content[0] GraphName
+//Content[1] MissionName
+type AddNodeMsg struct {
+	Content [2]string
+}
+
 //user struct is corresponding to the mysql user table
 type User struct {
-	UserCode       string
-	UserName       string
+	UserCode string
+	//UserName       string
 	Password       string
 	Group          string
 	DisplayName    string
@@ -110,13 +117,13 @@ type Project struct {
 //mission struct is corresponding to the mysql mission table
 type Mission struct {
 	//MissionId string
-	MissionCode       string
-	MissionName       string
-	ProjectCode       string
-	ProductType       string
-	IsCampaign        int
-	IsAssert          int
-	MissionType       string
+	MissionCode string
+	MissionName string
+	ProjectCode string
+	ProductType string
+	IsCampaign  int
+	//IsAssert          int
+	//MissionType       string
 	MissionDetail     string
 	PlanBeginDatetime string
 	PlanEndDatetime   string
@@ -134,11 +141,13 @@ type Mission struct {
 //many missions, these messions make up a directed acyclic graph
 //this struct only contains the node position
 //the dependency relationship is stored in dependency table
+//Graph  实际是个节点！！！！！！！！！！！！！！！
 type Graph struct {
 	GraphCode      string
 	CampaignCode   string
 	ProjectCode    string
 	NodeCode       string
+	ProductType    int ///////////new add
 	Width          int
 	Height         int
 	XCoordinate    int
@@ -154,6 +163,7 @@ type Dependency struct {
 	DependencyCode   string
 	CampaignCode     string
 	ProjectCode      string
+	ProductType      int
 	StartMissionCode string
 	EndMissionCode   string
 	DependencyType   int

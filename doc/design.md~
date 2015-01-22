@@ -436,7 +436,7 @@ Post
     		“UpdateDatetime”: string
 	}”
 }
-///////////////////////new 
+
 1. 根据projectCode获取所有的镜头的compaign
 {
 	“command”:”getProjectShotCampaign”,
@@ -450,7 +450,7 @@ Post
 		"errorCode" : 0,
 		"errorMessage": ""
 	},
-	“commnd”: “getAllCompaign”,
+	“commnd”: “getProjectShotCampaign”,
 	“UserCode”: string,//发起该操作的user
 	“result”:”[{
 		MissionCode string
@@ -458,7 +458,6 @@ Post
     		ProjectCode string
     		ProductType string
     		IsCampaign int
-    		MissionType string
     		MissionDetail string
     		PlanBeginDatetime string
     		PlanEndDatetime string
@@ -494,7 +493,6 @@ Post
     		ProjectCode string
     		ProductType string
     		IsCampaign int
-    		MissionType string
     		MissionDetail string
     		PlanBeginDatetime string
     		PlanEndDatetime string
@@ -622,9 +620,10 @@ Post
 		MissionCode string
 	}”
 }
-1. QueryMissionByMissionCode
+//////////////////////////////////////new!!!!!!!
+1. GetMissionByMissionCode
 {
-	“command”:”queryMissionByMissionCode”,
+	“command”:”getMissionByMissionCode”,
 	“parameter”:”{
 		MissionCode string
 	}”
@@ -635,7 +634,7 @@ Post
 		"errorCode" : 0,
 		"errorMessage": ""
 	},
-	“commnd”: “queryMissionByMissionCode”,
+	“commnd”: “getMissionByMissionCode”,
 	“UserCode”: string,//发起该操作的user
 	“result”:”{
 		MissionCode string
@@ -1324,7 +1323,7 @@ Post
 }
 1. 查询指定mission的daily
 {
-	”command“:”queryDailyByMissionCode”,
+	”command“:”getDailyByMissionCode”,
 	“parameter”:”{
 		MissionCode string
 	}”
@@ -1335,7 +1334,7 @@ Post
 		"errorCode" : 0,
 		"errorMessage": ""
 	},
-	“commnd”: “queryDailyByMissionCode”,
+	“commnd”: “getDailyByMissionCode”,
 	“UserCode”: string,//发起该操作的user
 	“result”:”[{
 		DailyCode string
