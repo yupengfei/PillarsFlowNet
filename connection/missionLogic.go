@@ -38,8 +38,23 @@ func GetProjectAssertCampaign(userCode *string, parameter *string) {
 	}
 	command := "getAllCampaign"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
+	Hub.SendToUserCode(result, userCode)
 }
-
+func GetProjectShotCampaign(userCode *string, parameter *string) {
+	auth := authentication.GetAuthInformation(userCode)
+	var errorCode int
+	if auth == false {
+		errorCode = 3
+	}
+	var opResult []utility.Mission
+	if errorCode == 0 {
+		projectCode, _ := utility.ParseProjectCodeMessage(parameter)
+		opResult, _ = missionStorage.QueryShotCampaignsByProjectCode(&(projectCode.ProjectCode))
+	}
+	command := "getAllCampaign"
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
+	Hub.SendToUserCode(result, userCode)
+}
 func GetProjectUnassertCampaign(userCode *string, parameter *string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
@@ -53,8 +68,14 @@ func GetProjectUnassertCampaign(userCode *string, parameter *string) {
 	}
 	command := "getAllCampaign"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
+	Hub.SendToUserCode(result, userCode)
 }
 
+/*
+func GetProjectShotCampaign(userCode *string, parameter *string){
+
+	Hub.SendToUserCode(result, userCode)
+}*/
 func AddMission(userCode *string, parameter *string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
@@ -120,7 +141,7 @@ func DeleteMission(userCode *string, parameter *string) {
 	Hub.Dispatch(result)
 }
 
-func QueryMissionByMissionCode(userCode *string, parameter *string) {
+func GetMissionByMissionCode(userCode *string, parameter *string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if auth == false {
@@ -131,7 +152,7 @@ func QueryMissionByMissionCode(userCode *string, parameter *string) {
 		missionCode, _ := utility.ParseMissionCodeMessage(parameter)
 		opResult, _ = missionStorage.QueryMissionByMissionCode(&(missionCode.MissionCode))
 	}
-	command := "queryMissionByMissionCode"
+	command := "getMissionByMissionCode"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
 	Hub.SendToUserCode(result, userCode)
 }

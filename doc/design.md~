@@ -1027,7 +1027,7 @@ Post
 }
 1. 查询指定mission的target
 {
-	”command“:”queryTargetByMissionCode”,
+	”command“:”getTargetByMissionCode”,
 	“parameter”:”{
 		MissionCode string
 	}”
@@ -1038,7 +1038,7 @@ Post
 		"errorCode" : 0,
 		"errorMessage": ""
 	},
-	“commnd”: “queryTargetByMissionCode”,
+	“commnd”: “getTargetByMissionCode”,
 	“UserCode”: string,//发起该操作的user
 	“result”:”[{
 		TargetCode string

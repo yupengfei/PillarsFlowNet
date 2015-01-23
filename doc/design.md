@@ -437,7 +437,7 @@ Post
 	}”
 }
 
-1. 根据projectCode获取所有的镜头的compaign
+1. 根据projectCode获取所有Shot的镜头的compaign
 {
 	“command”:”getProjectShotCampaign”,
 	“parameter”:”{
@@ -472,7 +472,7 @@ Post
 }
 
 ///////////////////////new 
-1. 根据projectCode获取所有的镜头的compaign
+1. 根据projectCode获取所有Asset的镜头的compaign
 {
 	“command”:”getProjectAssertCampaign”,
 	“parameter”:”{

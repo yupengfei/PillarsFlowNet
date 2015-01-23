@@ -236,7 +236,7 @@ func QueryAssertCampaignsByProjectCode(projectCode *string) ([]utility.Mission, 
 		is_campaign, 
 		mission_detail, plan_begin_datetime, plan_end_datetime, 
 		real_begin_datetime, real_end_datetime, person_in_charge, status, picture, 
-		insert_datetime, update_datetime FROM mission where project_code = ? AND is_campaign=1`)
+		insert_datetime, update_datetime FROM mission where project_code = ? AND is_campaign=1 AND product_type=1`)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -263,7 +263,39 @@ func QueryAssertCampaignsByProjectCode(projectCode *string) ([]utility.Mission, 
 	}
 	return missionSlice, err
 }
-
+func QueryShotCampaignsByProjectCode(projectCode *string) ([]utility.Mission, error) {
+	stmt, err := mysqlUtility.DBConn.Prepare(`SELECT mission_code, mission_name, 
+		project_code, product_type, 
+		is_campaign, 
+		mission_detail, plan_begin_datetime, plan_end_datetime, 
+		real_begin_datetime, real_end_datetime, person_in_charge, status, picture, 
+		insert_datetime, update_datetime FROM mission where project_code = ? AND is_campaign=1 AND product_type=0`)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	result, err := stmt.Query(projectCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+	//this is easy to imply but may not very fast
+	var missionSlice []utility.Mission
+	for result.Next() {
+		var mission utility.Mission
+		err = result.Scan(&(mission.MissionCode), &(mission.MissionName), &(mission.ProjectCode),
+			&(mission.ProductType), &(mission.IsCampaign), &(mission.MissionDetail),
+			&(mission.PlanBeginDatetime), &(mission.PlanEndDatetime), &(mission.RealBeginDatetime), &(mission.PlanEndDatetime),
+			&(mission.PersonIncharge), &(mission.Status), &(mission.Picture),
+			&(mission.InsertDatetime),
+			&(mission.UpdateDatetime))
+		if err != nil {
+			pillarsLog.PillarsLogger.Print(err.Error())
+		}
+		missionSlice = append(missionSlice, mission)
+	}
+	return missionSlice, err
+}
 func QueryUnassertCampaignsByProjectCode(projectCode *string) ([]utility.Mission, error) {
 	stmt, err := mysqlUtility.DBConn.Prepare(`SELECT mission_code, mission_name, project_code, 
 		product_type, is_campaign, mission_detail, 
