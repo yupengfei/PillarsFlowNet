@@ -135,7 +135,7 @@ func QueryAllUser() ([]utility.User, error) {
 }
 
 func CheckUserNameAndPassword(userName *string, password *string) (*string, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code FROM user WHERE user_name=? AND password=?")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT user_code FROM user WHERE email=? AND password=?")
 	if err != nil {
 		panic(err.Error())
 	}

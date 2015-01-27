@@ -58,12 +58,12 @@ func AddNode(userCode *string, parameter *string) {
 		graph, _ := utility.ParseGraphMessage(&nodeMsg.Content[0])
 		graph.GraphCode = *(utility.GenerateCode(userCode))
 		graphCode = &(graph.GraphCode)
-		opResult, _ := graphStorage.InsertIntoGraph(graph)
 		///////////////添加mission
 		mission, _ := utility.ParseMissionMessage(&nodeMsg.Content[1])
-		mission.MissionCode = graph.NodeCode //节点代号和mission代号竟然一样
+		mission.MissionCode = *(utility.GenerateCode(userCode))
+		graph.NodeCode = mission.MissionCode //graph的NodeCode等于关联的MissionCode
+		opResult, _ := graphStorage.InsertIntoGraph(graph)
 		opResult1, _ := missionStorage.InsertIntoMission(mission)
-
 		if opResult == false || opResult1 == false {
 			errorCode = 1
 		} else {

@@ -1,19 +1,19 @@
-
 package mysqlUtility
 
 import (
-	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 	"PillarsFlowNet/pillarsLog"
 	"PillarsFlowNet/utility"
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
 )
+
 //begin with capitial word so it can be accessed by outer
-var DBConn * sql.DB
+var DBConn *sql.DB
 
 func init() {
 	DBConn = ConnectToDB()
 }
-func ConnectToDB() * sql.DB {
+func ConnectToDB() *sql.DB {
 	//connection already exist
 	if DBConn != nil {
 		return DBConn
@@ -21,7 +21,7 @@ func ConnectToDB() * sql.DB {
 	//connection not exist
 	propertyMap := utility.ReadProperty("./DB.properties")
 	var userName, password, host, port, database string
-	userName =  propertyMap["DBUserName"]
+	userName = propertyMap["DBUserName"]
 	password = propertyMap["DBPassword"]
 	host = propertyMap["DBIP"]
 	port = propertyMap["DBPort"]
@@ -39,5 +39,5 @@ func CloseDBConnection() {
 		DBConn.Close()
 		DBConn = nil
 	}
-	
+
 }

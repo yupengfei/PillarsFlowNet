@@ -399,7 +399,7 @@ Post
 {
 	“command”:”modifyProject”,
 	“parameter”:”{
-		“ProjectCode”: 任意string，不起作用,可以没有
+		“ProjectCode”: string,//必须有，需要通过它来锁定project
 		“ProjectName”: string,
 		“ProjectDetail": string,
 		“PlanBeginDatetime”: string,
@@ -658,7 +658,7 @@ Post
 
 1. 获取Campaign的全部node，服务器返回了所有的node信息和node对应的mission的信息
 {
-	“command”:”GetCampaignNode”,
+	“command”:”getCampaignNode”,
 	“parameter”:”{
 		CampaignCode string
 	}”
@@ -686,7 +686,7 @@ Post
 
 	}
 {
-		MissionCode string
+		MissionCode string     
 		MissionName string
 		ProjectCode string
 		ProductType int
@@ -712,7 +712,7 @@ Post
 		GraphCode string 任意string，不起作用,可以没有
 		CampaignCode string
 		ProjectCode string
-		NodeCode string
+		NodeCode string   //等于关联的MissionCode,所以它应该也是nil
 		ProductType int
 		Width int
 		Height int
@@ -722,7 +722,7 @@ Post
 		UpdateDatetime 任意string，不起作用,可以没有
 	}
 {
-		MissionCode string
+		MissionCode string  任意string，不起作用,可以没有
 		MissionName string
 		ProjectCode string
 		ProductType int

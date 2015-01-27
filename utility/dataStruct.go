@@ -35,7 +35,7 @@ type InMessage struct {
 //1. user name
 //2. use password
 type UserLogin struct {
-	UserName string
+	Email    string
 	Password string
 }
 

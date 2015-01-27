@@ -4,7 +4,7 @@ import (
 	"PillarsFlowNet/utility"
 	"testing"
 	// _ "github.com/go-sql-driver/mysql"
-	"fmt"
+	//"fmt"
 )
 
 // func TestQueryUserCode(t * testing.T) {
@@ -29,9 +29,9 @@ import (
 func TestInsertIntoUser1(t *testing.T) {
 	var user utility.User
 
-	user.UserName = "er.wang"
-	user.UserCode = *(utility.GenerateCode(&(user.UserName)))
-	pass := "aaa"
+	user.Email = "1@163.com"
+	user.UserCode = *(utility.GenerateCode(&(user.Email)))
+	pass := "111"
 	user.Password = string(utility.Md5sum(&pass))
 	user.Group = "fjkdjflk"
 	user.DisplayName = "fdafae"
@@ -58,6 +58,7 @@ func TestDeleteUserByUserName(t *testing.T) {
 	}
 }
 */
+/*
 func TestQueryAllUser(t *testing.T) {
 	result, err := QueryAllUser()
 	if err != nil {
@@ -66,3 +67,4 @@ func TestQueryAllUser(t *testing.T) {
 		fmt.Println(*(utility.ObjectToJsonString(result)))
 	}
 }
+*/
