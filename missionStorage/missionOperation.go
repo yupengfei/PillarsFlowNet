@@ -16,7 +16,7 @@ func InsertIntoMission(mission *utility.Mission) (bool, error) {
 		project_code, product_type, is_campaign, 
 		 mission_detail, plan_begin_datetime, plan_end_datetime, 
 		real_begin_datetime, real_end_datetime, person_in_charge, status, 
-		picture) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
+		picture) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`)
 	if err != nil {
 		panic(err.Error())
 	}

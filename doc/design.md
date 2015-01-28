@@ -485,7 +485,7 @@ Post
 		"errorCode" : 0,
 		"errorMessage": ""
 	},
-	“commnd”: “getAllCompaign”,
+	“commnd”: ”getProjectAssertCampaign”,
 	“UserCode”: string,//发起该操作的user
 	“result”:”[{
 		MissionCode string
@@ -738,7 +738,7 @@ Post
 		InsertDatetime string
 		UpdateDatetime string
 
-	}”
+	}]”
 }
 返回值
 {
@@ -748,7 +748,7 @@ Post
 	},
 	“commnd”: “addNode”,
 	“UserCode”: string,//发起该操作的user
-	“result”:”{
+	“result”:”[{
 		GraphCode string
 		CampaignCode string
 		ProjectCode string
@@ -760,7 +760,24 @@ Post
 		YCoordinate int
 		InsertDatetime string
 		UpdateDatetime string
-	}”
+	}{
+		MissionCode string  任意string，不起作用,可以没有
+		MissionName string
+		ProjectCode string
+		ProductType int
+		IsCampaign int
+		MissionDetail string
+		PlanBeginDatetime string
+		PlanEndDatetime string
+		RealBeginDatetime string
+		RealEndDatetime string
+		PersonIncharge string
+		Status int
+		Picture string
+		InsertDatetime string
+		UpdateDatetime string
+
+	}]”
 }
 
 1. 修改node

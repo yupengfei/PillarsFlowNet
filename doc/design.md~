@@ -712,7 +712,7 @@ Post
 		GraphCode string 任意string，不起作用,可以没有
 		CampaignCode string
 		ProjectCode string
-		NodeCode string   //等于关联的MissionCode
+		NodeCode string   //等于关联的MissionCode,所以它应该也是nil
 		ProductType int
 		Width int
 		Height int

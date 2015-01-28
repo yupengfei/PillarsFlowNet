@@ -37,7 +37,7 @@ func GetCampaignNode(userCode *string, parameter *string) {
 		resultSlice = append(resultSlice, *utility.ObjectToJsonString(opResult[i]))
 		resultSlice = append(resultSlice, *utility.ObjectToJsonString(missionSlice[i]))
 	}
-	command := "getAllNode"
+	command := "getCampaignNode"
 	result := utility.SliceResultToOutMessage(&command, resultSlice, errorCode, userCode)
 	Hub.SendToUserCode(result, userCode)
 }
@@ -49,17 +49,17 @@ func AddNode(userCode *string, parameter *string) {
 		errorCode = 3
 	}
 	var graphCode *string
-	//var resultSlice []string
-	var graphOut *utility.Graph
+	var resultSlice []string
+	//var graphOut *utility.Graph
 	if errorCode == 0 {
 		//这里好像没有处理发来的mission结构，添加节点的时候应该也要插入mission结构
 		nodeMsg, _ := utility.ParseStringSlice(parameter)
 		///////////////添加新节点
-		graph, _ := utility.ParseGraphMessage(&nodeMsg.Content[0])
+		graph, _ := utility.ParseGraphMessage(&nodeMsg[0])
 		graph.GraphCode = *(utility.GenerateCode(userCode))
 		graphCode = &(graph.GraphCode)
 		///////////////添加mission
-		mission, _ := utility.ParseMissionMessage(&nodeMsg.Content[1])
+		mission, _ := utility.ParseMissionMessage(&nodeMsg[1])
 		mission.MissionCode = *(utility.GenerateCode(userCode))
 		graph.NodeCode = mission.MissionCode //graph的NodeCode等于关联的MissionCode
 		opResult, _ := graphStorage.InsertIntoGraph(graph)
@@ -67,15 +67,15 @@ func AddNode(userCode *string, parameter *string) {
 		if opResult == false || opResult1 == false {
 			errorCode = 1
 		} else {
-			graphOut, _ = graphStorage.QueryGraphNodeByGraphCode(graphCode)
-			//resultSlice = append(resultSlice, *utility.ObjectToJsonString(graphOut))
-			//mission, _ := missionStorage.QueryMissionByMissionCode(&(graphOut.NodeCode))
-			//resultSlice = append(resultSlice, *utility.ObjectToJsonString(mission))
+			graphOut, _ := graphStorage.QueryGraphNodeByGraphCode(graphCode)
+			resultSlice = append(resultSlice, *utility.ObjectToJsonString(graphOut))
+			missionOut, _ := missionStorage.QueryMissionByMissionCode(&(mission.MissionCode))
+			resultSlice = append(resultSlice, *utility.ObjectToJsonString(missionOut))
 		}
 	}
 
 	var command = "addNode"
-	result := utility.BoolResultToOutMessage(&command, graphOut, errorCode, userCode)
+	result := utility.BoolResultToOutMessage(&command, resultSlice, errorCode, userCode)
 	Hub.Dispatch(result)
 }
 

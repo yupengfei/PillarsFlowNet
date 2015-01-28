@@ -29,12 +29,12 @@ import (
 func TestInsertIntoUser1(t *testing.T) {
 	var user utility.User
 
-	user.Email = "1@163.com"
+	user.Email = "2@163.com"
 	user.UserCode = *(utility.GenerateCode(&(user.Email)))
 	pass := "111"
 	user.Password = string(utility.Md5sum(&pass))
-	user.Group = "fjkdjflk"
-	user.DisplayName = "fdafae"
+	user.Group = "ttttttttttttttttttttt"
+	user.DisplayName = "hahahhaha"
 
 	result, _ := InsertIntoUser(&user)
 	if result != true {

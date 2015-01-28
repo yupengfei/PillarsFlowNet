@@ -129,8 +129,8 @@ func ObjectToJsonString(object interface{}) *string {
 	return &messageString
 }
 
-func ParseStringSlice(message *string) (*AddNodeMsg, error) {
-	var msg AddNodeMsg
+func ParseStringSlice(message *string) ([]string, error) {
+	var msg []string //AddNodeMsg
 	err := json.Unmarshal([]byte(*message), &msg)
-	return &msg, err
+	return msg, err
 }

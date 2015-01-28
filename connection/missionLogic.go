@@ -36,7 +36,7 @@ func GetProjectAssertCampaign(userCode *string, parameter *string) {
 		projectCode, _ := utility.ParseProjectCodeMessage(parameter)
 		opResult, _ = missionStorage.QueryAssertCampaignsByProjectCode(&(projectCode.ProjectCode))
 	}
-	command := "getAllCampaign"
+	command := "getProjectAssertCampaign"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
 	Hub.SendToUserCode(result, userCode)
 }
@@ -51,7 +51,7 @@ func GetProjectShotCampaign(userCode *string, parameter *string) {
 		projectCode, _ := utility.ParseProjectCodeMessage(parameter)
 		opResult, _ = missionStorage.QueryShotCampaignsByProjectCode(&(projectCode.ProjectCode))
 	}
-	command := "getAllCampaign"
+	command := "getProjectShotCampaign"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
 	Hub.SendToUserCode(result, userCode)
 }

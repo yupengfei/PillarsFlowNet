@@ -6,7 +6,7 @@ import (
 )
 
 func InsertIntoGraph(graph *utility.Graph) (bool, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare(`INSERT INTO graph(graph_code, campaign_code, project_code, node_code, product_type 
+	stmt, err := mysqlUtility.DBConn.Prepare(`INSERT INTO graph(graph_code, campaign_code, project_code, node_code, product_type ,
 		width, height, x_coordinate, y_coordinate) VALUES(?, ?, ?, ?, ?, ?, ?, ?,?)`)
 	if err != nil {
 		panic(err.Error())
