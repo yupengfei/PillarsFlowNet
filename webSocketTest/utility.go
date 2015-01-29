@@ -108,15 +108,15 @@ func receveForgetCampaignNode(receve *string) {
 	}
 }
 func receveForaddNode(receve *string) {
-	var result []string
+	var result AddNodeMsg
 	err := json.Unmarshal([]byte(*receve), &result)
 	if err != nil {
 		fmt.Println(err)
 	}
 	var node Graph
 	var mision Mission
-	json.Unmarshal([]byte(result[0]), &node)
-	json.Unmarshal([]byte(result[1]), &mision)
+	json.Unmarshal([]byte(result.Content[0]), &node)
+	json.Unmarshal([]byte(result.Content[1]), &mision)
 	nodecode = node.GraphCode
 	missioncode = mision.MissionCode
 	fmt.Println("node: ", node)

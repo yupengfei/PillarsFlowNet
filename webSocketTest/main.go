@@ -280,14 +280,14 @@ func TestaddNode(project *string) {
 		Status:            1,
 		Picture:           "123",
 	}
-	Object := []string{}
+	Object := AddNodeMsg{}
 	node_str, _ := json.Marshal(node)
 	miss_str, _ := json.Marshal(_mission)
-	Object = append(Object, string(node_str))
-	Object = append(Object, string(miss_str))
+	Object.Content[0] = string(node_str)
+	Object.Content[1] = string(miss_str)
 	msg, _ := json.Marshal(Object)
-	fmt.Println(string(msg))
-	//go Trace(&cmd, msg)
+	//fmt.Println(string(msg))
+	go Trace(&cmd, msg)
 }
 func TestmodifyNode(camCode, project, mission, code *string) {
 	cmd := "modifyNode"
