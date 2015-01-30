@@ -4,6 +4,7 @@ import (
 	"PillarsFlowNet/authentication"
 	"PillarsFlowNet/missionStorage"
 	"PillarsFlowNet/utility"
+	"fmt"
 )
 
 //获取某个Project所有的Campaign
@@ -32,6 +33,7 @@ func GetProjectAssertCampaign(userCode *string, parameter *string) {
 		errorCode = 3
 	}
 	var opResult []utility.Mission
+	fmt.Println(parameter)
 	if errorCode == 0 {
 		projectCode, _ := utility.ParseProjectCodeMessage(parameter)
 		opResult, _ = missionStorage.QueryAssertCampaignsByProjectCode(&(projectCode.ProjectCode))
@@ -207,7 +209,7 @@ func GetAllUndesignatedMission(userCode *string, parameter *string) {
 	if errorCode == 0 {
 		opResult, _ = missionStorage.QueryAllUndesignatedMission()
 	}
-	command := "getPersonAllFinishedMission"
+	command := "GetAllUndesignatedMission"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
 	Hub.SendToUserCode(result, userCode)
 }

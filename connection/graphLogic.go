@@ -5,6 +5,7 @@ import (
 	"PillarsFlowNet/graphStorage"
 	"PillarsFlowNet/missionStorage"
 	"PillarsFlowNet/utility"
+	"fmt"
 )
 
 //获取特定战役所有的node
@@ -48,6 +49,7 @@ func AddNode(userCode *string, parameter *string) {
 	if auth == false {
 		errorCode = 3
 	}
+	fmt.Println(*parameter)
 	var graphCode *string
 	var resultSlice utility.AddNodeMsg
 	//var graphOut *utility.Graph
@@ -59,7 +61,9 @@ func AddNode(userCode *string, parameter *string) {
 		graph.GraphCode = *(utility.GenerateCode(userCode))
 		graphCode = &(graph.GraphCode)
 		///////////////添加mission
+		fmt.Println(nodeMsg.Content[1])
 		mission, _ := utility.ParseMissionMessage(&nodeMsg.Content[1])
+		fmt.Println(mission)
 		mission.MissionCode = *(utility.GenerateCode(userCode))
 		graph.NodeCode = mission.MissionCode //graph的NodeCode等于关联的MissionCode
 		opResult, _ := graphStorage.InsertIntoGraph(graph)

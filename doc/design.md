@@ -503,7 +503,7 @@ Post
     		Picture string
     		InsertDatetime string
     		UpdateDatetime string		
-	}”
+	}]”
 }
 
 1. 新建mission
