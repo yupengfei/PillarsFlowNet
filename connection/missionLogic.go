@@ -2,15 +2,16 @@ package connection
 
 import (
 	"PillarsFlowNet/authentication"
+	"PillarsFlowNet/graphStorage"
 	"PillarsFlowNet/missionStorage"
 	"PillarsFlowNet/utility"
-	"fmt"
+	//"fmt"
 )
 
 //获取某个Project所有的Campaign
 //TODO
 //将该函数改名为GetProjectCampaign
-func GetProjectCampaign(userCode *string, parameter *string) {
+/*func GetProjectCampaign(userCode *string, parameter *string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if auth == false {
@@ -25,21 +26,29 @@ func GetProjectCampaign(userCode *string, parameter *string) {
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
 	Hub.SendToUserCode(result, userCode)
 }
-
+*/
+////////最顶级的任务查询
 func GetProjectAssertCampaign(userCode *string, parameter *string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if auth == false {
 		errorCode = 3
 	}
+	projectCode, _ := utility.ParseProjectCodeMessage(parameter)
 	var opResult []utility.Mission
-	fmt.Println(parameter)
+	var opNode []utility.Graph
 	if errorCode == 0 {
-		projectCode, _ := utility.ParseProjectCodeMessage(parameter)
+		opNode, _ = graphStorage.QueryAssertNodesByCampaignCode(&(projectCode.ProjectCode))
 		opResult, _ = missionStorage.QueryAssertCampaignsByProjectCode(&(projectCode.ProjectCode))
 	}
+	opResultLength := len(opNode)
+	var resultSlice []string
+	for i := 0; i < opResultLength; i++ {
+		resultSlice = append(resultSlice, *utility.ObjectToJsonString(opNode[i]))
+		resultSlice = append(resultSlice, *utility.ObjectToJsonString(opResult[i]))
+	}
 	command := "getProjectAssertCampaign"
-	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
+	result := utility.SliceResultToOutMessage(&command, resultSlice, errorCode, userCode)
 	Hub.SendToUserCode(result, userCode)
 }
 func GetProjectShotCampaign(userCode *string, parameter *string) {
@@ -48,13 +57,21 @@ func GetProjectShotCampaign(userCode *string, parameter *string) {
 	if auth == false {
 		errorCode = 3
 	}
+	projectCode, _ := utility.ParseProjectCodeMessage(parameter)
 	var opResult []utility.Mission
+	var opNode []utility.Graph
 	if errorCode == 0 {
-		projectCode, _ := utility.ParseProjectCodeMessage(parameter)
+		opNode, _ = graphStorage.QueryShotNodesByCampaignCode(&(projectCode.ProjectCode))
 		opResult, _ = missionStorage.QueryShotCampaignsByProjectCode(&(projectCode.ProjectCode))
 	}
+	opResultLength := len(opNode)
+	var resultSlice []string
+	for i := 0; i < opResultLength; i++ {
+		resultSlice = append(resultSlice, *utility.ObjectToJsonString(opNode[i]))
+		resultSlice = append(resultSlice, *utility.ObjectToJsonString(opResult[i]))
+	}
 	command := "getProjectShotCampaign"
-	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
+	result := utility.SliceResultToOutMessage(&command, resultSlice, errorCode, userCode)
 	Hub.SendToUserCode(result, userCode)
 }
 func GetProjectUnassertCampaign(userCode *string, parameter *string) {

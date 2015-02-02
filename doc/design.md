@@ -453,6 +453,19 @@ Post
 	“commnd”: “getProjectShotCampaign”,
 	“UserCode”: string,//发起该操作的user
 	“result”:”[{
+		GraphCode string
+		CampaignCode string
+		ProjectCode string
+		NodeCode string
+		ProductType int
+		Width int
+		Height int
+		XCoordinate int
+		YCoordinate int
+		InsertDatetime string
+		UpdateDatetime string
+
+	}{
 		MissionCode string
     		MissionName string
     		ProjectCode string
@@ -488,6 +501,19 @@ Post
 	“commnd”: ”getProjectAssertCampaign”,
 	“UserCode”: string,//发起该操作的user
 	“result”:”[{
+		GraphCode string
+		CampaignCode string
+		ProjectCode string
+		NodeCode string
+		ProductType int
+		Width int
+		Height int
+		XCoordinate int
+		YCoordinate int
+		InsertDatetime string
+		UpdateDatetime string
+
+	}{
 		MissionCode string
     		MissionName string
     		ProjectCode string
@@ -708,7 +734,7 @@ Post
 1. 新建node
 {
 	“command”:”addNode”,
-	“parameter”:”[{
+	“parameter”:”{Content:[{
 		GraphCode string 任意string，不起作用,可以没有
 		CampaignCode string
 		ProjectCode string
@@ -738,7 +764,7 @@ Post
 		InsertDatetime string
 		UpdateDatetime string
 
-	}]”
+	}]}”
 }
 返回值
 {

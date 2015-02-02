@@ -20,7 +20,7 @@ func GetCampaignNode(userCode *string, parameter *string) {
 	var opResult []utility.Graph
 	if errorCode == 0 {
 		campaignCode, _ := utility.ParseCampaignCodeMessage(parameter)
-		opResult, _ = graphStorage.QueryGraphNodesByCampaignCode(&(campaignCode.CampaignCode))
+		opResult, _ = graphStorage.QueryGraphNodesByCampaignCode(&(campaignCode.CampaignCode), 1)
 	}
 	var missionSlice []utility.Mission
 	opResultLength := len(opResult)
@@ -61,9 +61,7 @@ func AddNode(userCode *string, parameter *string) {
 		graph.GraphCode = *(utility.GenerateCode(userCode))
 		graphCode = &(graph.GraphCode)
 		///////////////添加mission
-		fmt.Println(nodeMsg.Content[1])
 		mission, _ := utility.ParseMissionMessage(&nodeMsg.Content[1])
-		fmt.Println(mission)
 		mission.MissionCode = *(utility.GenerateCode(userCode))
 		graph.NodeCode = mission.MissionCode //graph的NodeCode等于关联的MissionCode
 		opResult, _ := graphStorage.InsertIntoGraph(graph)
