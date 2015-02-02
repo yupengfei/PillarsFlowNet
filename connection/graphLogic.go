@@ -20,7 +20,7 @@ func GetCampaignNode(userCode *string, parameter *string) {
 	var opResult []utility.Graph
 	if errorCode == 0 {
 		campaignCode, _ := utility.ParseCampaignCodeMessage(parameter)
-		opResult, _ = graphStorage.QueryGraphNodesByCampaignCode(&(campaignCode.CampaignCode), 1)
+		opResult, _ = graphStorage.QueryGraphNodesByCampaignCode(&(campaignCode.CampaignCode))
 	}
 	var missionSlice []utility.Mission
 	opResultLength := len(opResult)

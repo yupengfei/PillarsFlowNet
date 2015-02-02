@@ -8,26 +8,6 @@ import (
 	//"fmt"
 )
 
-//获取某个Project所有的Campaign
-//TODO
-//将该函数改名为GetProjectCampaign
-/*func GetProjectCampaign(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
-	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
-	var opResult []utility.Mission
-	if errorCode == 0 {
-		projectCode, _ := utility.ParseProjectCodeMessage(parameter)
-		opResult, _ = missionStorage.QueryCampaignsByProjectCode(&(projectCode.ProjectCode))
-	}
-	command := "getAllCampaign"
-	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
-	Hub.SendToUserCode(result, userCode)
-}
-*/
-////////最顶级的任务查询
 func GetProjectAssertCampaign(userCode *string, parameter *string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int

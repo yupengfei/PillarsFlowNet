@@ -55,9 +55,10 @@ func DeleteNodeByNodeCode(nodeCode *string) (bool, error) {
 	return true, err
 }
 
+////////////////////////****************new add for  GetProjectShotCampaign and GetProjectAssertCampaign ***************************
 func QueryAssertNodesByCampaignCode(projectCode *string) ([]utility.Graph, error) {
 	stmt, err := mysqlUtility.DBConn.Prepare(`SELECT graph_code, campaign_code,
-		project_code,node_code,product_type,x_coordinate,y_coordinate,width,height  FROM graph where campaign_code = ? AND is_campaign=1 AND product_type=1`)
+		project_code,node_code,product_type,x_coordinate,y_coordinate,width,height  FROM graph where campaign_code = ? AND product_type=1`)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -83,7 +84,7 @@ func QueryAssertNodesByCampaignCode(projectCode *string) ([]utility.Graph, error
 }
 func QueryShotNodesByCampaignCode(projectCode *string) ([]utility.Graph, error) {
 	stmt, err := mysqlUtility.DBConn.Prepare(`SELECT graph_code, campaign_code,
-		project_code,node_code,product_type,x_coordinate,y_coordinate,width,height  FROM graph where campaign_code = ? AND is_campaign=1 AND product_type=0`)
+		project_code,node_code,product_type,x_coordinate,y_coordinate,width,height  FROM graph where campaign_code = ? AND product_type=0`)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -107,10 +108,12 @@ func QueryShotNodesByCampaignCode(projectCode *string) ([]utility.Graph, error) 
 	}
 	return graphSlice, err
 }
-func QueryGraphNodesByCampaignCode(campaignCode *string, types int) ([]utility.Graph, error) {
+
+//********************************************************************************************
+func QueryGraphNodesByCampaignCode(campaignCode *string) ([]utility.Graph, error) {
 	stmt, err := mysqlUtility.DBConn.Prepare(`SELECT graph_code, campaign_code, project_code, node_code, product_type,width, height, x_coordinate, y_coordinate, 
 		insert_datetime, update_datetime 
-		FROM graph WHERE campaign_code = ? AND product_type=?`)
+		FROM graph WHERE campaign_code = ?`)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -124,7 +127,7 @@ func QueryGraphNodesByCampaignCode(campaignCode *string, types int) ([]utility.G
 	for result.Next() {
 		var graph utility.Graph
 		err = result.Scan(&(graph.GraphCode), &(graph.CampaignCode), &(graph.ProjectCode), &(graph.NodeCode), &(graph.ProductType), &(graph.Width),
-			&(graph.Height), &(graph.XCoordinate), &(graph.YCoordinate), &(graph.InsertDatetime), &(graph.UpdateDatetime), types)
+			&(graph.Height), &(graph.XCoordinate), &(graph.YCoordinate), &(graph.InsertDatetime), &(graph.UpdateDatetime))
 		if err != nil {
 			panic(err.Error())
 		}
