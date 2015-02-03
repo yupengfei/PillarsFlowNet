@@ -1,0 +1,4 @@
+2015/01/29 16:30:04 /home/pillars/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/01/29 16:30:04 /home/pillars/Go/src/PillarsFlowNet/connection/connection.go:106: json: cannot unmarshal array into Go value of type string
+2015/01/30 16:21:38 /home/pillars/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/01/30 16:21:38 /home/pillars/Go/src/PillarsFlowNet/connection/connection.go:106: json: cannot unmarshal object into Go value of type string

@@ -1,6 +1,7 @@
 package graphStorage
 
 import (
+	"CGWorldlineWeb/pillarsLog"
 	"PillarsFlowNet/mysqlUtility"
 	"PillarsFlowNet/utility"
 )
@@ -54,6 +55,61 @@ func DeleteNodeByNodeCode(nodeCode *string) (bool, error) {
 	return true, err
 }
 
+////////////////////////****************new add for  GetProjectShotCampaign and GetProjectAssertCampaign ***************************
+func QueryAssertNodesByCampaignCode(projectCode *string) ([]utility.Graph, error) {
+	stmt, err := mysqlUtility.DBConn.Prepare(`SELECT graph_code, campaign_code,
+		project_code,node_code,product_type,x_coordinate,y_coordinate,width,height  FROM graph where campaign_code = ? AND product_type=1`)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	result, err := stmt.Query(projectCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+	//this is easy to imply but may not very fast
+	var graphSlice []utility.Graph
+	for result.Next() {
+		var graph utility.Graph
+		err = result.Scan(&(graph.GraphCode), &(graph.CampaignCode), &(graph.ProjectCode),
+			&(graph.NodeCode), &(graph.ProductType),
+			&(graph.XCoordinate), &(graph.YCoordinate), &(graph.Width), &(graph.Height))
+		if err != nil {
+			pillarsLog.PillarsLogger.Print(err.Error())
+		}
+		graphSlice = append(graphSlice, graph)
+	}
+	return graphSlice, err
+}
+func QueryShotNodesByCampaignCode(projectCode *string) ([]utility.Graph, error) {
+	stmt, err := mysqlUtility.DBConn.Prepare(`SELECT graph_code, campaign_code,
+		project_code,node_code,product_type,x_coordinate,y_coordinate,width,height  FROM graph where campaign_code = ? AND product_type=0`)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer stmt.Close()
+	result, err := stmt.Query(projectCode)
+	if err != nil {
+		panic(err.Error())
+	}
+	defer result.Close()
+	//this is easy to imply but may not very fast
+	var graphSlice []utility.Graph
+	for result.Next() {
+		var graph utility.Graph
+		err = result.Scan(&(graph.GraphCode), &(graph.CampaignCode), &(graph.ProjectCode),
+			&(graph.NodeCode), &(graph.ProductType),
+			&(graph.XCoordinate), &(graph.YCoordinate), &(graph.Width), &(graph.Height))
+		if err != nil {
+			pillarsLog.PillarsLogger.Print(err.Error())
+		}
+		graphSlice = append(graphSlice, graph)
+	}
+	return graphSlice, err
+}
+
+//********************************************************************************************
 func QueryGraphNodesByCampaignCode(campaignCode *string) ([]utility.Graph, error) {
 	stmt, err := mysqlUtility.DBConn.Prepare(`SELECT graph_code, campaign_code, project_code, node_code, product_type,width, height, x_coordinate, y_coordinate, 
 		insert_datetime, update_datetime 

@@ -16,7 +16,7 @@ func init() {
 	if PillarsLogger == nil {
 		propertyMap := utility.ReadProperty("./log.properties")
 		logFileName := propertyMap["LogFile"]
-		fmt.Println(logFileName)
+		fmt.Println(logFileName, "222")
 		var err error
 		outFile, err = os.OpenFile(logFileName, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0666)
 

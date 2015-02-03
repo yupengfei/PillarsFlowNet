@@ -120,7 +120,7 @@ type Mission struct {
 	MissionCode string
 	MissionName string
 	ProjectCode string
-	ProductType string
+	ProductType int
 	IsCampaign  int
 	//IsAssert          int
 	//MissionType       string

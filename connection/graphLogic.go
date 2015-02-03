@@ -5,6 +5,7 @@ import (
 	"PillarsFlowNet/graphStorage"
 	"PillarsFlowNet/missionStorage"
 	"PillarsFlowNet/utility"
+	"fmt"
 )
 
 //获取特定战役所有的node
@@ -48,18 +49,19 @@ func AddNode(userCode *string, parameter *string) {
 	if auth == false {
 		errorCode = 3
 	}
+	fmt.Println(*parameter)
 	var graphCode *string
-	var resultSlice []string
+	var resultSlice utility.AddNodeMsg
 	//var graphOut *utility.Graph
 	if errorCode == 0 {
 		//这里好像没有处理发来的mission结构，添加节点的时候应该也要插入mission结构
 		nodeMsg, _ := utility.ParseStringSlice(parameter)
 		///////////////添加新节点
-		graph, _ := utility.ParseGraphMessage(&nodeMsg[0])
+		graph, _ := utility.ParseGraphMessage(&nodeMsg.Content[0])
 		graph.GraphCode = *(utility.GenerateCode(userCode))
 		graphCode = &(graph.GraphCode)
 		///////////////添加mission
-		mission, _ := utility.ParseMissionMessage(&nodeMsg[1])
+		mission, _ := utility.ParseMissionMessage(&nodeMsg.Content[1])
 		mission.MissionCode = *(utility.GenerateCode(userCode))
 		graph.NodeCode = mission.MissionCode //graph的NodeCode等于关联的MissionCode
 		opResult, _ := graphStorage.InsertIntoGraph(graph)
@@ -68,9 +70,11 @@ func AddNode(userCode *string, parameter *string) {
 			errorCode = 1
 		} else {
 			graphOut, _ := graphStorage.QueryGraphNodeByGraphCode(graphCode)
-			resultSlice = append(resultSlice, *utility.ObjectToJsonString(graphOut))
+			resultSlice.Content[0] = *utility.ObjectToJsonString(graphOut)
+			//resultSlice = append(resultSlice.Content, *utility.ObjectToJsonString(graphOut))
 			missionOut, _ := missionStorage.QueryMissionByMissionCode(&(mission.MissionCode))
-			resultSlice = append(resultSlice, *utility.ObjectToJsonString(missionOut))
+			resultSlice.Content[1] = *utility.ObjectToJsonString(missionOut)
+			//resultSlice = append(resultSlice, *utility.ObjectToJsonString(missionOut))
 		}
 	}
 
