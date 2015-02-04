@@ -4,6 +4,7 @@ import (
 	"PillarsFlowNet/authentication"
 	"PillarsFlowNet/dependencyStorage"
 	"PillarsFlowNet/utility"
+	"fmt"
 )
 
 //获取特定战役所有的依赖
@@ -42,9 +43,10 @@ func AddDependency(userCode *string, parameter *string) {
 		dependency, _ := utility.ParseDependencyMessage(parameter)
 		dependency.DependencyCode = *(utility.GenerateCode(userCode))
 		dependencyCode = &(dependency.DependencyCode)
-		opResult, _ := dependencyStorage.InsertIntoDependency(dependency)
+		opResult, err := dependencyStorage.InsertIntoDependency(dependency)
 		if opResult == false {
 			errorCode = 1
+			fmt.Println(err.Error())
 		} else {
 			dependencyOut, _ = dependencyStorage.QueryDependencyByDependencyCode(dependencyCode)
 		}
