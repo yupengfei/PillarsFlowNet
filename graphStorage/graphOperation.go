@@ -4,6 +4,7 @@ import (
 	"CGWorldlineWeb/pillarsLog"
 	"PillarsFlowNet/mysqlUtility"
 	"PillarsFlowNet/utility"
+	"fmt"
 )
 
 func InsertIntoGraph(graph *utility.Graph) (bool, error) {
@@ -28,6 +29,11 @@ func ModifyGraph(graph *utility.Graph) (bool, error) {
 		panic(err.Error())
 	}
 	defer stmt.Close()
+	fmt.Println("ModifyGraph" + graph.GraphCode)
+	fmt.Println("ModifyGraph" + graph.ProjectCode)
+	fmt.Println(graph.Width)
+
+	fmt.Println(graph.XCoordinate)
 	_, err = stmt.Exec(graph.CampaignCode, graph.ProjectCode, graph.NodeCode, graph.ProductType,
 		graph.Width, graph.Height, graph.XCoordinate, graph.YCoordinate, graph.GraphCode)
 	if err != nil {

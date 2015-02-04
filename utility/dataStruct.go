@@ -39,13 +39,6 @@ type UserLogin struct {
 	Password string
 }
 
-//addNode message have two struct   Graph and mission,so it's parameter is string_slice's JSON string
-//Content[0] GraphName
-//Content[1] MissionName
-type AddNodeMsg struct {
-	Content [2]string
-}
-
 //user struct is corresponding to the mysql user table
 type User struct {
 	UserCode string
@@ -148,10 +141,10 @@ type Graph struct {
 	ProjectCode    string
 	NodeCode       string
 	ProductType    int ///////////new add
-	Width          int
-	Height         int
-	XCoordinate    int
-	YCoordinate    int
+	Width          float32
+	Height         float32
+	XCoordinate    float32
+	YCoordinate    float32
 	InsertDatetime string
 	UpdateDatetime string
 }

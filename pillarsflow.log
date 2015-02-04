@@ -2,3 +2,29 @@
 2015/01/29 16:30:04 /home/pillars/Go/src/PillarsFlowNet/connection/connection.go:106: json: cannot unmarshal array into Go value of type string
 2015/01/30 16:21:38 /home/pillars/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
 2015/01/30 16:21:38 /home/pillars/Go/src/PillarsFlowNet/connection/connection.go:106: json: cannot unmarshal object into Go value of type string
+2015/02/04 11:22:32 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/02/04 11:22:32 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:106: invalid character 'o' looking for beginning of value
+2015/02/04 11:23:26 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/02/04 11:23:26 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:106: invalid character 'o' looking for beginning of value
+2015/02/04 11:23:50 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/02/04 11:23:50 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:106: invalid character 'o' looking for beginning of value
+2015/02/04 11:26:09 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/02/04 11:26:09 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:106: invalid character 'o' looking for beginning of value
+2015/02/04 11:26:10 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/02/04 11:26:10 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:106: invalid character 'o' looking for beginning of value
+2015/02/04 11:26:12 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/02/04 11:26:12 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:106: invalid character 'o' looking for beginning of value
+2015/02/04 11:26:13 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/02/04 11:26:13 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:106: invalid character 'o' looking for beginning of value
+2015/02/04 11:27:35 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/02/04 11:27:35 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:106: invalid character 'o' looking for beginning of value
+2015/02/04 11:28:09 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/02/04 11:28:09 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:106: invalid character 'o' looking for beginning of value
+2015/02/04 11:29:03 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/02/04 11:29:03 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:106: invalid character 'o' looking for beginning of value
+2015/02/04 11:30:19 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/02/04 11:30:19 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:106: invalid character 'o' looking for beginning of value
+2015/02/04 11:30:42 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/02/04 11:30:42 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:106: invalid character 'o' looking for beginning of value
+2015/02/04 11:31:16 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:105: parse in message error
+2015/02/04 11:31:16 /home/developer/Go/src/PillarsFlowNet/connection/connection.go:106: invalid character 'o' looking for beginning of value

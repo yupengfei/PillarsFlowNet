@@ -127,7 +127,7 @@ func (c *connection) readPump() {
 			}
 
 		} else { //else do some other command
-
+			fmt.Println(*command)
 			if *command == "getAllProject" {
 				go GetAllProject(c.userCode, parameter)
 			} else if *command == "addProject" {
