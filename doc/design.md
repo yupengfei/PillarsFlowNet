@@ -56,72 +56,75 @@
 ##数据表设定
 
 1. 用户的基本信息存储于MySQL
-MySQL: DB: Pillars
-CREATE DATABASE IF NOT EXISTS PillarsFlow DEFAULT CHARSET utf8;
-Table: user 存储用户名、密码、组别等信息，后续改为用email登录
-Create Table `user` (
-	`user_id` int unsigned NOT NULL AUTO_INCREMENT,
-	`user_code` char(32) not null unique,#计算生成的唯一识别符
-	`email` char(30) not null,#用户邮箱，用于登录
-	`password` char(32) not null,#用户的密码
-	`group` varchar(20) not null,#用户的组别，目前有系统管理员、统筹、八个部门的组
-	`display_name` char(20) not null,#用于展示的名称
-	`position` varchar(50) not null,#所在位置
-	`picture` mediumtext not null,#头像照片的base64编码
-	`phone` char(20)not null,#用户电话号码
-	`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	PRIMARY KEY (`user_id`),
-	INDEX(`email`),
-	INDEX(`group`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+		MySQL: DB: Pillars
+		CREATE DATABASE IF NOT EXISTS PillarsFlow DEFAULT CHARSET utf8;
+		Table: user 存储用户名、密码、组别等信息，后续改为用email登录
+		Create Table `user` (
+			`user_id` int unsigned NOT NULL AUTO_INCREMENT,
+			`user_code` char(32) not null unique,#计算生成的唯一识别符
+			`email` char(30) not null,#用户邮箱，用于登录
+			`password` char(32) not null,#用户的密码
+			`group` varchar(20) not null,#用户的组别，目前有系统管理员、统筹、八个部门的组
+			`display_name` char(20) not null,#用于展示的名称
+			`position` varchar(50) not null,#所在位置
+			`picture` mediumtext not null,#头像照片的base64编码
+			`phone` char(20)not null,#用户电话号码
+			`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			PRIMARY KEY (`user_id`),
+			INDEX(`email`),
+			INDEX(`group`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 1. 项目的相关信息存放在project表
-MySQL: DB: Pillars
-Table: project 存储项目的相关信息
-Create table `project`(
-	`project_id` int unsigned NOT NULL AUTO_INCREMENT,
-	`project_code` char(32) NOT NULL,
-	`project_name` char(50) NOT NULL,#存储项目的名称
-	`project_detail` varchar(2000) NOT NULL,#存储项目的详细说明
-	`plan_begin_datetime` datetime  NOT NULL,#存储项目计划开始的时间
-	`plan_end_datetime` datetime NOT NULL,#存储项目计划结束的时间
-	`real_begin_datetime` datetime NOT NULL,#存储项目实际开始的时间
-	`real_end_datetime` datetime NOT NULL,#存储项目实际结束的时间
-	`person_in_charge` char(32) NOT NULL,#存储`user_code`，项目负责人的usercode
-	`status` int default 0 NOT NULL, #0未开始，1已经完成,2进行中
-	`picture` mediumtext NOT NULL,#直接往mysql中写入照片的base64编码
-	`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	PRIMARY KEY (`project_id`),
-	INDEX(`project_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+		MySQL: DB: Pillars
+		Table: project 存储项目的相关信息
+		Create table `project`(
+			`project_id` int unsigned NOT NULL AUTO_INCREMENT,
+			`project_code` char(32) NOT NULL,
+			`project_name` char(50) NOT NULL,#存储项目的名称
+			`project_detail` varchar(2000) NOT NULL,#存储项目的详细说明
+			`plan_begin_datetime` datetime  NOT NULL,#存储项目计划开始的时间
+			`plan_end_datetime` datetime NOT NULL,#存储项目计划结束的时间
+			`real_begin_datetime` datetime NOT NULL,#存储项目实际开始的时间
+			`real_end_datetime` datetime NOT NULL,#存储项目实际结束的时间
+			`person_in_charge` char(32) NOT NULL,#存储`user_code`，项目负责人的usercode
+			`status` int default 0 NOT NULL, #0未开始，1已经完成,2进行中
+			`picture` mediumtext NOT NULL,#直接往mysql中写入照片的base64编码
+			`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			PRIMARY KEY (`project_id`),
+			INDEX(`project_code`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 1. 任务的相关信息存放在mission表
-MySQL: DB: Pillars
-Table: mission 存储任务相关信息
-Create Table `mission` (
-	`mission_id` int unsigned NOT NULL AUTO_INCREMENT,
-	`mission_code` char(32) not null unique,
-	`mission_name` char(50) NOT NULL,#任务的名称
-	`project_code` char(32) NOT NULL,#任务所属project
-	`product_type` tinyint NOT NULL,#标识任务产品的种类，如资产还是镜头，0代表镜头，1代表资产
-	`is_campaign` tinyint default 0 NOT NULL, #是否是一个战役，0不是，1是
-	`mission_detail` varchar(200) NOT NULL,#给任务一段更详细的文本说明
-	`plan_begin_datetime` datetime NOT NULL,#计划开始时间
-	`plan_end_datetime` datetime NOT NULL,#计划结束时间
-	`real_begin_datetime` datetime NOT NULL,#实际开始时间
-	`real_end_datetime` datetime NOT NULL,#实际结束时间
-	`person_in_charge` char(32) NOT NULL,#存储`user_code`，任务的负责人
-	`status` int default 0 NOT NULL, #0指定了人但未开始，1已经完成,2已经通过，3进行中，4未指定人
-	`picture` mediumtext NOT NULL,#照片的base64编码
-	`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	PRIMARY KEY (`mission_id`),
-	INDEX(`mission_code`),
-	INDEX(`person_in_charge`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+		MySQL: DB: Pillars
+		Table: mission 存储任务相关信息
+		Create Table `mission` (
+			`mission_id` int unsigned NOT NULL AUTO_INCREMENT,
+			`mission_code` char(32) not null unique,
+			`mission_name` char(50) NOT NULL,#任务的名称
+			`project_code` char(32) NOT NULL,#任务所属project
+			`product_type` tinyint NOT NULL,#标识任务产品的种类，如资产还是镜头，0代表镜头，1代表资产
+			`is_campaign` tinyint default 0 NOT NULL, #是否是一个战役，0不是，1是
+			`mission_detail` varchar(200) NOT NULL,#给任务一段更详细的文本说明
+			`plan_begin_datetime` datetime NOT NULL,#计划开始时间
+			`plan_end_datetime` datetime NOT NULL,#计划结束时间
+			`real_begin_datetime` datetime NOT NULL,#实际开始时间
+			`real_end_datetime` datetime NOT NULL,#实际结束时间
+			`person_in_charge` char(32) NOT NULL,#存储`user_code`，任务的负责人
+			`status` int default 0 NOT NULL, #0指定了人但未开始，1已经完成,2已经通过，3进行中，4未指定人
+			`picture` mediumtext NOT NULL,#照片的base64编码
+			`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			PRIMARY KEY (`mission_id`),
+			INDEX(`mission_code`),
+			INDEX(`person_in_charge`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 1. 任务的有向无环图的节点信息存放在graph表
 MySQL: DB: Pillars
@@ -132,1429 +135,1491 @@ Table: graph存储任务有向无环图的节点信息
 
 		1. 用户双击其中的任意一个node，则向服务器请求该node作为campaign_code，product_type为镜头的所有node和dependency并返回；
 
-Create table `graph` (
-	`campaign_id` int unsigned not null auto_increment,
-	`graph_code` char(32) not null unique,#
-	`campaign_code` char(32) not null,#实际上是一个mission code，指大的mission
-	`project_code` char(32) NOT NULL,#任务所属project
-	`node_code` char(32) not null,#实际上是一个mission code,每个campaign_code对应很多个node_code
-	`product_type` tinyint NOT NULL,#标识任务产品的种类，如资产还是镜头，0代表镜头，1代表资产
-	`x_coordinate` int NOT NULL,#该节点所在的x轴的位置
-	`y_coordinate` int NOT NULL,#该节点所在的y轴的位置
-	`width` int NOT NULL,#该节点的宽度
-	`height` int NOT NULL,#该节点的高度
-	`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	PRIMARY KEY (`campaign_id`),
-	INDEX(`node_code`),
-	INDEX(`campaign_code`),
-	INDEX(`project_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		Create table `graph` (
+			`campaign_id` int unsigned not null auto_increment,
+			`graph_code` char(32) not null unique,#
+			`campaign_code` char(32) not null,#实际上是一个mission code，指大的mission
+			`project_code` char(32) NOT NULL,#任务所属project
+			`node_code` char(32) not null,#实际上是一个mission code,每个campaign_code对应很多个node_code
+			`product_type` tinyint NOT NULL,#标识任务产品的种类，如资产还是镜头，0代表镜头，1代表资产
+			`x_coordinate` int NOT NULL,#该节点所在的x轴的位置
+			`y_coordinate` int NOT NULL,#该节点所在的y轴的位置
+			`width` int NOT NULL,#该节点的宽度
+			`height` int NOT NULL,#该节点的高度
+			`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			PRIMARY KEY (`campaign_id`),
+			INDEX(`node_code`),
+			INDEX(`campaign_code`),
+			INDEX(`project_code`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 1. 任务的有向无环图的连接信息存放在dependency表
-MySQL: DB: Pillars
-Table: dependency 存储任务依赖图
-Create table `dependency` (
-	`dependency_id` int unsigned NOT NULL AUTO_INCREMENT,
-	`dependency_code` char(32) NOT NULL,
-	`campaign_code` char(32) not null,#实际上是一个mission code，指大的mission
-	`project_code` char(32) NOT NULL,#任务所属项目，增加这个冗余项可以减少很多次查询
-	`product_type` tinyint NOT NULL,#标识任务产品的种类，如资产还是镜头，0代表镜头，1代表资产
-	`start_mission_code` char(32) NOT NULL,
-	`end_mission_code` char(32) NOT NULL,
-	`dependency_type` int NOT NULL,#0前置依赖,1引用
-	`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	PRIMARY KEY (`dependency_id`),
-	INDEX(`start_mission_code`),
-	INDEX(`end_mission_code`),
-	INDEX(`campaign_code`),
-	Unique index(`start_mission_code`, `end_mission_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+		MySQL: DB: Pillars
+		Table: dependency 存储任务依赖图
+		Create table `dependency` (
+			`dependency_id` int unsigned NOT NULL AUTO_INCREMENT,
+			`dependency_code` char(32) NOT NULL,
+			`campaign_code` char(32) not null,#实际上是一个mission code，指大的mission
+			`project_code` char(32) NOT NULL,#任务所属项目，增加这个冗余项可以减少很多次查询
+			`product_type` tinyint NOT NULL,#标识任务产品的种类，如资产还是镜头，0代表镜头，1代表资产
+			`start_mission_code` char(32) NOT NULL,
+			`end_mission_code` char(32) NOT NULL,
+			`dependency_type` int NOT NULL,#0前置依赖,1引用
+			`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			PRIMARY KEY (`dependency_id`),
+			INDEX(`start_mission_code`),
+			INDEX(`end_mission_code`),
+			INDEX(`campaign_code`),
+			Unique index(`start_mission_code`, `end_mission_code`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 1. 任务的目标信息存放在target表
-MySQL: DB: Pillars
-Table: target 存储任务生成的文件
 
-Create table `target`(
-	`target_id` int unsigned NOT NULL AUTO_INCREMENT,
-	`target_code` char(32) NOT NULL unique,
-	`mission_code` char(32) NOT NULL,#该任务的code
-	`project_code` char(32) NOT NULL,#该任务对应的production的code
-	`version_tag` char(20) NOT NULL,#该成果的版本信息，由用户指定
-	`storage_position` varchar(200)  NOT NULL,#该成果存在什么地方
-	`picture` mediumtext NOT NULL,#照片存base64编码
-	`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	PRIMARY KEY (`target_id`),
-	INDEX(`mission_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		MySQL: DB: Pillars
+		Table: target 存储任务生成的文件
+
+		Create table `target`(
+			`target_id` int unsigned NOT NULL AUTO_INCREMENT,
+			`target_code` char(32) NOT NULL unique,
+			`mission_code` char(32) NOT NULL,#该任务的code
+			`project_code` char(32) NOT NULL,#该任务对应的production的code
+			`version_tag` char(20) NOT NULL,#该成果的版本信息，由用户指定
+			`storage_position` varchar(200)  NOT NULL,#该成果存在什么地方
+			`picture` mediumtext NOT NULL,#照片存base64编码
+			`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			PRIMARY KEY (`target_id`),
+			INDEX(`mission_code`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 1. 任务需要审核的文件放在daily表
-MySQL: DB: Pillars
-Table: daily 存储用于审核的文件的信息
 
-Create table `daily`(
-	`daily_id` int unsigned NOT NULL AUTO_INCREMENT,
-	`daily_code` char(32) NOT NULL unique,
-	`mission_code` char(32) NOT NULL,
-	`project_code` char(32) NOT NULL,
-	`version_tag` char(20) NOT NULL,
-	`storage_position` varchar(200)  NOT NULL,
-	`picture` mediumtext NOT NULL,#照片存base64编码
-	`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-	`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-	PRIMARY KEY (`daily_id`),
-	INDEX(`mission_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+		MySQL: DB: Pillars
+		Table: daily 存储用于审核的文件的信息
+
+		Create table `daily`(
+			`daily_id` int unsigned NOT NULL AUTO_INCREMENT,
+			`daily_code` char(32) NOT NULL unique,
+			`mission_code` char(32) NOT NULL,
+			`project_code` char(32) NOT NULL,
+			`version_tag` char(20) NOT NULL,
+			`storage_position` varchar(200)  NOT NULL,
+			`picture` mediumtext NOT NULL,#照片存base64编码
+			`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			`update_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+			PRIMARY KEY (`daily_id`),
+			INDEX(`mission_code`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 1. 使用MongoDB存储非结构化数据，包括聊天内容、评论信息，这些信息永不删除。
-Use PillarsFlow
-聊天内容存储到Chart表
-MongoDB: DB: PillarsFlow
-Chart
-{
-    _id string #单条chart的唯一标示符，key值
-    IsPicture int #是否是一张图片，每次只能发送一张图片或者一段文字
-    Message string #单条chart的具体内容
-    From string #谁发送的消息，usercode
-    SendTime string #发送的时间
-    To string #发送给谁的消息，usercode
-    ReceivedTime string #收到信息的时间
-    IsRecieved int #0已经收到，1未收到
-    Deleted int #0未删除， 1已删除
-    DeletedTime string
-}
 
-1. 任务的评论信息存储到Post表 可以对mission自身、mission的daily信息和mission的target信息进行评论
-MongoDB: DB: PillarsFlow
-Post
-{
-	_id: 每条Post生成一个Code
-	MissionCode:存储具体的missioncode
-	PostType：int#0mission自身的消息，1missionDaily的消息，2target的消息
-	Code：post关联到某个daily或者mission自身或者target
-	IsPicture int #0不是图片，1是图片
-	Message：消息主体
-	ReplyTo：回复某一个PostCode
-	UserCode: 发布人的code
-	PostTime: 回复发布的时间
-	Deleted:0//1为被删除
-	DeletedTime:被删除的时间
-}
+		Use PillarsFlow
+		聊天内容存储到Chart表
+		MongoDB: DB: PillarsFlow
+		Chart
+		{
+		    _id string #单条chart的唯一标示符，key值
+		    IsPicture int #是否是一张图片，每次只能发送一张图片或者一段文字
+		    Message string #单条chart的具体内容
+		    From string #谁发送的消息，usercode
+		    SendTime string #发送的时间
+		    To string #发送给谁的消息，usercode
+		    ReceivedTime string #收到信息的时间
+		    IsRecieved int #0已经收到，1未收到
+		    Deleted int #0未删除， 1已删除
+		    DeletedTime string
+		}
+
+1. 任务的评论信息存储到Post表 
+
+		可以对mission自身、mission的daily信息和mission的target信息进行评论
+		MongoDB: DB: PillarsFlow
+		Post
+		{
+			_id: 每条Post生成一个Code
+			MissionCode:存储具体的missioncode
+			PostType：int#0mission自身的消息，1missionDaily的消息，2target的消息
+			Code：post关联到某个daily或者mission自身或者target
+			IsPicture int #0不是图片，1是图片
+			Message：消息主体
+			ReplyTo：回复某一个PostCode
+			UserCode: 发布人的code
+			PostTime: 回复发布的时间
+			Deleted:0//1为被删除
+			DeletedTime:被删除的时间
+		}
 
 ##通信机制
 前后端通过websocket建立链接，相互传递json数据进行通信
 1. 客户端向服务器端的请求格式如下
-{
-	"command" : "command name",
-	"parameter": “{
-		“parameter string”
-	}”
-}
+
+	{
+		"command" : "command name",
+		"parameter": “{
+			“parameter string”
+		}”
+	}
+
 服务器端解析该json字符串，获取command和parameter，根据command将不同的parameter分发到不同的处理函数。
 例如登陆的请求格式为
-{
-	"command" : "login",
-	"parameter": “{
-		"Email": "yupengfei@qq.com",
-		"Password": "123456"
-	}”
-}
-1. 服务器端向客户端返回的格式如下
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	"command": "command name",
-	“UserCode”: string,//发起该操作的user
-	"result": “{
-		“parameter string”
-	}”
-}
+
+	{
+		"command" : "login",
+		"parameter": “{
+			"Email": "yupengfei@qq.com",
+			"Password": "123456"
+		}”
+	}
+
+1.服务器端向客户端返回的格式如下
+
+	{
+		"error": {
+			"errorCode" : 0,
+			"errorMessage": ""
+		},
+		"command": "command name",
+		“UserCode”: string,//发起该操作的user
+		"result": “{
+			“parameter string”
+		}”
+	}
+
 客户端首先解析错误信息，如果没有错误则根据将result的内容转发到对应的函数，例如登陆的返回值为
 
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	"command": "login",
-	“UserCode”: string,//发起该操作的user
-	"result":“ {
-		UserCode string
-		Email string
-		Password string，返回只里面该字段为空
-		Group string
-		DisplayName string
-		Position string
-		Picture string
-		Phone string
-		InsertDatetime string
-		UpdateDatetime string
+	{
+		"error": {
+			"errorCode" : 0,
+			"errorMessage": ""
+		},
+		"command": "login",
+		“UserCode”: string,//发起该操作的user
+		"result":“ {
+			UserCode string
+			Email string
+			Password string，返回只里面该字段为空
+			Group string
+			DisplayName string
+			Position string
+			Picture string
+			Phone string
+			InsertDatetime string
+			UpdateDatetime string
+		}”
+	}
 
-	}”
-}
 如果登录
 其中error对应的服务器或者网络的错误，errorCode为0代表没有错误，errorcode为1代表服务器内部错误，errorcode为2代表权限不足，errorcode为3代表其它错误，可以在errormessage字段加以标示如
-{
-	"error": {
-		"errorCode" : 3
-		"errorMessage": "用户名或密码错误，重试"
-	},
-	"command": "login",
-	“UserCode”: string,//发起该操作的user
-	"result":“ {
-		UserCode string
-		Email string
-		Password string，返回只里面该字段为空
-		Group string
-		DisplayName string
-		Position string
-		Picture string
-		Phone string
-		InsertDatetime string
-		UpdateDatetime string
 
-	}”
-}
+	{
+		"error": {
+			"errorCode" : 3
+			"errorMessage": "用户名或密码错误，重试"
+		},
+		"command": "login",
+		“UserCode”: string,//发起该操作的user
+		"result":“ {
+			UserCode string
+			Email string
+			Password string，返回只里面该字段为空
+			Group string
+			DisplayName string
+			Position string
+			Picture string
+			Phone string
+			InsertDatetime string
+			UpdateDatetime string
+
+		}”
+	}
+
+
 ##其它接口
+
 1. 获取所有project
-{
-	“command”: “getAllProject”,
-	“parameter”:”{
-		
-	}”
-}
-返回值为
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getAllProject”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[
-			{
-				“ProjectCode”: string,
-				“ProjectName”: string,
-    			“ProjectDetail": string,
-    			“PlanBeginDatetime”: string,
-    			“PlanEndDatetime”: string,
-    			“RealBeginDatetime”: string,
-    			“RealEndDatetime”: string,
-    			“PersonInCharge”: string,
-    			“Status”: int,
-    			“Picture”: string
-				“InsertDatetime”: string
-    			“UpdateDatetime”: string
 
-			}
-		]
+		{
+			“command”: “getAllProject”,
+			“parameter”:”{
+				
+			}”
+		}
+		返回值为
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getAllProject”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[
+					{
+						“ProjectCode”: string,
+						“ProjectName”: string,
+		    			“ProjectDetail": string,
+		    			“PlanBeginDatetime”: string,
+		    			“PlanEndDatetime”: string,
+		    			“RealBeginDatetime”: string,
+		    			“RealEndDatetime”: string,
+		    			“PersonInCharge”: string,
+		    			“Status”: int,
+		    			“Picture”: string
+						“InsertDatetime”: string
+		    			“UpdateDatetime”: string
+					}
+				]
+		}
+
 1. 添加project
-{
-	“command”:”addProject”,
-	“parameter”:”{
-		“ProjectCode”: 任意string，不起作用,可以没有
-		“ProjectName”: string,
-		“ProjectDetail": string,
-		“PlanBeginDatetime”: string,
-		“PlanEndDatetime”: string,
-		“RealBeginDatetime”: string,
-		“RealEndDatetime”: string,
-		“PersonInCharge”: string,
-		“Status”: int,
-		“Picture”: string,
-		“InsertDatetime”: 任意string，不起作用,可以没有
-		“UpdateDatetime”: 任意string，不起作用,可以没有
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “addProject”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		“ProjectCode”: string
-		“ProjectName”: string,
-		“ProjectDetail": string,
-		“PlanBeginDatetime”: string,
-		“PlanEndDatetime”: string,
-		“RealBeginDatetime”: string,
-		“RealEndDatetime”: string,
-		“PersonInCharge”: string,
-		“Status”: int,
-		“Picture”: string,
-		“InsertDatetime”: string
-    	“UpdateDatetime”: string
 
-	}”
-}
+		{
+			“command”:”addProject”,
+			“parameter”:”{
+				“ProjectCode”: 任意string，不起作用,可以没有
+				“ProjectName”: string,
+				“ProjectDetail": string,
+				“PlanBeginDatetime”: string,
+				“PlanEndDatetime”: string,
+				“RealBeginDatetime”: string,
+				“RealEndDatetime”: string,
+				“PersonInCharge”: string,
+				“Status”: int,
+				“Picture”: string,
+				“InsertDatetime”: 任意string，不起作用,可以没有
+				“UpdateDatetime”: 任意string，不起作用,可以没有
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “addProject”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				“ProjectCode”: string
+				“ProjectName”: string,
+				“ProjectDetail": string,
+				“PlanBeginDatetime”: string,
+				“PlanEndDatetime”: string,
+				“RealBeginDatetime”: string,
+				“RealEndDatetime”: string,
+				“PersonInCharge”: string,
+				“Status”: int,
+				“Picture”: string,
+				“InsertDatetime”: string
+		    	“UpdateDatetime”: string
+			}”
+		}
+
 1. 修改project
-{
-	“command”:”modifyProject”,
-	“parameter”:”{
-		“ProjectCode”: string,//必须有，需要通过它来锁定project
-		“ProjectName”: string,
-		“ProjectDetail": string,
-		“PlanBeginDatetime”: string,
-		“PlanEndDatetime”: string,
-		“RealBeginDatetime”: string,
-		“RealEndDatetime”: string,
-		“PersonInCharge”: string,
-		“Status”: int,
-		“Picture”: string
-		“InsertDatetime”: 任意string，不起作用,可以没有
-    	“UpdateDatetime”: 任意string，不起作用,可以没有
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “modifyProject”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		“ProjectCode”: string
-		“ProjectName”: string,
-    		“ProjectDetail": string,
-    		“PlanBeginDatetime”: string,
-    		“PlanEndDatetime”: string,
-    		“RealBeginDatetime”: string,
-    		“RealEndDatetime”: string,
-    		“PersonInCharge”: string,
-    		“Status”: int,
-    		“Picture”: string,
-		“InsertDatetime”: string
-    		“UpdateDatetime”: string
-	}”
-}
+
+		{
+			“command”:”modifyProject”,
+			“parameter”:”{
+				“ProjectCode”: string,//必须有，需要通过它来锁定project
+				“ProjectName”: string,
+				“ProjectDetail": string,
+				“PlanBeginDatetime”: string,
+				“PlanEndDatetime”: string,
+				“RealBeginDatetime”: string,
+				“RealEndDatetime”: string,
+				“PersonInCharge”: string,
+				“Status”: int,
+				“Picture”: string
+				“InsertDatetime”: 任意string，不起作用,可以没有
+		    	“UpdateDatetime”: 任意string，不起作用,可以没有
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “modifyProject”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				“ProjectCode”: string
+				“ProjectName”: string,
+		    		“ProjectDetail": string,
+		    		“PlanBeginDatetime”: string,
+		    		“PlanEndDatetime”: string,
+		    		“RealBeginDatetime”: string,
+		    		“RealEndDatetime”: string,
+		    		“PersonInCharge”: string,
+		    		“Status”: int,
+		    		“Picture”: string,
+				“InsertDatetime”: string
+		    		“UpdateDatetime”: string
+			}”
+		}
 
 1. 根据projectCode获取所有Shot的镜头的compaign
-{
-	“command”:”getProjectShotCampaign”,
-	“parameter”:”{
-		“ProjectCode”:string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getProjectShotCampaign”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		GraphCode string
-		CampaignCode string
-		ProjectCode string
-		NodeCode string
-		ProductType int
-		Width int
-		Height int
-		XCoordinate int
-		YCoordinate int
-		InsertDatetime string
-		UpdateDatetime string
 
-	}{
-		MissionCode string
-    		MissionName string
-    		ProjectCode string
-    		ProductType string
-    		IsCampaign int
-    		MissionDetail string
-    		PlanBeginDatetime string
-    		PlanEndDatetime string
-    		RealBeginDatetime string
-    		RealEndDatetime string
-    		PersonIncharge string
-    		Status int
-    		Picture string
-    		InsertDatetime string
-    		UpdateDatetime string		
-	}”
-}
+		{
+			“command”:”getProjectShotCampaign”,
+			“parameter”:”{
+				“ProjectCode”:string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getProjectShotCampaign”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				GraphCode string
+				CampaignCode string
+				ProjectCode string
+				NodeCode string
+				ProductType int
+				Width int
+				Height int
+				XCoordinate int
+				YCoordinate int
+				InsertDatetime string
+				UpdateDatetime string
+			},
+			{
+				MissionCode string
+		    		MissionName string
+		    		ProjectCode string
+		    		ProductType string
+		    		IsCampaign int
+		    		MissionDetail string
+		    		PlanBeginDatetime string
+		    		PlanEndDatetime string
+		    		RealBeginDatetime string
+		    		RealEndDatetime string
+		    		PersonIncharge string
+		    		Status int
+		    		Picture string
+		    		InsertDatetime string
+		    		UpdateDatetime string		
+			}]”
+		}
 
 ///////////////////////new 
-1. 根据projectCode获取所有Asset的镜头的compaign
-{
-	“command”:”getProjectAssertCampaign”,
-	“parameter”:”{
-		“ProjectCode”:string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: ”getProjectAssertCampaign”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		GraphCode string
-		CampaignCode string
-		ProjectCode string
-		NodeCode string
-		ProductType int
-		Width int
-		Height int
-		XCoordinate int
-		YCoordinate int
-		InsertDatetime string
-		UpdateDatetime string
 
-	}{
-		MissionCode string
-    		MissionName string
-    		ProjectCode string
-    		ProductType string
-    		IsCampaign int
-    		MissionDetail string
-    		PlanBeginDatetime string
-    		PlanEndDatetime string
-    		RealBeginDatetime string
-    		RealEndDatetime string
-    		PersonIncharge string
-    		Status int
-    		Picture string
-    		InsertDatetime string
-    		UpdateDatetime string		
-	}]”
-}
+1. 根据projectCode获取所有Asset的镜头的compaign
+
+		{
+			“command”:”getProjectAssertCampaign”,
+			“parameter”:”{
+				“ProjectCode”:string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: ”getProjectAssertCampaign”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				GraphCode string
+				CampaignCode string
+				ProjectCode string
+				NodeCode string
+				ProductType int
+				Width int
+				Height int
+				XCoordinate int
+				YCoordinate int
+				InsertDatetime string
+				UpdateDatetime string
+			},
+			{
+				MissionCode string
+		    		MissionName string
+		    		ProjectCode string
+		    		ProductType string
+		    		IsCampaign int
+		    		MissionDetail string
+		    		PlanBeginDatetime string
+		    		PlanEndDatetime string
+		    		RealBeginDatetime string
+		    		RealEndDatetime string
+		    		PersonIncharge string
+		    		Status int
+		    		Picture string
+		    		InsertDatetime string
+		    		UpdateDatetime string		
+			}]”
+		}
 
 1. 新建mission
-{
-	“command”:”addMission”,
-	“parameter”:”{
-		MissionCode 任意string，不起作用,可以没有
-		MissionName string
-		ProjectCode string
-		ProductType int
-		IsCampaign int
-		MissionDetail string
-		PlanBeginDatetime string
-		PlanEndDatetime string
-		RealBeginDatetime string
-		RealEndDatetime string
-		PersonIncharge string
-		Status int
-		Picture string
-		InsertDatetime 任意string，不起作用,可以没有
-		UpdateDatetime 任意string，不起作用,可以没有
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “addMission”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		MissionCode string
-    		MissionName string
-    		ProjectCode string
-    		ProductType int
-    		IsCampaign int
-    		MissionDetail string
-    		PlanBeginDatetime string
-    		PlanEndDatetime string
-    		RealBeginDatetime string
-    		RealEndDatetime string
-    		PersonIncharge string
-    		Status int
-    		Picture string
-    		InsertDatetime string
-    		UpdateDatetime string
-	}”
-}
+
+		{
+			“command”:”addMission”,
+			“parameter”:”{
+				MissionCode 任意string，不起作用,可以没有
+				MissionName string
+				ProjectCode string
+				ProductType int
+				IsCampaign int
+				MissionDetail string
+				PlanBeginDatetime string
+				PlanEndDatetime string
+				RealBeginDatetime string
+				RealEndDatetime string
+				PersonIncharge string
+				Status int
+				Picture string
+				InsertDatetime 任意string，不起作用,可以没有
+				UpdateDatetime 任意string，不起作用,可以没有
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “addMission”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				MissionCode string
+		    		MissionName string
+		    		ProjectCode string
+		    		ProductType int
+		    		IsCampaign int
+		    		MissionDetail string
+		    		PlanBeginDatetime string
+		    		PlanEndDatetime string
+		    		RealBeginDatetime string
+		    		RealEndDatetime string
+		    		PersonIncharge string
+		    		Status int
+		    		Picture string
+		    		InsertDatetime string
+		    		UpdateDatetime string
+			}”
+		}
 
 1. 修改mission
-{
-	“command”:”modifyMission”,
-	“parameter”:{
-		MissionCode string
-		MissionName string
-		ProjectCode string
-		ProductType int
-		IsCampaign int
-		MissionDetail string
-		PlanBeginDatetime string
-		PlanEndDatetime string
-		RealBeginDatetime string
-		RealEndDatetime string
-		PersonIncharge string
-		Status int
-		Picture string
-		InsertDatetime 任意string，不起作用,可以没有
-		UpdateDatetime 任意string，不起作用,可以没有
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “modifyMission”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		MissionCode string
-		MissionName string
-		ProjectCode string
-		ProductType int
-		IsCampaign int
-		MissionDetail string
-		PlanBeginDatetime string
-		PlanEndDatetime string
-		RealBeginDatetime string
-		RealEndDatetime string
-		PersonIncharge string
-		Status int
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
-	}”
-}
-1. 删除mission
-{
-	“command”:”deleteMission”,
-	“parameter”:”{
-		MissionCode string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “deleteMission”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		MissionCode string
-	}”
-}
-//////////////////////////////////////new!!!!!!!
-1. GetMissionByMissionCode
-{
-	“command”:”getMissionByMissionCode”,
-	“parameter”:”{
-		MissionCode string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getMissionByMissionCode”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		MissionCode string
-		MissionName string
-		ProjectCode string
-		ProductType int
-		IsCampaign int
-		MissionDetail string
-		PlanBeginDatetime string
-		PlanEndDatetime string
-		RealBeginDatetime string
-		RealEndDatetime string
-		PersonIncharge string
-		Status int
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
 
-	}”
-}
+		{
+			“command”:”modifyMission”,
+			“parameter”:{
+				MissionCode string
+				MissionName string
+				ProjectCode string
+				ProductType int
+				IsCampaign int
+				MissionDetail string
+				PlanBeginDatetime string
+				PlanEndDatetime string
+				RealBeginDatetime string
+				RealEndDatetime string
+				PersonIncharge string
+				Status int
+				Picture string
+				InsertDatetime 任意string，不起作用,可以没有
+				UpdateDatetime 任意string，不起作用,可以没有
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “modifyMission”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				MissionCode string
+				MissionName string
+				ProjectCode string
+				ProductType int
+				IsCampaign int
+				MissionDetail string
+				PlanBeginDatetime string
+				PlanEndDatetime string
+				RealBeginDatetime string
+				RealEndDatetime string
+				PersonIncharge string
+				Status int
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}”
+		}
+
+1. 删除mission
+
+		{
+			“command”:”deleteMission”,
+			“parameter”:”{
+				MissionCode string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “deleteMission”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				MissionCode string
+			}”
+		}
+
+//////////////////////////////////////new!!!!!!!
+
+1. GetMissionByMissionCode
+
+		{
+			“command”:”getMissionByMissionCode”,
+			“parameter”:”{
+				MissionCode string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getMissionByMissionCode”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				MissionCode string
+				MissionName string
+				ProjectCode string
+				ProductType int
+				IsCampaign int
+				MissionDetail string
+				PlanBeginDatetime string
+				PlanEndDatetime string
+				RealBeginDatetime string
+				RealEndDatetime string
+				PersonIncharge string
+				Status int
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}”
+		}
 
 1. 获取Campaign的全部node，服务器返回了所有的node信息和node对应的mission的信息
-{
-	“command”:”getCampaignNode”,
-	“parameter”:”{
-		CampaignCode string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getAllNode”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		GraphCode string
-		CampaignCode string
-		ProjectCode string
-		NodeCode string
-		ProductType int
-		Width int
-		Height int
-		XCoordinate int
-		YCoordinate int
-		InsertDatetime string
-		UpdateDatetime string
 
-	}
-{
-		MissionCode string     
-		MissionName string
-		ProjectCode string
-		ProductType int
-		IsCampaign int
-		MissionDetail string
-		PlanBeginDatetime string
-		PlanEndDatetime string
-		RealBeginDatetime string
-		RealEndDatetime string
-		PersonIncharge string
-		Status int
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
-
-	}]”
-}
+		{
+			“command”:”getCampaignNode”,
+			“parameter”:”{
+				CampaignCode string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getAllNode”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				GraphCode string
+				CampaignCode string
+				ProjectCode string
+				NodeCode string
+				ProductType int
+				Width int
+				Height int
+				XCoordinate int
+				YCoordinate int
+				InsertDatetime string
+				UpdateDatetime string
+			}
+		{
+				MissionCode string     
+				MissionName string
+				ProjectCode string
+				ProductType int
+				IsCampaign int
+				MissionDetail string
+				PlanBeginDatetime string
+				PlanEndDatetime string
+				RealBeginDatetime string
+				RealEndDatetime string
+				PersonIncharge string
+				Status int
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}]”
+		}
 
 1. 新建node
-{
-	“command”:”addNode”,
-	“parameter”:”{Content:[{
-		GraphCode string 任意string，不起作用,可以没有
-		CampaignCode string
-		ProjectCode string
-		NodeCode string   //等于关联的MissionCode,所以它应该也是nil
-		ProductType int
-		Width int
-		Height int
-		XCoordinate int
-		YCoordinate int
-		InsertDatetime 任意string，不起作用,可以没有
-		UpdateDatetime 任意string，不起作用,可以没有
-	}
-{
-		MissionCode string  任意string，不起作用,可以没有
-		MissionName string
-		ProjectCode string
-		ProductType int
-		IsCampaign int
-		MissionDetail string
-		PlanBeginDatetime string
-		PlanEndDatetime string
-		RealBeginDatetime string
-		RealEndDatetime string
-		PersonIncharge string
-		Status int
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
 
-	}]}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “addNode”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		GraphCode string
-		CampaignCode string
-		ProjectCode string
-		NodeCode string
-		ProductType int
-		Width int
-		Height int
-		XCoordinate int
-		YCoordinate int
-		InsertDatetime string
-		UpdateDatetime string
-	}{
-		MissionCode string  任意string，不起作用,可以没有
-		MissionName string
-		ProjectCode string
-		ProductType int
-		IsCampaign int
-		MissionDetail string
-		PlanBeginDatetime string
-		PlanEndDatetime string
-		RealBeginDatetime string
-		RealEndDatetime string
-		PersonIncharge string
-		Status int
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
-
-	}]”
-}
+		{
+			“command”:”addNode”,
+			“parameter”:”{Content:[{
+				GraphCode string 任意string，不起作用,可以没有
+				CampaignCode string
+				ProjectCode string
+				NodeCode string   //等于关联的MissionCode,所以它应该也是nil
+				ProductType int
+				Width int
+				Height int
+				XCoordinate int
+				YCoordinate int
+				InsertDatetime 任意string，不起作用,可以没有
+				UpdateDatetime 任意string，不起作用,可以没有
+			}
+		{
+				MissionCode string  任意string，不起作用,可以没有
+				MissionName string
+				ProjectCode string
+				ProductType int
+				IsCampaign int
+				MissionDetail string
+				PlanBeginDatetime string
+				PlanEndDatetime string
+				RealBeginDatetime string
+				RealEndDatetime string
+				PersonIncharge string
+				Status int
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}]}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “addNode”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				GraphCode string
+				CampaignCode string
+				ProjectCode string
+				NodeCode string
+				ProductType int
+				Width int
+				Height int
+				XCoordinate int
+				YCoordinate int
+				InsertDatetime string
+				UpdateDatetime string
+			}{
+				MissionCode string  任意string，不起作用,可以没有
+				MissionName string
+				ProjectCode string
+				ProductType int
+				IsCampaign int
+				MissionDetail string
+				PlanBeginDatetime string
+				PlanEndDatetime string
+				RealBeginDatetime string
+				RealEndDatetime string
+				PersonIncharge string
+				Status int
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}]”
+		}
 
 1. 修改node
-{
-	“command”:”modifyNode”,
-	“parameter”:”{
-		GraphCode string
-		CampaignCode string
-		ProjectCode string
-		NodeCode string
-		ProductType int
-		Width int
-		Height int
-		XCoordinate int
-		YCoordinate int
-		InsertDatetime 任意string，不起作用,可以没有
-		UpdateDatetime 任意string，不起作用,可以没有
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “modifyNode”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		GraphCode string
-		CampaignCode string
-		ProjectCode string
-		NodeCode string
-		ProductType int
-		Width int
-		Height int
-		XCoordinate int
-		YCoordinate int
-		InsertDatetime string
-		UpdateDatetime string
-	}”
-}
+
+		{
+			“command”:”modifyNode”,
+			“parameter”:”{
+				GraphCode string
+				CampaignCode string
+				ProjectCode string
+				NodeCode string
+				ProductType int
+				Width int
+				Height int
+				XCoordinate int
+				YCoordinate int
+				InsertDatetime 任意string，不起作用,可以没有
+				UpdateDatetime 任意string，不起作用,可以没有
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “modifyNode”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				GraphCode string
+				CampaignCode string
+				ProjectCode string
+				NodeCode string
+				ProductType int
+				Width int
+				Height int
+				XCoordinate int
+				YCoordinate int
+				InsertDatetime string
+				UpdateDatetime string
+			}”
+		}
+
 1. 删除node
-{
-	“command”:”deleteNode”,
-	“parameter”:”{
-		GraphCode string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “deleteNode”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		GraphCode string	
-	}”
-}
+
+		{
+			“command”:”deleteNode”,
+			“parameter”:”{
+				GraphCode string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “deleteNode”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				GraphCode string	
+			}”
+		}
+
 1. 获取Campaign的全部dependency
-{
-	“command”:getCampaignDependency,
-	“parameter”:”{
-		CampaignCode string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getAllDependency”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		DependencyCode string
-		CampaignCode string
-		ProjectCode string
-		ProductType int
-		StartMissionCode string
-		EndMissionCode string
-		DependencyType int
-		InsertDatetime string
-		UpdateDatetime string
-	}]”
-}
+
+		{
+			“command”:getCampaignDependency,
+			“parameter”:”{
+				CampaignCode string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getAllDependency”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				DependencyCode string
+				CampaignCode string
+				ProjectCode string
+				ProductType int
+				StartMissionCode string
+				EndMissionCode string
+				DependencyType int
+				InsertDatetime string
+				UpdateDatetime string
+			}]”
+		}
+
 1. 添加dependency
-{
-	“command”:”addDependency”,
-	“parameter”:{
-		DependencyCode 任意string，不起作用,可以没有
-		CampaignCode string
-		ProjectCode string
-		ProductType int
-		StartMissionCode string
-		EndMissionCode string
-		DependencyType int
-		InsertDatetime 任意string，不起作用,可以没有
-		UpdateDatetime 任意string，不起作用,可以没有
-	}
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “addDependency”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		DependencyCode string
-		CampaignCode string
-		ProjectCode string
-		ProductType int
-		StartMissionCode string
-		EndMissionCode string
-		DependencyType int
-		InsertDatetime string
-		UpdateDatetime string
-	}”
-}
-	
+
+		{
+			“command”:”addDependency”,
+			“parameter”:{
+				DependencyCode 任意string，不起作用,可以没有
+				CampaignCode string
+				ProjectCode string
+				ProductType int
+				StartMissionCode string
+				EndMissionCode string
+				DependencyType int
+				InsertDatetime 任意string，不起作用,可以没有
+				UpdateDatetime 任意string，不起作用,可以没有
+			}
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “addDependency”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				DependencyCode string
+				CampaignCode string
+				ProjectCode string
+				ProductType int
+				StartMissionCode string
+				EndMissionCode string
+				DependencyType int
+				InsertDatetime string
+				UpdateDatetime string
+			}”
+		}
+
 1. 删除dependency
-{
-	“command”:”deleteDependency”,
-	“parameter”:”{
-		DependencyCode string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “deleteDependency”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		DependencyCode string
-	}”
-}
+
+		{
+			“command”:”deleteDependency”,
+			“parameter”:”{
+				DependencyCode string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “deleteDependency”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				DependencyCode string
+			}”
+		}
+
 1. 修改dependency
-{
-	“command”:”modifyDependency”,
-	“parameter”:{
-		DependencyCode string
-    		CampaignCode string
-    		ProjectCode string
-    		ProductType int
-    		StartMissionCode string
-    		EndMissionCode string
-    		DependencyType int
-    		InsertDatetime 任意string，不起作用,可以没有
-    		UpdateDatetime 任意string，不起作用,可以没有
-	}
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “addDependency”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		DependencyCode string
-    		CampaignCode string
-    		ProjectCode string
-    		ProductType int
-    		StartMissionCode string
-    		EndMissionCode string
-    		DependencyType int
-    		InsertDatetime string
-    		UpdateDatetime string
-	}”
-}
+
+		{
+			“command”:”modifyDependency”,
+			“parameter”:{
+				DependencyCode string
+		    		CampaignCode string
+		    		ProjectCode string
+		    		ProductType int
+		    		StartMissionCode string
+		    		EndMissionCode string
+		    		DependencyType int
+		    		InsertDatetime 任意string，不起作用,可以没有
+		    		UpdateDatetime 任意string，不起作用,可以没有
+			}
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “addDependency”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				DependencyCode string
+					CampaignCode string
+					ProjectCode string
+					ProductType int
+					StartMissionCode string
+					EndMissionCode string
+					DependencyType int
+					InsertDatetime string
+					UpdateDatetime string
+			}”
+		}
 
 1. 添加target
-{
-	“command”:”addTarget”,
-	“parameter”:”{
-		TargetCode 任意string，不起作用,可以没有
-		MissionCode string
-		ProjectCode string
-		VersionTag string
-		StoragePosition string
-		Picture string
-		InsertDatetime 任意string，不起作用,可以没有
-		UpdateDatetime 任意string，不起作用,可以没有
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “addTarget”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		TargetCode string
-		MissionCode string
-		ProjectCode string
-		VersionTag string
-		StoragePosition string
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
-	}”
-}
+
+		{
+			“command”:”addTarget”,
+			“parameter”:”{
+				TargetCode 任意string，不起作用,可以没有
+				MissionCode string
+				ProjectCode string
+				VersionTag string
+				StoragePosition string
+				Picture string
+				InsertDatetime 任意string，不起作用,可以没有
+				UpdateDatetime 任意string，不起作用,可以没有
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “addTarget”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				TargetCode string
+				MissionCode string
+				ProjectCode string
+				VersionTag string
+				StoragePosition string
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}”
+		}
+
 1. 修改target
-{
-	“command”:”modifyTarget”,
-	“parameter”:”{
-		TargetCode string
-    		MissionCode string
-    		ProjectCode string
-    		VersionTag string
-    		StoragePosition string
-    		Picture string
-    		InsertDatetime 任意string，不起作用,可以没有
-    		UpdateDatetime 任意string，不起作用,可以没有
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “modifyTarget”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		TargetCode string
-		MissionCode string
-		ProjectCode string
-		VersionTag string
-		StoragePosition string
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
 
-	}”
-}
+		{
+			“command”:”modifyTarget”,
+			“parameter”:”{
+				TargetCode string
+		    		MissionCode string
+		    		ProjectCode string
+		    		VersionTag string
+		    		StoragePosition string
+		    		Picture string
+		    		InsertDatetime 任意string，不起作用,可以没有
+		    		UpdateDatetime 任意string，不起作用,可以没有
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “modifyTarget”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				TargetCode string
+				MissionCode string
+				ProjectCode string
+				VersionTag string
+				StoragePosition string
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+
+			}”
+		}
+
 1. 删除target
-{
-	”command“:”deleteTarget”,
-	“parameter”:”{
-		TargetCode string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “deleteTarget”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		TargetCode string
-	}”
-}
-1. 查询指定mission的target
-{
-	”command“:”getTargetByMissionCode”,
-	“parameter”:”{
-		MissionCode string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getTargetByMissionCode”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		TargetCode string
-		MissionCode string
-		ProjectCode string
-		VersionTag string
-		StoragePosition string
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
-	}]”
-}
-1. addChart
-{
-	“command”:”addChart”,
-	“parameter”:”{
-		Id 任意string,可以没有 
-		IsPicture int #0不是，1是
-		Message string
-		From 任意string,可以没有
-		SendTime 任意string,可以没有
-		To string
-		ReceivedTime 任意string,可以没有
-		IsReceived 任意int,可以没有
-		Deleted int 任意int,可以没有
-		DeletedTime 任意string,可以没有
-	}”
-}
-返回值分别给发出人和受到人
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “addChart”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		Id string 
-		IsPicture int #0不是，1是
-		Message string
-		From string
-		SendTime string
-		To string
-		ReceivedTime 任意string,可以没有
-		IsRecieved 任意int,可以没有
-		Deleted int 任意int,可以没有
-		DeletedTime 任意string,可以没有
-	}”
-}
-1. receiveChart由收到人返回给服务器
-{
-	“command”:”receiveChart”,
-	“parameter”:”{
-		ChartCode string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “receiveChart”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		ChartCode string
-	}”
-}
-1. getAllUnreceivedChart获取所有的未读信息
-{
-	“command”:”getAllUnreceivedChart”,
-	”parameter“：”{
-	}“
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getAllUnreceivedChart”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		Id string 
-		IsPicture int #0不是，1是
-		Message string
-		From string
-		SendTime string
-		To string
-		ReceivedTime 任意string,可以没有
-		IsRecieved 任意int,可以没有
-		Deleted int 任意int,可以没有
-		DeletedTime 任意string,可以没有
-	}]”
-}
 
+		{
+			”command“:”deleteTarget”,
+			“parameter”:”{
+				TargetCode string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “deleteTarget”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				TargetCode string
+			}”
+		}
+
+1. 查询指定mission的target
+
+		{
+			”command“:”getTargetByMissionCode”,
+			“parameter”:”{
+				MissionCode string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getTargetByMissionCode”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				TargetCode string
+				MissionCode string
+				ProjectCode string
+				VersionTag string
+				StoragePosition string
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}]”
+		}
+
+1. addChart
+
+		{
+			“command”:”addChart”,
+			“parameter”:”{
+				Id 任意string,可以没有 
+				IsPicture int #0不是，1是
+				Message string
+				From 任意string,可以没有
+				SendTime 任意string,可以没有
+				To string
+				ReceivedTime 任意string,可以没有
+				IsReceived 任意int,可以没有
+				Deleted int 任意int,可以没有
+				DeletedTime 任意string,可以没有
+			}”
+		}
+		返回值分别给发出人和受到人
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “addChart”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				Id string 
+				IsPicture int #0不是，1是
+				Message string
+				From string
+				SendTime string
+				To string
+				ReceivedTime 任意string,可以没有
+				IsRecieved 任意int,可以没有
+				Deleted int 任意int,可以没有
+				DeletedTime 任意string,可以没有
+			}”
+		}
+
+1. receiveChart由收到人返回给服务器
+
+		{
+			“command”:”receiveChart”,
+			“parameter”:”{
+				ChartCode string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “receiveChart”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				ChartCode string
+			}”
+		}
+
+1. getAllUnreceivedChart获取所有的未读信息
+
+		{
+			“command”:”getAllUnreceivedChart”,
+			”parameter“：”{
+			}“
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getAllUnreceivedChart”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				Id string 
+				IsPicture int #0不是，1是
+				Message string
+				From string
+				SendTime string
+				To string
+				ReceivedTime 任意string,可以没有
+				IsRecieved 任意int,可以没有
+				Deleted int 任意int,可以没有
+				DeletedTime 任意string,可以没有
+			}]”
+		}
 
 1. addPost
-{
-	“command”:”addPost”,
-	“parameter”:”{
-		Id: 任意string，可以没有
-		MissionCode:存储具体的missioncode
-		PostType：int#0mission自身的消息，1missionDaily的消息，2target的消息
-		Code：post关联到某个daily或者mission自身或者target
-		IsPicture int #0不是图片，1是图片
-		Message string
-		ReplyTo string
-		UserCode 任意string，可以没有
-		PostTime: 任意string，可以没有
-		Deleted: 任意int，可以没有
-		DeletedTime:任意string，可以没有
-	}”
-}
-返回给所有人
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “addPost”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		Id: string
-		MissionCode:存储具体的missioncode
-		PostType：int#0mission自身的消息，1missionDaily的消息，2target的消息
-		Code：post关联到某个daily或者mission自身或者target
-		IsPicture int #0不是图片，1是图片
-		Message string
-		ReplyTo string
-		UserCode string
-		PostTime: string
-		Deleted: 任意int，可以没有
-		DeletedTime:任意string，可以没有
 
-	}”
-}
+		{
+			“command”:”addPost”,
+			“parameter”:”{
+				Id: 任意string，可以没有
+				MissionCode:存储具体的missioncode
+				PostType：int#0mission自身的消息，1missionDaily的消息，2target的消息
+				Code：post关联到某个daily或者mission自身或者target
+				IsPicture int #0不是图片，1是图片
+				Message string
+				ReplyTo string
+				UserCode 任意string，可以没有
+				PostTime: 任意string，可以没有
+				Deleted: 任意int，可以没有
+				DeletedTime:任意string，可以没有
+			}”
+		}
+		返回给所有人
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “addPost”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				Id: string
+				MissionCode:存储具体的missioncode
+				PostType：int#0mission自身的消息，1missionDaily的消息，2target的消息
+				Code：post关联到某个daily或者mission自身或者target
+				IsPicture int #0不是图片，1是图片
+				Message string
+				ReplyTo string
+				UserCode string
+				PostTime: string
+				Deleted: 任意int，可以没有
+				DeletedTime:任意string，可以没有
+			}”
+		}
 
 1. getAllTargetPost 根据targetCode获取所有post
-{
-	“command”：“getAllTargetPost”，
-	“parameter”：“{
-		TargetCode string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getAllTargetPost”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		Id: string
-		MissionCode:存储具体的missioncode
-		PostType：int#0mission自身的消息，1missionDaily的消息，2target的消息
-		Code：post关联到某个daily或者mission自身或者target
-		IsPicture int #0不是图片，1是图片
-		Message string
-		ReplyTo string
-		UserCode string
-		PostTime: string
-		Deleted: 任意int，可以没有
-		DeletedTime:任意string，可以没有
 
-	}]”
-}
+		{
+			“command”：“getAllTargetPost”，
+			“parameter”：“{
+				TargetCode string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getAllTargetPost”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				Id: string
+				MissionCode:存储具体的missioncode
+				PostType：int#0mission自身的消息，1missionDaily的消息，2target的消息
+				Code：post关联到某个daily或者mission自身或者target
+				IsPicture int #0不是图片，1是图片
+				Message string
+				ReplyTo string
+				UserCode string
+				PostTime: string
+				Deleted: 任意int，可以没有
+				DeletedTime:任意string，可以没有
+			}]”
+		}
+
 1. getAllUser 获取所有的用户列表
-{
-	“command”:”getAllUser”,
-	”parameter“：”{
-	}“
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getAllUser”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		UserCode string
-		Email string
-		Password string，返回只里面该字段为空
-		Group string
-		DisplayName string
-		Position string
-		Picture string
-		Phone string
-		InsertDatetime string
-		UpdateDatetime string
-	}]”
-}
+
+		{
+			“command”:”getAllUser”,
+			”parameter“：”{
+			}“
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getAllUser”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				UserCode string
+				Email string
+				Password string，返回只里面该字段为空
+				Group string
+				DisplayName string
+				Position string
+				Picture string
+				Phone string
+				InsertDatetime string
+				UpdateDatetime string
+			}]”
+		}
 
 1. 添加daily
-{
-	“command”:”addDaily”,
-	“parameter”:”{
-		DailyCode 任意string，不起作用,可以没有
-		MissionCode string
-		ProjectCode string
-		VersionTag string
-		StoragePosition string
-		Picture string
-		InsertDatetime 任意string，不起作用,可以没有
-		UpdateDatetime 任意string，不起作用,可以没有
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “addDaily”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		DailyCode string
-		MissionCode string
-		ProjectCode string
-		VersionTag string
-		StoragePosition string
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
-	}”
-}
-1. 修改daily
-{
-	“command”:”modifyDaily”,
-	“parameter”:”{
-		DailyCode string
-		MissionCode string
-		ProjectCode string
-		VersionTag string
-		StoragePosition string
-		Picture string
-		InsertDatetime 任意string，不起作用,可以没有
-		UpdateDatetime 任意string，不起作用,可以没有
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “modifyDaily”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		DailyCode string
-		MissionCode string
-		ProjectCode string
-		VersionTag string
-		StoragePosition string
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
 
-	}”
-}
+		{
+			“command”:”addDaily”,
+			“parameter”:”{
+				DailyCode 任意string，不起作用,可以没有
+				MissionCode string
+				ProjectCode string
+				VersionTag string
+				StoragePosition string
+				Picture string
+				InsertDatetime 任意string，不起作用,可以没有
+				UpdateDatetime 任意string，不起作用,可以没有
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “addDaily”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				DailyCode string
+				MissionCode string
+				ProjectCode string
+				VersionTag string
+				StoragePosition string
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}”
+		}
+
+1. 修改daily
+
+		{
+			“command”:”modifyDaily”,
+			“parameter”:”{
+				DailyCode string
+				MissionCode string
+				ProjectCode string
+				VersionTag string
+				StoragePosition string
+				Picture string
+				InsertDatetime 任意string，不起作用,可以没有
+				UpdateDatetime 任意string，不起作用,可以没有
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “modifyDaily”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				DailyCode string
+				MissionCode string
+				ProjectCode string
+				VersionTag string
+				StoragePosition string
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}”
+		}
+
 1. 删除daily
-{
-	”command“:”deleteDaily”,
-	“parameter”:”{
-		DailyCode string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “deleteDaily”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”{
-		DailyCode string
-	}”
-}
+
+		{
+			”command“:”deleteDaily”,
+			“parameter”:”{
+				DailyCode string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “deleteDaily”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”{
+				DailyCode string
+			}”
+		}
+
 1. 查询指定mission的daily
-{
-	”command“:”getDailyByMissionCode”,
-	“parameter”:”{
-		MissionCode string
-	}”
-}
-返回值
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getDailyByMissionCode”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		DailyCode string
-		MissionCode string
-		ProjectCode string
-		VersionTag string
-		StoragePosition string
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
-	}]”
-}
+
+		{
+			”command“:”getDailyByMissionCode”,
+			“parameter”:”{
+				MissionCode string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getDailyByMissionCode”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				DailyCode string
+				MissionCode string
+				ProjectCode string
+				VersionTag string
+				StoragePosition string
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}]”
+		}
 
 1. 获取用户所有的未开始的Mission，返回一个missionList
-{
-	Command: “getPersonAllWaitingMission”,
-	Parameter:”{
-	}”
-}
-返回值为
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getPersonAllWaitingMission”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		MissionCode string
-		MissionName string
-		ProjectCode string
-		ProductType int
-		IsCampaign int
-		MissionDetail string
-		PlanBeginDatetime string
-		PlanEndDatetime string
-		RealBeginDatetime string
-		RealEndDatetime string
-		PersonIncharge string
-		Status int
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
-	}]”
-}
 
-获取用户所有的进行中的mission
-{
-	Command: “getPersonAllUndergoingMission”,
-	Parameter:”{
-	}”
-}
-返回值为
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getPersonAllUndergoingMission”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		MissionCode string
-		MissionName string
-		ProjectCode string
-		ProductType int
-		IsCampaign int
-		MissionDetail string
-		PlanBeginDatetime string
-		PlanEndDatetime string
-		RealBeginDatetime string
-		RealEndDatetime string
-		PersonIncharge string
-		Status int
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
-	}]”
-}
+		{
+			Command: “getPersonAllWaitingMission”,
+			Parameter:”{
+			}”
+		}
+		返回值为
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getPersonAllWaitingMission”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				MissionCode string
+				MissionName string
+				ProjectCode string
+				ProductType int
+				IsCampaign int
+				MissionDetail string
+				PlanBeginDatetime string
+				PlanEndDatetime string
+				RealBeginDatetime string
+				RealEndDatetime string
+				PersonIncharge string
+				Status int
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}]”
+		}
 
-获取用户所有已完成正在审核的mission
-{
-	Command: “getPersonAllReviewingMission”,
-	Parameter:”{
-	}”
-}
-返回值为
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getPersonAllReviewingMission”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		MissionCode string
-		MissionName string
-		ProjectCode string
-		ProductType int
-		IsCampaign int
-		MissionDetail string
-		PlanBeginDatetime string
-		PlanEndDatetime string
-		RealBeginDatetime string
-		RealEndDatetime string
-		PersonIncharge string
-		Status int
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
-	}]”
-}
+1. 获取用户所有的进行中的mission
 
-获取用户所有已通过的mission
-{
-	Command: “getPersonAllFinishedMission”,
-	Parameter:”{
-	}”
-}
-返回值为
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getPersonAllFinishedMission”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		MissionCode string
-		MissionName string
-		ProjectCode string
-		ProductType int
-		IsCampaign int
-		MissionDetail string
-		PlanBeginDatetime string
-		PlanEndDatetime string
-		RealBeginDatetime string
-		RealEndDatetime string
-		PersonIncharge string
-		Status int
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
-	}]”
-}
+		{
+			Command: “getPersonAllUndergoingMission”,
+			Parameter:”{
+			}”
+		}
+		返回值为
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getPersonAllUndergoingMission”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				MissionCode string
+				MissionName string
+				ProjectCode string
+				ProductType int
+				IsCampaign int
+				MissionDetail string
+				PlanBeginDatetime string
+				PlanEndDatetime string
+				RealBeginDatetime string
+				RealEndDatetime string
+				PersonIncharge string
+				Status int
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}]”
+		}
 
-获取所有未指定人的mission
-{
-	Command: “getAllUndesignatedMission”,
-	Parameter:”{
-	}”
-}
-返回值为
-{
-	"error": {
-		"errorCode" : 0,
-		"errorMessage": ""
-	},
-	“commnd”: “getAllUndesignatedMission”,
-	“UserCode”: string,//发起该操作的user
-	“result”:”[{
-		MissionCode string
-		MissionName string
-		ProjectCode string
-		ProductType int
-		IsCampaign int
-		MissionDetail string
-		PlanBeginDatetime string
-		PlanEndDatetime string
-		RealBeginDatetime string
-		RealEndDatetime string
-		PersonIncharge string
-		Status int
-		Picture string
-		InsertDatetime string
-		UpdateDatetime string
-	}]”
-}
+1. 获取用户所有已完成正在审核的mission
+
+		{
+			Command: “getPersonAllReviewingMission”,
+			Parameter:”{
+			}”
+		}
+		返回值为
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getPersonAllReviewingMission”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				MissionCode string
+				MissionName string
+				ProjectCode string
+				ProductType int
+				IsCampaign int
+				MissionDetail string
+				PlanBeginDatetime string
+				PlanEndDatetime string
+				RealBeginDatetime string
+				RealEndDatetime string
+				PersonIncharge string
+				Status int
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}]”
+		}
+
+1. 获取用户所有已通过的mission
+
+		{
+			Command: “getPersonAllFinishedMission”,
+			Parameter:”{
+			}”
+		}
+		返回值为
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getPersonAllFinishedMission”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				MissionCode string
+				MissionName string
+				ProjectCode string
+				ProductType int
+				IsCampaign int
+				MissionDetail string
+				PlanBeginDatetime string
+				PlanEndDatetime string
+				RealBeginDatetime string
+				RealEndDatetime string
+				PersonIncharge string
+				Status int
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}]”
+		}
+
+1. 获取所有未指定人的mission
+
+		{
+			Command: “getAllUndesignatedMission”,
+			Parameter:”{
+			}”
+		}
+		返回值为
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getAllUndesignatedMission”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				MissionCode string
+				MissionName string
+				ProjectCode string
+				ProductType int
+				IsCampaign int
+				MissionDetail string
+				PlanBeginDatetime string
+				PlanEndDatetime string
+				RealBeginDatetime string
+				RealEndDatetime string
+				PersonIncharge string
+				Status int
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}]”
+		}
 
 ##软件架构
 软件的架构图如下
