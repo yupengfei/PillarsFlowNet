@@ -208,7 +208,7 @@ func GetAllUndesignatedMission(userCode *string, parameter *string) {
 	if errorCode == 0 {
 		opResult, _ = missionStorage.QueryAllUndesignatedMission()
 	}
-	command := "GetAllUndesignatedMission"
+	command := "getAllUndesignatedMission"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
 	Hub.SendToUserCode(result, userCode)
 }
