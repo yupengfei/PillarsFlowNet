@@ -63,6 +63,7 @@
 		Create Table `user` (
 			`user_id` int unsigned NOT NULL AUTO_INCREMENT,
 			`user_code` char(32) not null unique,#计算生成的唯一识别符
+			`company_code` char(32) not null ,#本人所属的公司
 			`email` char(30) not null,#用户邮箱，用于登录
 			`password` char(32) not null,#用户的密码
 			`group` varchar(20) not null,#用户的组别，目前有系统管理员、统筹、八个部门的组
@@ -91,6 +92,7 @@
 			`real_begin_datetime` datetime NOT NULL,#存储项目实际开始的时间
 			`real_end_datetime` datetime NOT NULL,#存储项目实际结束的时间
 			`person_in_charge` char(32) NOT NULL,#存储`user_code`，项目负责人的usercode
+			`company` char(32) NOT NULL, #      存储公司名称
 			`status` int default 0 NOT NULL, #0未开始，1已经完成,2进行中
 			`picture` mediumtext NOT NULL,#直接往mysql中写入照片的base64编码
 			`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -1850,9 +1852,16 @@ People主要由两个部分构成
 1、客户端发起查询后，阻塞所有的增删改信息的处理，在所有查询处理完之后再处理增删改；
 2、服务器端加两个互斥锁，分别锁定production的增删改查和post的增删改查。
 
-##同步范围
+by han2015: 初步分析，同步的主要部分是管理员的增删改操作对普通用户的查询操作的影响。　普通用户修改自己的mission不用同步，管理员的
+查询不用考虑同步，因为管理员这部分应该是顺序执行的（管理员也相当于一个客户端）。
+所以加锁的部分就比较明确，普通用户查询指定的内容时，服务器就对这一块加锁，目的是阻塞管理员对该部分的修改，直到发送成功后解锁该部分，然后
+管理员才能对该部分修改，然后发送修改命令。
 
+##同步范围
 并不是所有的信息都应该向每个客户端广播，客户端只需要收到从登录开始自己曾经查询过的project的全部信息
+
+by han2015: 实现方法，对每个project建一个列表，这个列表记录了当前所有关注过本项目的用户，当项目本身发生变化需要广播的时候，只对列表中的每个用户发送。用户对该表的行为有添加（登陆后查看该项目）和删除（用户退出关闭下线）。　管理员对该表没有操作行为，只负责对project添加，新建列表，查询列表（修改完一个project，广播的时候查询该表）
+这里有个特殊情况，当用户关注project后,project正完成修改，准备广播时，用户退出了。对这种用户可以通过全局用户列表对比一遍，查不到的用户，不再发送(这种情况发生的可能很小)。
 
 ##权限机制
 
@@ -1863,4 +1872,13 @@ People主要由两个部分构成
 1.制片人拥有新建项目，调配军团内部的人员（将某项工作指定给某个人），新建mission等权限；
 
 1.普通用户只能更改由自己负责的mission的信息，其它的操作返回权限不足的error
+
+by han2015:根据上述需求，需要修改原数据库user,project表结构,还要新建一个mysql新表`company`
+计划：权限的验证通过group字段，对修改，添加，删除的操作接口添加权限认证，制片人可以做任何操作，只对普通用户开放
+修改mission的权限。查询接口应该不需要权限验证，如果有的话对普通用户限制。
+
+
+
+
+
 
