@@ -13,11 +13,11 @@ import (
 //TODO
 //将该函数改名为GetCampaignDependency
 func GetCampaignDependency(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+	//auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
+	//if auth == false {
+	//	errorCode = 3
+	//}
 	var opResult []utility.Dependency
 	if errorCode == 0 {
 		campaignCode, _ := utility.ParseCampaignCodeMessage(parameter)

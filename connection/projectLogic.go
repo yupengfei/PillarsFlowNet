@@ -1,10 +1,12 @@
 package connection
 
 import (
+	"PillarsFlowNet/authentication"
 	"PillarsFlowNet/projectStorage"
 	"PillarsFlowNet/utility"
 )
 
+//只查询本公司的项目，这里需要修改ｓｑｌ查询
 func GetAllProject(userCode *string, parameter *string) ([]byte, *string) {
 	var errorCode int
 	var opResult []utility.Project
@@ -20,7 +22,11 @@ func GetAllProject(userCode *string, parameter *string) ([]byte, *string) {
 }
 
 func AddProject(userCode *string, parameter *string) ([]byte, *string) {
+	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
+	if auth == false {
+		errorCode = 3
+	}
 	var projectCode *string
 	var projectOut *utility.Project
 	if errorCode == 0 {
@@ -41,7 +47,11 @@ func AddProject(userCode *string, parameter *string) ([]byte, *string) {
 }
 
 func ModifyProject(userCode *string, parameter *string) ([]byte, *string) {
+	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
+	if auth == false {
+		errorCode = 3
+	}
 	var projectCode *string
 	var projectOut *utility.Project
 	if errorCode == 0 {

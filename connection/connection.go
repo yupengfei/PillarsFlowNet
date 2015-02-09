@@ -176,6 +176,8 @@ func (c *connection) readPump() {
 				go ModifyDaily(c.userCode, parameter)
 			} else if *command == "deleteDaily" {
 				go DeleteDaily(c.userCode, parameter)
+			} else if *command == "getCompanyDaily" {
+				go GetCompanyDaily(c.userCode, parameter)
 			} else if *command == "getDailyByMissionCode" {
 				go GetDailyByMissionCode(c.userCode, parameter)
 			} else if *command == "getAllUser" {

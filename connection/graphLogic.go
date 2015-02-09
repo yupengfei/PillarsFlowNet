@@ -12,19 +12,16 @@ import (
 //TODO
 //将该参数改名为GetCampaignNode
 func GetCampaignNode(userCode *string, parameter *string) {
-	fmt.Println(*parameter)
-	auth := authentication.GetAuthInformation(userCode)
+	//auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
+	//if auth == false {
+	//	errorCode = 3
+	//}
 	var opResult []utility.Graph
 	if errorCode == 0 {
 		campaignCode, _ := utility.ParseCampaignCodeMessage(parameter)
 		opResult, _ = graphStorage.QueryGraphNodesByCampaignCode(&(campaignCode.CampaignCode))
 	}
-	//fmt.Println(string(result))
-
 	var missionSlice []utility.Mission
 	opResultLength := len(opResult)
 	var i int

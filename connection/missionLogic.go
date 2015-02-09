@@ -9,11 +9,11 @@ import (
 )
 
 func GetProjectAssertCampaign(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+	//auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
+	//if auth == false {
+	//	errorCode = 3
+	//}
 	projectCode, _ := utility.ParseProjectCodeMessage(parameter)
 	var opResult *utility.Mission
 	var opNode []utility.Graph
@@ -21,7 +21,6 @@ func GetProjectAssertCampaign(userCode *string, parameter *string) {
 	if errorCode == 0 {
 		opNode, _ = graphStorage.QueryAssertNodesByCampaignCode(&(projectCode.ProjectCode))
 		opResultLength := len(opNode)
-		
 		for i := 0; i < opResultLength; i++ {
 			resultSlice = append(resultSlice, *utility.ObjectToJsonString(opNode[i]))
 			opResult, _ = missionStorage.QueryMissionByMissionCode(&(opNode[i].NodeCode))
@@ -33,11 +32,11 @@ func GetProjectAssertCampaign(userCode *string, parameter *string) {
 	Hub.SendToUserCode(result, userCode)
 }
 func GetProjectShotCampaign(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+	//auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
+	//if auth == false {
+	//	errorCode = 3
+	//}
 	projectCode, _ := utility.ParseProjectCodeMessage(parameter)
 	var opResult *utility.Mission
 	var opNode []utility.Graph
@@ -45,7 +44,6 @@ func GetProjectShotCampaign(userCode *string, parameter *string) {
 	if errorCode == 0 {
 		opNode, _ = graphStorage.QueryShotNodesByCampaignCode(&(projectCode.ProjectCode))
 		opResultLength := len(opNode)
-		
 		for i := 0; i < opResultLength; i++ {
 			resultSlice = append(resultSlice, *utility.ObjectToJsonString(opNode[i]))
 			opResult, _ = missionStorage.QueryMissionByMissionCode(&(opNode[i].NodeCode))
@@ -56,6 +54,7 @@ func GetProjectShotCampaign(userCode *string, parameter *string) {
 	result := utility.SliceResultToOutMessage(&command, resultSlice, errorCode, userCode)
 	Hub.SendToUserCode(result, userCode)
 }
+
 // func GetProjectUnassertCampaign(userCode *string, parameter *string) {
 // 	auth := authentication.GetAuthInformation(userCode)
 // 	var errorCode int
@@ -72,11 +71,6 @@ func GetProjectShotCampaign(userCode *string, parameter *string) {
 // 	Hub.SendToUserCode(result, userCode)
 // }
 
-/*
-func GetProjectShotCampaign(userCode *string, parameter *string){
-
-	Hub.SendToUserCode(result, userCode)
-}*/
 func AddMission(userCode *string, parameter *string) {
 	auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
@@ -143,11 +137,11 @@ func DeleteMission(userCode *string, parameter *string) {
 }
 
 func GetMissionByMissionCode(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+	//auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
+	//if auth == false {
+	//	errorCode = 3
+	//}
 	var opResult *utility.Mission
 	if errorCode == 0 {
 		missionCode, _ := utility.ParseMissionCodeMessage(parameter)
@@ -208,7 +202,7 @@ func GetAllUndesignatedMission(userCode *string, parameter *string) {
 	if errorCode == 0 {
 		opResult, _ = missionStorage.QueryAllUndesignatedMission()
 	}
-	command := "GetAllUndesignatedMission"
+	command := "getAllUndesignatedMission"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
 	Hub.SendToUserCode(result, userCode)
 }

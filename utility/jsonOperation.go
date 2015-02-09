@@ -69,7 +69,11 @@ func ParseProjectCodeMessage(message *string) (*ProjectCode, error) {
 	err := json.Unmarshal([]byte(*message), &projectCode)
 	return &projectCode, err
 }
-
+func ParseCompanyCodeMessage(message *string) (string, error) {
+	var CompanyCode string
+	err := json.Unmarshal([]byte(*message), &CompanyCode)
+	return CompanyCode, err
+}
 func ParseMissionCodeMessage(message *string) (*MissionCode, error) {
 	var missionCode MissionCode
 	err := json.Unmarshal([]byte(*message), &missionCode)

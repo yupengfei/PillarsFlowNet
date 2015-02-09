@@ -77,7 +77,17 @@
 			INDEX(`email`),
 			INDEX(`group`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+1.  公司信息文件放在company表
 
+		MySQL: DB: Pillars
+		Table: company 存储用于审核的文件的信息
+
+		Create table `company`(
+			`company_id` int unsigned NOT NULL AUTO_INCREMENT,
+			`company_code` char(32) NOT NULL unique,
+			PRIMARY KEY (`company_id`),
+			INDEX(`company_code`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 1. 项目的相关信息存放在project表
 
 		MySQL: DB: Pillars
@@ -92,7 +102,7 @@
 			`real_begin_datetime` datetime NOT NULL,#存储项目实际开始的时间
 			`real_end_datetime` datetime NOT NULL,#存储项目实际结束的时间
 			`person_in_charge` char(32) NOT NULL,#存储`user_code`，项目负责人的usercode
-			`company` char(32) NOT NULL, #      存储公司名称
+			`company_code` char(32) not null ,#项目所属的公司
 			`status` int default 0 NOT NULL, #0未开始，1已经完成,2进行中
 			`picture` mediumtext NOT NULL,#直接往mysql中写入照片的base64编码
 			`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -206,6 +216,7 @@ Table: graph存储任务有向无环图的节点信息
 		Create table `daily`(
 			`daily_id` int unsigned NOT NULL AUTO_INCREMENT,
 			`daily_code` char(32) NOT NULL unique,
+			`company_code` char(32) NOT NULL,
 			`mission_code` char(32) NOT NULL,
 			`project_code` char(32) NOT NULL,
 			`version_tag` char(20) NOT NULL,
@@ -302,6 +313,7 @@ Table: graph存储任务有向无环图的节点信息
 		“UserCode”: string,//发起该操作的user
 		"result":“ {
 			UserCode string
+			CompanyCode string
 			Email string
 			Password string，返回只里面该字段为空
 			Group string
@@ -326,6 +338,7 @@ Table: graph存储任务有向无环图的节点信息
 		“UserCode”: string,//发起该操作的user
 		"result":“ {
 			UserCode string
+			CompanyCode string
 			Email string
 			Password string，返回只里面该字段为空
 			Group string
@@ -362,12 +375,13 @@ Table: graph存储任务有向无环图的节点信息
 					{
 						“ProjectCode”: string,
 						“ProjectName”: string,
-		    			“ProjectDetail": string,
+		    				“ProjectDetail": string,
 		    			“PlanBeginDatetime”: string,
 		    			“PlanEndDatetime”: string,
 		    			“RealBeginDatetime”: string,
 		    			“RealEndDatetime”: string,
 		    			“PersonInCharge”: string,
+					“CompanyCode”:string,
 		    			“Status”: int,
 		    			“Picture”: string
 						“InsertDatetime”: string
@@ -389,6 +403,7 @@ Table: graph存储任务有向无环图的节点信息
 				“RealBeginDatetime”: string,
 				“RealEndDatetime”: string,
 				“PersonInCharge”: string,
+				“CompanyCode”:string,
 				“Status”: int,
 				“Picture”: string,
 				“InsertDatetime”: 任意string，不起作用,可以没有
@@ -1452,7 +1467,33 @@ Table: graph存储任务有向无环图的节点信息
 				UpdateDatetime string
 			}]”
 		}
+1. 查询今天所有的daily
 
+		{
+			”command“:”getCompanyDaily”,
+			“parameter”:”{
+				Company string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getCompanyDaily”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				DailyCode string
+				MissionCode string
+				ProjectCode string
+				VersionTag string
+				StoragePosition string
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}]”
+		}
 1. 获取用户所有的未开始的Mission，返回一个missionList
 
 		{
@@ -1852,13 +1893,15 @@ People主要由两个部分构成
 1、客户端发起查询后，阻塞所有的增删改信息的处理，在所有查询处理完之后再处理增删改；
 2、服务器端加两个互斥锁，分别锁定production的增删改查和post的增删改查。
 
-by han2015: 
+by han2015: 初步分析，同步的主要部分是管理员的增删改操作对普通用户的查询操作的影响。　普通用户修改自己的mission不用同步，管理员的
+查询不用考虑同步，因为管理员这部分应该是顺序执行的（管理员也相当于一个客户端）。
+##　mission,graph,project用同一个互斥锁，这样管理员一次只有一个操作，直到发送完毕解锁。每个管理员‘线程’都有属于自己的锁。普通用户查询
+## 不用锁
 
 ##同步范围
 并不是所有的信息都应该向每个客户端广播，客户端只需要收到从登录开始自己曾经查询过的project的全部信息
 
-by han2015: 实现方法，对每个project建一个列表，这个列表记录了当前所有关注过本项目的用户，当项目本身发生变化需要广播的时候，只对列表中的每个用户发送。用户对该表的行为有添加（登陆后查看该项目）和删除（用户退出关闭下线）。　管理员对该表没有操作行为，只负责对project添加，新建列表，查询列表（修改完一个project，广播的时候查询该表）
-这里有个特殊情况，当用户关注project后,project正完成修改，准备广播时，用户退出了。对这种用户可以通过全局用户列表对比一遍，查不到的用户，不再发送(这种情况发生的可能很小)。
+##　by han2015:普通用户是属于公司的，普通用户只关注本公司的项目，解决同步范围问题。
 
 ##权限机制
 
