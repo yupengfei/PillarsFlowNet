@@ -23,6 +23,22 @@ func InsertIntoUser(user *utility.User) (bool, error) {
 	}
 	return true, err
 }
+func QueryCompanyUser(code *string) (error, []*string) {
+	stmt, _ := mysqlUtility.DBConn.Prepare("SELECT user_code FROM user WHERE company_code=?")
+	defer stmt.Close()
+	members, err := stmt.Query(code)
+	defer members.Close()
+	if err != nil {
+		return err, []*string{}
+	}
+	var users []*string
+	for members.Next() {
+		var user string
+		members.Scan(&user)
+		users = append(users, &user)
+	}
+	return nil, users
+}
 
 /***************
 func DeleteUserByUserName(userName *string) (bool, error) {

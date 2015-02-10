@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/gorilla/websocket"
 	"net/http"
+	"sync"
 	"time"
 	// "PillarsFlowNet/chartLogic"
 	// "PillarsFlowNet/dailyLogic"
@@ -46,6 +47,7 @@ type connection struct {
 	ws       *websocket.Conn
 	send     chan []byte
 	userCode *string
+	Metux    *sync.Mutex
 }
 
 // write writes a message with the given message type and message to client.
@@ -131,43 +133,43 @@ func (c *connection) readPump() {
 			if *command == "getAllProject" {
 				go GetAllProject(c.userCode, parameter)
 			} else if *command == "addProject" {
-				go AddProject(c.userCode, parameter)
+				go AddProject(c.userCode, c.Metux, parameter)
 			} else if *command == "modifyProject" {
-				go ModifyProject(c.userCode, parameter)
+				go ModifyProject(c.userCode, c.Metux, parameter)
 			} else if *command == "getProjectAssertCampaign" {
 				go GetProjectAssertCampaign(c.userCode, parameter) //
 			} else if *command == "getProjectShotCampaign" {
 				go GetProjectShotCampaign(c.userCode, parameter) ///////meiyou
 			} else if *command == "addMission" {
-				go AddMission(c.userCode, parameter)
+				go AddMission(c.userCode, c.Metux, parameter)
 			} else if *command == "getMissionByMissionCode" {
 				go GetMissionByMissionCode(c.userCode, parameter)
 			} else if *command == "modifyMission" {
-				go ModifyMission(c.userCode, parameter)
+				go ModifyMission(c.userCode, c.Metux, parameter)
 			} else if *command == "deleteMission" {
-				go DeleteMission(c.userCode, parameter) //ModifyProject()
+				go DeleteMission(c.userCode, c.Metux, parameter) //ModifyProject()
 			} else if *command == "getCampaignNode" {
 				go GetCampaignNode(c.userCode, parameter)
 			} else if *command == "addNode" {
-				go AddNode(c.userCode, parameter)
+				go AddNode(c.userCode, c.Metux, parameter)
 			} else if *command == "modifyNode" {
-				go ModifyNode(c.userCode, parameter)
+				go ModifyNode(c.userCode, c.Metux, parameter)
 			} else if *command == "deleteNode" {
-				go DeleteNode(c.userCode, parameter)
+				go DeleteNode(c.userCode, c.Metux, parameter)
 			} else if *command == "getCampaignDependency" {
 				go GetCampaignDependency(c.userCode, parameter)
 			} else if *command == "addDependency" {
-				go AddDependency(c.userCode, parameter)
+				go AddDependency(c.userCode, c.Metux, parameter)
 			} else if *command == "modifyDependency" {
-				go ModifyDependency(c.userCode, parameter)
+				go ModifyDependency(c.userCode, c.Metux, parameter)
 			} else if *command == "deleteDependency" {
-				go DeleteDependency(c.userCode, parameter)
+				go DeleteDependency(c.userCode, c.Metux, parameter)
 			} else if *command == "addTarget" {
-				go AddTarget(c.userCode, parameter)
+				go AddTarget(c.userCode, c.Metux, parameter)
 			} else if *command == "modifyTarget" {
-				go ModifyTarget(c.userCode, parameter)
+				go ModifyTarget(c.userCode, c.Metux, parameter)
 			} else if *command == "deleteTarget" {
-				go DeleteTarget(c.userCode, parameter)
+				go DeleteTarget(c.userCode, c.Metux, parameter)
 			} else if *command == "getTargetByMissionCode" {
 				go GetTargetByMissionCode(c.userCode, parameter)
 			} else if *command == "addDaily" {
@@ -218,7 +220,7 @@ func ServeWs(w http.ResponseWriter, r *http.Request) {
 		panic(err.Error())
 		return
 	}
-	c := &connection{send: make(chan []byte), ws: ws, userCode: nil}
+	c := &connection{send: make(chan []byte), ws: ws, userCode: nil, Metux: new(sync.Mutex)}
 	go c.writePump()
 	c.readPump()
 }

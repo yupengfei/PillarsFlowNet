@@ -30,7 +30,8 @@ func AddDaily(userCode *string, parameter *string) {
 	}
 	var command = "addDaily"
 	result := utility.BoolResultToOutMessage(&command, dailyOut, errorCode, userCode)
-	Hub.Dispatch(result)
+	//Hub.Dispatch(result)
+	Hub.SendToUserCode(result, userCode)
 }
 
 //修改Daily表中的某一条数据
@@ -56,7 +57,8 @@ func ModifyDaily(userCode *string, parameter *string) {
 	}
 	var command = "modifyDaily"
 	result := utility.BoolResultToOutMessage(&command, dailyOut, errorCode, userCode)
-	Hub.Dispatch(result)
+	//Hub.Dispatch(result)
+	Hub.SendToUserCode(result, userCode)
 }
 
 //删除某条Daily
@@ -77,14 +79,14 @@ func DeleteDaily(userCode *string, parameter *string) {
 	}
 	var command = "deleteDaily"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	Hub.Dispatch(result)
+	//Hub.Dispatch(result)
+	Hub.SendToUserCode(result, userCode)
 }
 func GetCompanyDaily(userCode *string, parameter *string) {
 	var errorCode int
 	var opResult []utility.Daily
 	if errorCode == 0 {
-		companyCode, _ := utility.ParseCompanyCodeMessage(parameter)
-		opResult, _ = dailyStorage.QueryDailysByMissionCode(&companyCode)
+		opResult, _ = dailyStorage.QueryDailysByCompanyCode(parameter)
 	}
 	command := "getCompanyDaily"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)

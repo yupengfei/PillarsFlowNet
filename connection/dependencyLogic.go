@@ -5,6 +5,7 @@ import (
 	"PillarsFlowNet/dependencyStorage"
 	"PillarsFlowNet/utility"
 	"fmt"
+	"sync"
 )
 
 //获取特定战役所有的依赖
@@ -31,11 +32,14 @@ func GetCampaignDependency(userCode *string, parameter *string) {
 //增加依赖
 //inputParameters[0]为发起该操作的用户的UserCode
 //inputParameters[1]为具体的参数
-func AddDependency(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+func AddDependency(userCode *string, mutex *sync.Mutex, parameter *string) {
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if auth == false {
 		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
 	}
 	var dependencyCode *string
 	var dependencyOut *utility.Dependency
@@ -53,14 +57,21 @@ func AddDependency(userCode *string, parameter *string) {
 	}
 	var command = "addDependency"
 	result := utility.BoolResultToOutMessage(&command, dependencyOut, errorCode, userCode)
-	Hub.Dispatch(result)
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
 }
 
-func DeleteDependency(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+func DeleteDependency(userCode *string, mutex *sync.Mutex, parameter *string) {
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if auth == false {
 		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
 	}
 
 	if errorCode == 0 {
@@ -73,14 +84,21 @@ func DeleteDependency(userCode *string, parameter *string) {
 
 	var command = "deleteDependency"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	Hub.Dispatch(result)
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
 }
 
-func ModifyDependency(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+func ModifyDependency(userCode *string, mutex *sync.Mutex, parameter *string) {
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if auth == false {
 		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
 	}
 	var dependencyCode *string
 	var dependencyOut *utility.Dependency
@@ -96,5 +114,9 @@ func ModifyDependency(userCode *string, parameter *string) {
 	}
 	var command = "modifyDependency"
 	result := utility.BoolResultToOutMessage(&command, dependencyOut, errorCode, userCode)
-	Hub.Dispatch(result)
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
 }

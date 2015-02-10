@@ -5,6 +5,7 @@ import (
 	"PillarsFlowNet/graphStorage"
 	"PillarsFlowNet/missionStorage"
 	"PillarsFlowNet/utility"
+	"sync"
 	//"fmt"
 )
 
@@ -71,11 +72,14 @@ func GetProjectShotCampaign(userCode *string, parameter *string) {
 // 	Hub.SendToUserCode(result, userCode)
 // }
 
-func AddMission(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+func AddMission(userCode *string, mutex *sync.Mutex, parameter *string) {
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if auth == false {
 		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
 	}
 	var missionCode *string
 	var missionOut *utility.Mission
@@ -92,14 +96,21 @@ func AddMission(userCode *string, parameter *string) {
 	}
 	command := "addMission"
 	result := utility.BoolResultToOutMessage(&command, missionOut, errorCode, userCode)
-	Hub.Dispatch(result)
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
 }
 
-func ModifyMission(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+func ModifyMission(userCode *string, mutex *sync.Mutex, parameter *string) {
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if auth == false {
 		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
 	}
 	var missionCode *string
 	var missionOut *utility.Mission
@@ -115,14 +126,21 @@ func ModifyMission(userCode *string, parameter *string) {
 	}
 	command := "modifyMission"
 	result := utility.BoolResultToOutMessage(&command, missionOut, errorCode, userCode)
-	Hub.Dispatch(result)
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
 }
 
-func DeleteMission(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+func DeleteMission(userCode *string, mutex *sync.Mutex, parameter *string) {
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if auth == false {
 		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
 	}
 	if errorCode == 0 {
 		missionCode, _ := utility.ParseMissionCodeMessage(parameter)
@@ -133,7 +151,11 @@ func DeleteMission(userCode *string, parameter *string) {
 	}
 	var command = "deleteMission"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	Hub.Dispatch(result)
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
 }
 
 func GetMissionByMissionCode(userCode *string, parameter *string) {

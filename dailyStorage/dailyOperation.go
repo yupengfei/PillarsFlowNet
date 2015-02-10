@@ -12,7 +12,7 @@ import (
 
 //insert is a Transaction
 func InsertIntoDaily(daily *utility.Daily) (bool, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("INSERT INTO daily(daily_code,company_code, mission_code, project_code, version_tag, storage_position, picture) VALUES(?, ?, ?, ?, ?, ?)")
+	stmt, err := mysqlUtility.DBConn.Prepare("INSERT INTO daily(daily_code,company_code, mission_code, project_code, version_tag, storage_position, picture) VALUES(?, ?, ?,?, ?, ?, ?)")
 	if err != nil {
 		panic(err.Error())
 	}
@@ -50,7 +50,7 @@ func DeleteDailyByDailyCode(dailyCode *string) (bool, error) {
 	return true, err
 }
 func QueryDailysByCompanyCode(companyCode *string) ([]utility.Daily, error) {
-	stmt, err := mysqlUtility.DBConn.Prepare("SELECT daily_code,company_code, company_code,mission_code, project_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM daily WHERE company_code = ? AND Date(insert_datetime)=Date(Now())")
+	stmt, err := mysqlUtility.DBConn.Prepare("SELECT daily_code,company_code, mission_code, project_code, version_tag, storage_position, picture, insert_datetime, update_datetime FROM daily WHERE company_code = ? AND Date(insert_datetime)=Date(Now())")
 	if err != nil {
 		panic(err.Error())
 	}

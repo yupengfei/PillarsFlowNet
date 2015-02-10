@@ -427,6 +427,7 @@ Table: graph存储任务有向无环图的节点信息
 				“RealBeginDatetime”: string,
 				“RealEndDatetime”: string,
 				“PersonInCharge”: string,
+				“CompanyCode”:string,
 				“Status”: int,
 				“Picture”: string,
 				“InsertDatetime”: string
@@ -447,6 +448,7 @@ Table: graph存储任务有向无环图的节点信息
 				“RealBeginDatetime”: string,
 				“RealEndDatetime”: string,
 				“PersonInCharge”: string,
+				“CompanyCode”:string,
 				“Status”: int,
 				“Picture”: string
 				“InsertDatetime”: 任意string，不起作用,可以没有
@@ -470,6 +472,7 @@ Table: graph存储任务有向无环图的节点信息
 		    		“RealBeginDatetime”: string,
 		    		“RealEndDatetime”: string,
 		    		“PersonInCharge”: string,
+				“CompanyCode”:string,
 		    		“Status”: int,
 		    		“Picture”: string,
 				“InsertDatetime”: string
@@ -1337,6 +1340,7 @@ Table: graph存储任务有向无环图的节点信息
 			“UserCode”: string,//发起该操作的user
 			“result”:”[{
 				UserCode string
+				CompanyCode string,
 				Email string
 				Password string，返回只里面该字段为空
 				Group string
@@ -1355,6 +1359,7 @@ Table: graph存储任务有向无环图的节点信息
 			“command”:”addDaily”,
 			“parameter”:”{
 				DailyCode 任意string，不起作用,可以没有
+				CompanyCode string
 				MissionCode string
 				ProjectCode string
 				VersionTag string
@@ -1374,6 +1379,7 @@ Table: graph存储任务有向无环图的节点信息
 			“UserCode”: string,//发起该操作的user
 			“result”:”{
 				DailyCode string
+				CompanyCode string
 				MissionCode string
 				ProjectCode string
 				VersionTag string
@@ -1390,6 +1396,7 @@ Table: graph存储任务有向无环图的节点信息
 			“command”:”modifyDaily”,
 			“parameter”:”{
 				DailyCode string
+				CompanyCode string
 				MissionCode string
 				ProjectCode string
 				VersionTag string
@@ -1409,6 +1416,7 @@ Table: graph存储任务有向无环图的节点信息
 			“UserCode”: string,//发起该操作的user
 			“result”:”{
 				DailyCode string
+				CompanyCode string
 				MissionCode string
 				ProjectCode string
 				VersionTag string
@@ -1458,6 +1466,7 @@ Table: graph存储任务有向无环图的节点信息
 			“UserCode”: string,//发起该操作的user
 			“result”:”[{
 				DailyCode string
+				CompanyCodestring 
 				MissionCode string
 				ProjectCode string
 				VersionTag string
@@ -1485,6 +1494,7 @@ Table: graph存储任务有向无环图的节点信息
 			“UserCode”: string,//发起该操作的user
 			“result”:”[{
 				DailyCode string
+				CompanyCode string 
 				MissionCode string
 				ProjectCode string
 				VersionTag string
