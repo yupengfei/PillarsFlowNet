@@ -1,12 +1,21 @@
 package connection
 
 import (
+	"PillarsFlowNet/authentication"
 	"PillarsFlowNet/targetStorage"
 	"PillarsFlowNet/utility"
+	"sync"
 )
 
-func AddTarget(userCode *string, parameter *string) {
+func AddTarget(userCode *string, mutex *sync.Mutex, parameter *string) {
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
+	if auth == false {
+		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
+	}
 	var targetCode *string
 	var targetOut *utility.Target
 	if errorCode == 0 {
@@ -22,11 +31,22 @@ func AddTarget(userCode *string, parameter *string) {
 	}
 	var command = "addTarget"
 	result := utility.BoolResultToOutMessage(&command, targetOut, errorCode, userCode)
-	Hub.Dispatch(result)
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
 }
 
-func ModifyTarget(userCode *string, parameter *string) {
+func ModifyTarget(userCode *string, mutex *sync.Mutex, parameter *string) {
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
+	if auth == false {
+		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
+	}
 	var targetCode *string
 	var targetOut *utility.Target
 	if errorCode == 0 {
@@ -41,11 +61,22 @@ func ModifyTarget(userCode *string, parameter *string) {
 	}
 	var command = "modifyTarget"
 	result := utility.BoolResultToOutMessage(&command, targetOut, errorCode, userCode)
-	Hub.Dispatch(result)
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
 }
 
-func DeleteTarget(userCode *string, parameter *string) {
+func DeleteTarget(userCode *string, mutex *sync.Mutex, parameter *string) {
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
+	if auth == false {
+		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
+	}
 	if errorCode == 0 {
 		targetCode, _ := utility.ParseTargetCodeMessage(parameter)
 		opResult, _ := targetStorage.DeleteTargetByTargetCode(&(targetCode.TargetCode))
@@ -55,7 +86,11 @@ func DeleteTarget(userCode *string, parameter *string) {
 	}
 	var command = "deleteTarget"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	Hub.Dispatch(result)
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
 }
 
 func GetTargetByMissionCode(userCode *string, parameter *string) {

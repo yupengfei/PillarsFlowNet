@@ -1,7 +1,7 @@
 package connection
 
 import (
-	"PillarsFlowNet/authentication"
+	//"PillarsFlowNet/authentication"
 	"PillarsFlowNet/dailyStorage"
 	"PillarsFlowNet/utility"
 )
@@ -10,11 +10,11 @@ import (
 //inputParameters[0]为发起该操作的用户的usercode
 //inputParameters[1]为具体的参数
 func AddDaily(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+	//auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
+	//if auth == false {
+	//	errorCode = 3
+	//}
 	var dailyCode *string
 	var dailyOut *utility.Daily
 	if errorCode == 0 {
@@ -30,18 +30,19 @@ func AddDaily(userCode *string, parameter *string) {
 	}
 	var command = "addDaily"
 	result := utility.BoolResultToOutMessage(&command, dailyOut, errorCode, userCode)
-	Hub.Dispatch(result)
+	//Hub.Dispatch(result)
+	Hub.SendToUserCode(result, userCode)
 }
 
 //修改Daily表中的某一条数据
 //inputParameters[0]为发起该操作的用户的UserCode
 //inputParameters[1]为具体的参数
 func ModifyDaily(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+	//auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
+	//if auth == false {
+	//	errorCode = 3
+	//}
 	var dailyCode *string
 	var dailyOut *utility.Daily
 	if errorCode == 0 {
@@ -56,18 +57,19 @@ func ModifyDaily(userCode *string, parameter *string) {
 	}
 	var command = "modifyDaily"
 	result := utility.BoolResultToOutMessage(&command, dailyOut, errorCode, userCode)
-	Hub.Dispatch(result)
+	//Hub.Dispatch(result)
+	Hub.SendToUserCode(result, userCode)
 }
 
 //删除某条Daily
 //inputParameters[0]为发起该操作的用户的UserCOde
 //inputParameters[1]为具体的参数
 func DeleteDaily(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+	//auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
+	//if auth == false {
+	//	errorCode = 3
+	//}
 	if errorCode == 0 {
 		dailyCode, _ := utility.ParseDailyCodeMessage(parameter)
 		opResult, _ := dailyStorage.DeleteDailyByDailyCode(&(dailyCode.DailyCode))
@@ -77,18 +79,29 @@ func DeleteDaily(userCode *string, parameter *string) {
 	}
 	var command = "deleteDaily"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	Hub.Dispatch(result)
+	//Hub.Dispatch(result)
+	Hub.SendToUserCode(result, userCode)
+}
+func GetCompanyDaily(userCode *string, parameter *string) {
+	var errorCode int
+	var opResult []utility.Daily
+	if errorCode == 0 {
+		opResult, _ = dailyStorage.QueryDailysByCompanyCode(parameter)
+	}
+	command := "getCompanyDaily"
+	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
+	Hub.SendToUserCode(result, userCode)
 }
 
 //获取missionCode相关的所有Daily
 //inputParameters[0]为发起该操作的用户的code
 //inputParameters[1]为具体的参数
 func GetDailyByMissionCode(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+	//auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
+	//if auth == false {
+	//	errorCode = 3
+	//}
 	var opResult []utility.Daily
 	if errorCode == 0 {
 		missionCode, _ := utility.ParseMissionCodeMessage(parameter)

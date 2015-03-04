@@ -1,11 +1,14 @@
 package connection
 
 import (
+	"PillarsFlowNet/authentication"
 	"PillarsFlowNet/projectStorage"
 	"PillarsFlowNet/utility"
+	"sync"
 )
 
-func GetAllProject(userCode *string, parameter *string) ([]byte, *string) {
+//只查询本公司的项目，这里需要修改ｓｑｌ查询
+func GetAllProject(userCode *string, parameter *string) { // ([]byte, *string)
 	var errorCode int
 	var opResult []utility.Project
 
@@ -16,11 +19,18 @@ func GetAllProject(userCode *string, parameter *string) ([]byte, *string) {
 	command := "getAllProject"
 	result := utility.SliceResultToOutMessage(&command, opResult, errorCode, userCode)
 	Hub.SendToUserCode(result, userCode)
-	return result, userCode
+	//return result, userCode
 }
 
-func AddProject(userCode *string, parameter *string) ([]byte, *string) {
+func AddProject(userCode *string, mutex *sync.Mutex, parameter *string) { //([]byte, *string)
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
+	if auth == false {
+		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
+	}
 	var projectCode *string
 	var projectOut *utility.Project
 	if errorCode == 0 {
@@ -36,12 +46,24 @@ func AddProject(userCode *string, parameter *string) ([]byte, *string) {
 	}
 	var command = "addProject"
 	result := utility.BoolResultToOutMessage(&command, projectOut, errorCode, userCode)
-	Hub.Dispatch(result)
-	return result, userCode
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
+
+	//return result, userCode
 }
 
-func ModifyProject(userCode *string, parameter *string) ([]byte, *string) {
+func ModifyProject(userCode *string, mutex *sync.Mutex, parameter *string) { //([]byte, *string)
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
+	if auth == false {
+		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
+	}
 	var projectCode *string
 	var projectOut *utility.Project
 	if errorCode == 0 {
@@ -56,6 +78,10 @@ func ModifyProject(userCode *string, parameter *string) ([]byte, *string) {
 	}
 	var command = "modifyProject"
 	result := utility.BoolResultToOutMessage(&command, projectOut, errorCode, userCode)
-	Hub.Dispatch(result)
-	return result, userCode
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
+	//return result, userCode
 }

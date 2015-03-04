@@ -41,8 +41,8 @@ type UserLogin struct {
 
 //user struct is corresponding to the mysql user table
 type User struct {
-	UserCode string
-	//UserName       string
+	UserCode       string
+	CompanyCode    string
 	Password       string
 	Group          string
 	DisplayName    string
@@ -101,6 +101,7 @@ type Project struct {
 	RealBeginDatetime string
 	RealEndDatetime   string
 	PersonInCharge    string
+	CompanyCode       string
 	Status            int
 	Picture           string
 	InsertDatetime    string
@@ -182,6 +183,7 @@ type Target struct {
 //daily is used to review the rate of progress of mission
 type Daily struct {
 	DailyCode       string
+	CompanyCode     string
 	MissionCode     string
 	ProjectCode     string
 	VersionTag      string
@@ -195,7 +197,7 @@ type Daily struct {
 //a chart maybe a picture or a string
 //chart is from someuser to someuser
 type Chart struct {
-	Id           string `json:"id"    bson:"_id"`
+	Id           string `json:"Id"    bson:"_id"`
 	IsPicture    int
 	Message      string
 	From         string
@@ -209,7 +211,7 @@ type Chart struct {
 
 //post struct is corresponding to mongodb post table
 type Post struct {
-	Id          string `json:"id"    bson:"_id"`
+	Id          string `json:"Id"    bson:"_id"`
 	MissionCode string
 	PostType    int
 	Code        string

@@ -1,7 +1,7 @@
 package connection
 
 import (
-	"PillarsFlowNet/authentication"
+	//"PillarsFlowNet/authentication"
 	"PillarsFlowNet/chartStorage"
 	"PillarsFlowNet/utility"
 	"time"
@@ -12,11 +12,11 @@ import (
 //其中inputParameters[0]是执行该操作的用户的code
 //inputParameters[1]包含了更多的聊天信息
 func AddChart(userCode *string, parameter *string) { //result, fromUserCode, ToUserCode
-	auth := authentication.GetAuthInformation(userCode)
+	//auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
+	//if auth == false {
+	//	errorCode = 3
+	//}
 	var chartOut *utility.Chart
 	var err error
 	var toUserCode *string
@@ -43,11 +43,11 @@ func AddChart(userCode *string, parameter *string) { //result, fromUserCode, ToU
 
 //用户在阅读完某条信息后会将该条信息标记为已读
 func ReceiveChart(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+	//auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
+	//if auth == false {
+	//	errorCode = 3
+	//}
 	if errorCode == 0 {
 		chartCode, _ := utility.ParseChartCodeMessage(parameter)
 		_, err := chartStorage.MarkAsReceiveByChartCode(&(chartCode.ChartCode))
@@ -63,11 +63,11 @@ func ReceiveChart(userCode *string, parameter *string) {
 
 //用户登陆后，会向服务器请求所有发给自己的未读信息
 func GetAllUnreceivedChart(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+	//auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
+	//if auth == false {
+	//	errorCode = 3
+	//}
 	var opResult []utility.Chart
 	var err error
 	if errorCode == 0 {

@@ -63,6 +63,7 @@
 		Create Table `user` (
 			`user_id` int unsigned NOT NULL AUTO_INCREMENT,
 			`user_code` char(32) not null unique,#计算生成的唯一识别符
+			`company_code` char(32) not null ,#本人所属的公司
 			`email` char(30) not null,#用户邮箱，用于登录
 			`password` char(32) not null,#用户的密码
 			`group` varchar(20) not null,#用户的组别，目前有系统管理员、统筹、八个部门的组
@@ -76,7 +77,17 @@
 			INDEX(`email`),
 			INDEX(`group`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+1.  公司信息文件放在company表
 
+		MySQL: DB: Pillars
+		Table: company 存储用于审核的文件的信息
+
+		Create table `company`(
+			`company_id` int unsigned NOT NULL AUTO_INCREMENT,
+			`company_code` char(32) NOT NULL unique,
+			PRIMARY KEY (`company_id`),
+			INDEX(`company_code`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 1. 项目的相关信息存放在project表
 
 		MySQL: DB: Pillars
@@ -91,6 +102,7 @@
 			`real_begin_datetime` datetime NOT NULL,#存储项目实际开始的时间
 			`real_end_datetime` datetime NOT NULL,#存储项目实际结束的时间
 			`person_in_charge` char(32) NOT NULL,#存储`user_code`，项目负责人的usercode
+			`company_code` char(32) not null ,#项目所属的公司
 			`status` int default 0 NOT NULL, #0未开始，1已经完成,2进行中
 			`picture` mediumtext NOT NULL,#直接往mysql中写入照片的base64编码
 			`insert_datetime` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -204,6 +216,7 @@ Table: graph存储任务有向无环图的节点信息
 		Create table `daily`(
 			`daily_id` int unsigned NOT NULL AUTO_INCREMENT,
 			`daily_code` char(32) NOT NULL unique,
+			`company_code` char(32) NOT NULL,
 			`mission_code` char(32) NOT NULL,
 			`project_code` char(32) NOT NULL,
 			`version_tag` char(20) NOT NULL,
@@ -300,6 +313,7 @@ Table: graph存储任务有向无环图的节点信息
 		“UserCode”: string,//发起该操作的user
 		"result":“ {
 			UserCode string
+			CompanyCode string
 			Email string
 			Password string，返回只里面该字段为空
 			Group string
@@ -324,6 +338,7 @@ Table: graph存储任务有向无环图的节点信息
 		“UserCode”: string,//发起该操作的user
 		"result":“ {
 			UserCode string
+			CompanyCode string
 			Email string
 			Password string，返回只里面该字段为空
 			Group string
@@ -360,12 +375,13 @@ Table: graph存储任务有向无环图的节点信息
 					{
 						“ProjectCode”: string,
 						“ProjectName”: string,
-		    			“ProjectDetail": string,
+		    				“ProjectDetail": string,
 		    			“PlanBeginDatetime”: string,
 		    			“PlanEndDatetime”: string,
 		    			“RealBeginDatetime”: string,
 		    			“RealEndDatetime”: string,
 		    			“PersonInCharge”: string,
+					“CompanyCode”:string,
 		    			“Status”: int,
 		    			“Picture”: string
 						“InsertDatetime”: string
@@ -387,6 +403,7 @@ Table: graph存储任务有向无环图的节点信息
 				“RealBeginDatetime”: string,
 				“RealEndDatetime”: string,
 				“PersonInCharge”: string,
+				“CompanyCode”:string,
 				“Status”: int,
 				“Picture”: string,
 				“InsertDatetime”: 任意string，不起作用,可以没有
@@ -410,6 +427,7 @@ Table: graph存储任务有向无环图的节点信息
 				“RealBeginDatetime”: string,
 				“RealEndDatetime”: string,
 				“PersonInCharge”: string,
+				“CompanyCode”:string,
 				“Status”: int,
 				“Picture”: string,
 				“InsertDatetime”: string
@@ -430,6 +448,7 @@ Table: graph存储任务有向无环图的节点信息
 				“RealBeginDatetime”: string,
 				“RealEndDatetime”: string,
 				“PersonInCharge”: string,
+				“CompanyCode”:string,
 				“Status”: int,
 				“Picture”: string
 				“InsertDatetime”: 任意string，不起作用,可以没有
@@ -453,6 +472,7 @@ Table: graph存储任务有向无环图的节点信息
 		    		“RealBeginDatetime”: string,
 		    		“RealEndDatetime”: string,
 		    		“PersonInCharge”: string,
+				“CompanyCode”:string,
 		    		“Status”: int,
 		    		“Picture”: string,
 				“InsertDatetime”: string
@@ -1320,6 +1340,7 @@ Table: graph存储任务有向无环图的节点信息
 			“UserCode”: string,//发起该操作的user
 			“result”:”[{
 				UserCode string
+				CompanyCode string,
 				Email string
 				Password string，返回只里面该字段为空
 				Group string
@@ -1338,6 +1359,7 @@ Table: graph存储任务有向无环图的节点信息
 			“command”:”addDaily”,
 			“parameter”:”{
 				DailyCode 任意string，不起作用,可以没有
+				CompanyCode string
 				MissionCode string
 				ProjectCode string
 				VersionTag string
@@ -1357,6 +1379,7 @@ Table: graph存储任务有向无环图的节点信息
 			“UserCode”: string,//发起该操作的user
 			“result”:”{
 				DailyCode string
+				CompanyCode string
 				MissionCode string
 				ProjectCode string
 				VersionTag string
@@ -1373,6 +1396,7 @@ Table: graph存储任务有向无环图的节点信息
 			“command”:”modifyDaily”,
 			“parameter”:”{
 				DailyCode string
+				CompanyCode string
 				MissionCode string
 				ProjectCode string
 				VersionTag string
@@ -1392,6 +1416,7 @@ Table: graph存储任务有向无环图的节点信息
 			“UserCode”: string,//发起该操作的user
 			“result”:”{
 				DailyCode string
+				CompanyCode string
 				MissionCode string
 				ProjectCode string
 				VersionTag string
@@ -1441,6 +1466,7 @@ Table: graph存储任务有向无环图的节点信息
 			“UserCode”: string,//发起该操作的user
 			“result”:”[{
 				DailyCode string
+				CompanyCodestring 
 				MissionCode string
 				ProjectCode string
 				VersionTag string
@@ -1450,7 +1476,34 @@ Table: graph存储任务有向无环图的节点信息
 				UpdateDatetime string
 			}]”
 		}
+1. 查询今天所有的daily
 
+		{
+			”command“:”getCompanyDaily”,
+			“parameter”:”{
+				Company string
+			}”
+		}
+		返回值
+		{
+			"error": {
+				"errorCode" : 0,
+				"errorMessage": ""
+			},
+			“commnd”: “getCompanyDaily”,
+			“UserCode”: string,//发起该操作的user
+			“result”:”[{
+				DailyCode string
+				CompanyCode string 
+				MissionCode string
+				ProjectCode string
+				VersionTag string
+				StoragePosition string
+				Picture string
+				InsertDatetime string
+				UpdateDatetime string
+			}]”
+		}
 1. 获取用户所有的未开始的Mission，返回一个missionList
 
 		{
@@ -1850,9 +1903,19 @@ People主要由两个部分构成
 1、客户端发起查询后，阻塞所有的增删改信息的处理，在所有查询处理完之后再处理增删改；
 2、服务器端加两个互斥锁，分别锁定production的增删改查和post的增删改查。
 
-##同步范围
+by han2015: 初步分析，同步的主要部分是管理员的增删改操作对普通用户的查询操作的影响。　普通用户修改自己的mission不用同步，管理员的
+查询不用考虑同步，因为管理员这部分应该是顺序执行的（管理员也相当于一个客户端）。
+##　mission,graph,project用同一个互斥锁，这样管理员一次只有一个操作，直到发送完毕解锁。每个管理员‘线程’都有属于自己的锁。普通用户查询
+## 不用锁
+在所有的客户端的结构中，添加了一个Mutex锁，修改了一些命令接口，传入该锁，查询接口没有修改参数。　对于mission,graph,project,dependency，target表的操作添加了管理员控制。在调用关于这几个表的操作时，会有权限认证，如果是管理员,Mutex.lock,并在执行完本操作后defer Mutex.uLock，这样一个管理员其他操作会阻塞。如果是普通用户，跳过锁的操作和数据库操作，返回权限不足的信息，前台应该有提示。
 
+前端：　这里阻塞其他命令的操作。
+
+##同步范围
 并不是所有的信息都应该向每个客户端广播，客户端只需要收到从登录开始自己曾经查询过的project的全部信息
+
+##　by han2015:普通用户是属于公司的，普通用户只关注本公司的项目，解决同步范围问题。
+修改了一些参数，主要是获取管理员的所属公司。在派发消息的时候先查询user表中同一个公司的所有用户,获取一个用户组。最后对该用户组中登陆系统的成员发送消息。
 
 ##权限机制
 
@@ -1863,4 +1926,16 @@ People主要由两个部分构成
 1.制片人拥有新建项目，调配军团内部的人员（将某项工作指定给某个人），新建mission等权限；
 
 1.普通用户只能更改由自己负责的mission的信息，其它的操作返回权限不足的error
+
+by han2015:根据上述需求，需要修改原数据库user,project表结构,还要新建一个mysql新表`company`
+计划：权限的验证通过group字段，对修改，添加，删除的操作接口添加权限认证，制片人可以做任何操作，只对普通用户开放
+修改mission的权限。查询接口应该不需要权限验证，如果有的话对普通用户限制。
+
+关于权限的部分实现，通过用户的user_code查询group字段，admin和user区分，admin有所有权限。在可能需要权限的地方添加了权限认证的代码，有的地方
+比如daily，这里取消了权限认证，因为普通用户有增删改的权限。　如果未来还有权限的修改，都在权限认证的地方修改。
+
+
+
+
+
 

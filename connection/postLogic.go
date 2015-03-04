@@ -1,23 +1,23 @@
 package connection
 
 import (
-	"time"
 	"PillarsFlowNet/postStorage"
 	"PillarsFlowNet/utility"
+	"time"
 )
 
-func AddPost(userCode * string, parameter * string) {
+func AddPost(userCode *string, parameter *string) {
 	var errorCode int
-	var postOut * utility.Post
+	var postOut *utility.Post
 	var err error
 	//var toUserCode * string
-	if (errorCode == 0) {
+	if errorCode == 0 {
 		post, _ := utility.ParsePostMessage(parameter)
 		//toUserCode = &(chart.To)
 
 		post.Id = *(utility.GenerateCode(userCode))
 		post.UserCode = *userCode
-		
+
 		post.Deleted = 0
 		post.DeletedTime = time.Now().Format("2006-01-02 15:04:05")
 		postOut, err = postStorage.StoreToPost(post)
@@ -27,14 +27,15 @@ func AddPost(userCode * string, parameter * string) {
 	}
 	var command = "addPost"
 	result := utility.BoolResultToOutMessage(&command, postOut, errorCode, userCode)
-	Hub.Dispatch(result)
+	//Hub.Dispatch(result)
+	Hub.SendToUserCode(result, userCode)
 }
 
-func GetAllTargetPost(userCode * string, parameter * string) {
+func GetAllTargetPost(userCode *string, parameter *string) {
 	var errorCode int
 	var opResult []utility.Post
 	var err error
-	if (errorCode == 0) {
+	if errorCode == 0 {
 		targetCode, _ := utility.ParseTargetCodeMessage(parameter)
 		opResult, err = postStorage.GetAllPostByTargetCode(&(targetCode.TargetCode))
 		if err != nil {

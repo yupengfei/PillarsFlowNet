@@ -6,25 +6,23 @@ import (
 	"PillarsFlowNet/missionStorage"
 	"PillarsFlowNet/utility"
 	"fmt"
+	"sync"
 )
 
 //获取特定战役所有的node
 //TODO
 //将该参数改名为GetCampaignNode
 func GetCampaignNode(userCode *string, parameter *string) {
-	fmt.Println(*parameter)
-	auth := authentication.GetAuthInformation(userCode)
+	//auth := authentication.GetAuthInformation(userCode)
 	var errorCode int
-	if auth == false {
-		errorCode = 3
-	}
+	//if auth == false {
+	//	errorCode = 3
+	//}
 	var opResult []utility.Graph
 	if errorCode == 0 {
 		campaignCode, _ := utility.ParseCampaignCodeMessage(parameter)
 		opResult, _ = graphStorage.QueryGraphNodesByCampaignCode(&(campaignCode.CampaignCode))
 	}
-	//fmt.Println(string(result))
-
 	var missionSlice []utility.Mission
 	opResultLength := len(opResult)
 	var i int
@@ -46,11 +44,14 @@ func GetCampaignNode(userCode *string, parameter *string) {
 	Hub.SendToUserCode(result, userCode)
 }
 
-func AddNode(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+func AddNode(userCode *string, mutex *sync.Mutex, parameter *string) {
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if auth == false {
 		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
 	}
 	fmt.Println(*parameter)
 	var graphCode *string
@@ -83,15 +84,22 @@ func AddNode(userCode *string, parameter *string) {
 
 	var command = "addNode"
 	result := utility.SliceResultToOutMessage(&command, resultSlice, errorCode, userCode)
-	Hub.Dispatch(result)
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
 }
 
-func ModifyNode(userCode *string, parameter *string) {
+func ModifyNode(userCode *string, mutex *sync.Mutex, parameter *string) {
 	fmt.Println(*parameter)
-	auth := authentication.GetAuthInformation(userCode)
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if auth == false {
 		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
 	}
 	var graphCode *string
 	var graphOut *utility.Graph
@@ -107,14 +115,21 @@ func ModifyNode(userCode *string, parameter *string) {
 	}
 	var command = "modifyNode"
 	result := utility.BoolResultToOutMessage(&command, graphOut, errorCode, userCode)
-	Hub.Dispatch(result)
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
 }
 
-func DeleteNode(userCode *string, parameter *string) {
-	auth := authentication.GetAuthInformation(userCode)
+func DeleteNode(userCode *string, mutex *sync.Mutex, parameter *string) {
+	auth, code := authentication.GetAuthInformation(userCode)
 	var errorCode int
 	if auth == false {
 		errorCode = 3
+	} else {
+		mutex.Lock()
+		defer mutex.Unlock()
 	}
 
 	if errorCode == 0 {
@@ -126,5 +141,9 @@ func DeleteNode(userCode *string, parameter *string) {
 	}
 	var command = "deleteNode"
 	result := utility.StringResultToOutMessage(&command, parameter, errorCode, userCode)
-	Hub.Dispatch(result)
+	if auth == true {
+		Hub.Dispatch(result, code)
+	} else {
+		Hub.SendToUserCode(result, userCode)
+	}
 }
