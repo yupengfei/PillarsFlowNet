@@ -1817,7 +1817,7 @@ People主要由两个部分构成
 
 1. 修改reviewing的mission
 
-对reviewing的mission双击弹出是否移动到finished。
+对reviewing的mission双击弹出是否移动到finished或者undergoing。
 
 1. 修改未分配的mission
 
